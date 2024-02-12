@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 #[starknet::contract(account)]
 mod Account {
     use openzeppelin::account::AccountComponent;
