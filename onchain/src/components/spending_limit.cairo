@@ -1,6 +1,7 @@
 #[starknet::interface]
 trait DailyLimitTrait<T> {
     fn check_below_limit_and_update(ref self: T, value: u256) -> bool;
+    fn check_below_limit(self: @T, value: u256) -> bool;
 }
 
 #[starknet::component]
@@ -50,6 +51,11 @@ mod spending_limit {
             } else {
                 false
             }
+        }
+
+        #[inline(always)]
+        fn check_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
+            value <= self.limit.read()
         }
     }
 }
