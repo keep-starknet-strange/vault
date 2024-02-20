@@ -14,8 +14,6 @@ mod Account {
 
     // Account
     #[abi(embed_v0)]
-    impl SRC6Impl = AccountComponent::SRC6Impl<ContractState>;
-    #[abi(embed_v0)]
     impl SRC6CamelOnlyImpl = AccountComponent::SRC6CamelOnlyImpl<ContractState>;
     #[abi(embed_v0)]
     impl PublicKeyImpl = AccountComponent::PublicKeyImpl<ContractState>;
