@@ -38,6 +38,7 @@ mod spending_limit {
         last_modification: u64,
     }
 
+
     #[embeddable_as(DailyLimit)]
     impl DailyLimitU256<
         TContractState, +HasComponent<TContractState>, +Drop<TContractState>
@@ -88,6 +89,7 @@ mod spending_limit {
                 false
             }
         }
+
         fn validate_sum_under_limit(
             self: @ComponentState<TContractState>, ref calls: Span<Call>
         ) -> bool {
@@ -104,15 +106,22 @@ mod spending_limit {
             };
             self.is_below_limit(value)
         }
+
         #[inline(always)]
         fn is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
             value <= self.limit.read()
+        }
+
+        #[inline(always)]
+        fn initialize(ref self: ComponentState<TContractState>, public_key: felt252) {
+            self.public_key.write(public_key);
         }
     }
 }
 
 #[cfg(test)]
 mod test {
+    use vault::components::spending_limit::spending_limit::InternalTrait;
     use vault::components::spending_limit::DailyLimitTrait;
 
     #[starknet::contract]
@@ -141,6 +150,28 @@ mod test {
 
     #[test]
     fn test_is_valid_signature() {
-        assert!(COMPONENT().is_valid_signature(0, array![]).is_zero())
+        // Taken from OZ
+        // private_key: 1234,
+        // public_key: 0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa,
+        // transaction_hash: 0x601d3d2e265c10ff645e1554c435e72ce6721f0ba5fc96f0c650bfc6231191a,
+        // r: 0x6c8be1fb0fb5c730fbd7abaecbed9d980376ff2e660dfcd157e158d2b026891,
+        // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35
+        let mut component = COMPONENT();
+        assert!(COMPONENT().is_valid_signature(0, array![]).is_zero());
+        component
+            .initialize(
+                0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa
+            ); // set the public key
+        assert_eq!(
+            component
+                .is_valid_signature(
+                    0x601d3d2e265c10ff645e1554c435e72ce6721f0ba5fc96f0c650bfc6231191a, // message hash
+                    array![
+                        0x6c8be1fb0fb5c730fbd7abaecbed9d980376ff2e660dfcd157e158d2b026891, // r
+                        0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35 // s
+                    ]
+                ),
+            super::spending_limit::VALID
+        );
     }
 }
