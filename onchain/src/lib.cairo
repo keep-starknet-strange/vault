@@ -1,6 +1,6 @@
+mod components;
 #[cfg(test)]
 mod tests;
-mod components;
 
 #[starknet::contract(account)]
 mod Account {
