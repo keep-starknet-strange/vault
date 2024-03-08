@@ -1,17 +1,18 @@
 #[starknet::contract(account)]
 mod Account {
+    use starknet::account::Call;
     use openzeppelin::account::AccountComponent;
     use openzeppelin::introspection::src5::SRC5Component;
+    use openzeppelin::account::interface::ISRC6;
 
     use vault::spending_limit::daily_limit::DailyLimitComponent;
+    use vault::spending_limit::daily_limit::interface::IDailyLimit;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
     component!(path: DailyLimitComponent, storage: daily_limit, event: DailyLimitEvent);
 
     // Account
-    #[abi(embed_v0)]
-    impl SRC6CamelOnlyImpl = AccountComponent::SRC6CamelOnlyImpl<ContractState>;
     #[abi(embed_v0)]
     impl PublicKeyImpl = AccountComponent::PublicKeyImpl<ContractState>;
     #[abi(embed_v0)]
@@ -22,9 +23,8 @@ mod Account {
     impl DeployableImpl = AccountComponent::DeployableImpl<ContractState>;
     impl AccountInternalImpl = AccountComponent::InternalImpl<ContractState>;
 
-    // Limit
-    #[abi(embed_v0)]
-    impl DailyLimitImpl = DailyLimitComponent::DailyLimitImpl<ContractState>;
+    // Daily Limit
+    impl DailyLimitInternalImpl = DailyLimitComponent::InternalImpl<ContractState>;
 
     // SRC5
     #[abi(embed_v0)]
@@ -51,8 +51,47 @@ mod Account {
         DailyLimitEvent: DailyLimitComponent::Event,
     }
 
+    //
+    // Constructor
+    //
+
     #[constructor]
-    fn constructor(ref self: ContractState, public_key: felt252) {
-        self.account.initializer(public_key);
+    fn constructor(ref self: ContractState, public_key: felt252, limit: u256) {
+        self.account.initializer(:public_key);
+        self.daily_limit.initializer(:limit);
+    }
+
+    //
+    // SRC6 override
+    //
+
+    #[abi(embed_v0)]
+    impl ISRC6Impl of ISRC6<ContractState> {
+        fn __execute__(self: @ContractState, calls: Array<Call>) -> Array<Span<felt252>> {
+            self.account.__execute__(:calls)
+        }
+
+        fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
+            self.account.__validate__(:calls)
+        }
+
+        fn is_valid_signature(self: @ContractState, hash: felt252, signature: Array<felt252>) -> felt252 {
+            self.account.is_valid_signature(:hash, :signature)
+        }
+    }
+
+    //
+    // Daily Limit
+    //
+
+    #[abi(embed_v0)]
+    impl DailyLimit of IDailyLimit<ContractState> {
+        fn get_daily_limit(self: @ContractState) -> u256 {
+            self.daily_limit._get_daily_limit()
+        }
+
+        fn set_daily_limit(ref self: ContractState, new_limit: u256) {
+            self.daily_limit._set_daily_limit(:new_limit);
+        }
     }
 }
