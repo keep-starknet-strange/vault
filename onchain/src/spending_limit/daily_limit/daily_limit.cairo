@@ -1,23 +1,19 @@
-use starknet::account::Call;
-
-#[starknet::interface]
-trait DailyLimitTrait<T> {
-    fn __execute__(self: @T, calls: Array<Call>) -> Array<Span<felt252>>;
-    fn __validate__(self: @T, calls: Array<Call>) -> felt252;
-    fn is_valid_signature(self: @T, hash: felt252, signature: Array<felt252>) -> felt252;
-}
-
 #[starknet::component]
-mod spending_limit {
-    use core::array::ArrayTrait;
-    use vault::components::spending_limit::DailyLimitTrait;
+mod DailyLimitComponent {
+    use array::ArrayTrait;
     use starknet::info::get_block_timestamp;
     use starknet::account::Call;
     use ecdsa::check_ecdsa_signature;
     use array::IndexView;
 
+    use vault::spending_limit::daily_limit::interface;
+
     const DAY_IN_SECONDS: u64 = 86400;
     const VALID: felt252 = 'VALID';
+
+    //
+    // Storage
+    //
 
     #[storage]
     struct Storage {
@@ -26,6 +22,11 @@ mod spending_limit {
         last_modification: u64,
         public_key: felt252,
     }
+
+    //
+    // Events
+    //
+
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
@@ -38,19 +39,20 @@ mod spending_limit {
         last_modification: u64,
     }
 
-
-    #[embeddable_as(DailyLimit)]
-    impl DailyLimitU256<
+    #[embeddable_as(DailyLimitImpl)]
+    impl DailyLimit<
         TContractState, +HasComponent<TContractState>, +Drop<TContractState>
-    > of super::DailyLimitTrait<ComponentState<TContractState>> {
+    > of interface::DailyLimit<ComponentState<TContractState>> {
         fn __execute__(
             self: @ComponentState<TContractState>, calls: Array<Call>
         ) -> Array<Span<felt252>> {
             array![array![1].span()]
         }
+
         fn __validate__(self: @ComponentState<TContractState>, calls: Array<Call>) -> felt252 {
             1
         }
+
         fn is_valid_signature(
             self: @ComponentState<TContractState>, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
@@ -70,7 +72,13 @@ mod spending_limit {
         TContractState, +HasComponent<TContractState>
     > of InternalTrait<TContractState> {
         #[inline(always)]
-        fn check_below_limit_and_update(
+        fn initializer(ref self: ComponentState<TContractState>, public_key: felt252, limit: u256) {
+            self.public_key.write(public_key);
+            self.limit.write(limit);
+        }
+
+        #[inline(always)]
+        fn _check_below_limit_and_update(
             ref self: ComponentState<TContractState>, value: u256
         ) -> bool {
             let block_timestamp = get_block_timestamp();
@@ -90,7 +98,7 @@ mod spending_limit {
             }
         }
 
-        fn validate_sum_under_limit(
+        fn _validate_sum_under_limit(
             self: @ComponentState<TContractState>, ref calls: Span<Call>
         ) -> bool {
             let mut value = 0_u256;
@@ -104,49 +112,47 @@ mod spending_limit {
                     Option::None => { break; },
                 }
             };
-            self.is_below_limit(value)
+            self._is_below_limit(value)
         }
 
         #[inline(always)]
-        fn is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
+        fn _is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
             value <= self.limit.read()
-        }
-
-        #[inline(always)]
-        fn initialize(ref self: ComponentState<TContractState>, public_key: felt252, limit: u256) {
-            self.public_key.write(public_key);
-            self.limit.write(limit);
         }
     }
 }
 
+//
+// Tests
+//
+
 #[cfg(test)]
 mod test {
-    use vault::components::spending_limit::spending_limit::InternalTrait;
-    use vault::components::spending_limit::DailyLimitTrait;
+    use vault::spending_limit::daily_limit::DailyLimitComponent::InternalTrait;
+    use vault::spending_limit::daily_limit::interface::DailyLimit;
 
     #[starknet::contract]
     mod mock_contract {
-        use super::super::spending_limit;
-        component!(path: spending_limit, storage: spending_limit, event: SpendingLimitEvent);
+        use super::super::DailyLimitComponent;
+        component!(path: DailyLimitComponent, storage: spending_limit, event: SpendingLimitEvent);
 
         #[event]
         #[derive(Drop, starknet::Event)]
         enum Event {
             #[flat]
-            SpendingLimitEvent: spending_limit::Event,
+            SpendingLimitEvent: DailyLimitComponent::Event,
         }
         #[storage]
         struct Storage {
             #[substorage(v0)]
-            spending_limit: spending_limit::Storage,
+            spending_limit: DailyLimitComponent::Storage,
         }
     }
 
-    type ComponentState = super::spending_limit::ComponentState<mock_contract::ContractState>;
+    type ComponentState = super::DailyLimitComponent::ComponentState<mock_contract::ContractState>;
 
     fn COMPONENT() -> ComponentState {
-        super::spending_limit::component_state_for_testing()
+        super::DailyLimitComponent::component_state_for_testing()
     }
 
     #[test]
@@ -160,7 +166,7 @@ mod test {
         let mut component = COMPONENT();
         assert!(component.is_valid_signature(0, array![]).is_zero());
         component
-            .initialize(
+            .initializer(
                 0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa, 0x1
             ); // set the public key and daily limit
         assert_eq!(
@@ -172,7 +178,7 @@ mod test {
                         0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35 // s
                     ]
                 ),
-            super::spending_limit::VALID
+            super::DailyLimitComponent::VALID
         );
     }
 
@@ -180,14 +186,14 @@ mod test {
     fn test_is_below_limit() {
         let mut component = COMPONENT();
         // 0 <= 0
-        assert!(component.is_below_limit(0));
+        assert!(component._is_below_limit(0));
         // 1 <= 0
-        assert!(!component.is_below_limit(1));
+        assert!(!component._is_below_limit(1));
         // Set public key to 1 and limit to 2
-        component.initialize(1, 2);
+        component.initializer(1, 2);
         // 1 <= 2
-        assert!(component.is_below_limit(1));
+        assert!(component._is_below_limit(1));
         // 3 <= 2
-        assert!(!component.is_below_limit(3));
+        assert!(!component._is_below_limit(3));
     }
 }
