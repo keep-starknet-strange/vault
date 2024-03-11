@@ -72,7 +72,9 @@ mod Account {
         }
 
         fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
+            // execute some checks here using `DailyLimitInternalImpl`
             self.account.__validate__(:calls)
+            // or here
         }
 
         fn is_valid_signature(self: @ContractState, hash: felt252, signature: Array<felt252>) -> felt252 {
