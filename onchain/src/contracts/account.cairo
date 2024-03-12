@@ -89,11 +89,11 @@ mod Account {
     #[abi(embed_v0)]
     impl DailyLimit of IDailyLimit<ContractState> {
         fn get_daily_limit(self: @ContractState) -> u256 {
-            self.daily_limit._get_daily_limit()
+            self.daily_limit.get_daily_limit()
         }
 
         fn set_daily_limit(ref self: ContractState, new_limit: u256) {
-            self.daily_limit._set_daily_limit(:new_limit);
+            self.daily_limit.set_daily_limit(:new_limit);
         }
     }
 }

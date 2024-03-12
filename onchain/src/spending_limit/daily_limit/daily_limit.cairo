@@ -48,7 +48,7 @@ mod DailyLimitComponent {
         }
 
         #[inline(always)]
-        fn _check_below_limit_and_update(
+        fn check_below_limit_and_update(
             ref self: ComponentState<TContractState>, value: u256
         ) -> bool {
             let block_timestamp = get_block_timestamp();
@@ -68,7 +68,7 @@ mod DailyLimitComponent {
             }
         }
 
-        fn _validate_sum_under_limit(
+        fn validate_sum_under_limit(
             self: @ComponentState<TContractState>, ref calls: Span<Call>
         ) -> bool {
             let mut value = 0_u256;
@@ -82,21 +82,21 @@ mod DailyLimitComponent {
                     Option::None => { break; },
                 }
             };
-            self._is_below_limit(value)
+            self.is_below_limit(:value)
         }
 
         #[inline(always)]
-        fn _is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
+        fn is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
             value <= self.limit.read()
         }
 
         // Limit value mgmt
 
-        fn _get_daily_limit(self: @ComponentState<TContractState>) -> u256 {
+        fn get_daily_limit(self: @ComponentState<TContractState>) -> u256 {
             self.limit.read()
         }
 
-        fn _set_daily_limit(ref self: ComponentState<TContractState>, new_limit: u256) {
+        fn set_daily_limit(ref self: ComponentState<TContractState>, new_limit: u256) {
             self.limit.write(new_limit);
         }
     }
@@ -139,14 +139,14 @@ mod test {
     fn test_is_below_limit() {
         let mut component = COMPONENT();
         // 0 <= 0
-        assert!(component._is_below_limit(0));
+        assert!(component.is_below_limit(0));
         // 1 <= 0
-        assert!(!component._is_below_limit(1));
+        assert!(!component.is_below_limit(1));
         // Set limit to 2
         component.initializer(2);
         // 1 <= 2
-        assert!(component._is_below_limit(1));
+        assert!(component.is_below_limit(1));
         // 3 <= 2
-        assert!(!component._is_below_limit(3));
+        assert!(!component.is_below_limit(3));
     }
 }
