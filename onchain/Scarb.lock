@@ -2,13 +2,19 @@
 version = 1
 
 [[package]]
+name = "baz"
+version = "0.1.0"
+source = "git+https://github.com/LucasLvy/baz#90048880475e9598e1d52d59c78b29b8d5943f0f"
+
+[[package]]
 name = "openzeppelin"
 version = "0.9.0"
-source = "git+https://github.com/OpenZeppelin/cairo-contracts?branch=main#7684fb0ca81a718d262145be6722e6f9f9493c54"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts?branch=main#a66d6e70aa78f49fffcf7456d3d91be834473d44"
 
 [[package]]
 name = "vault"
 version = "0.1.0"
 dependencies = [
+ "baz",
  "openzeppelin",
 ]

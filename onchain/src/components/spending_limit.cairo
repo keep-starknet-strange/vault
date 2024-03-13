@@ -23,13 +23,15 @@ mod spending_limit {
     use core::box::BoxTrait;
     use core::option::OptionTrait;
     use core::traits::TryInto;
+    use core::boolean::BoolImpl;
     use ecdsa::check_ecdsa_signature;
     use starknet::{
         account::Call, SyscallResultTrait,
         info::{get_block_timestamp, get_tx_info, get_caller_address}
     };
     use vault::components::spending_limit::DailyLimitTrait;
-
+    /// Number of seconds in a day.
+    /// azedzdza
     const DAY_IN_SECONDS: u64 = 86400;
     const VALID: felt252 = 'VALID';
     const QUERY_OFFSET: u256 = 0x100000000000000000000000000000000;
@@ -53,6 +55,9 @@ mod spending_limit {
         last_modification: u64,
     }
 
+    const FOO: u32 = {
+        52
+    };
 
     #[embeddable_as(DailyLimit)]
     impl DailyLimitU256<
@@ -64,6 +69,7 @@ mod spending_limit {
             let sender = get_caller_address();
             assert!(sender.is_zero(), "Cannot call from contract");
 
+            FOO;
             // Check tx version
             let tx_info = get_tx_info().unbox();
             let tx_version = tx_info.version.into();
@@ -136,7 +142,10 @@ mod spending_limit {
             self.is_below_limit(value)
         }
 
+        /// ABCUSQD
+        /// OUBA
         #[inline(always)]
+        /// Ouba
         fn is_below_limit(self: @ComponentState<TContractState>, value: u256) -> bool {
             value <= self.limit.read()
         }
@@ -146,6 +155,22 @@ mod spending_limit {
             self.public_key.write(public_key);
             self.limit.write(limit);
         }
+
+        /// Appends an element to the back of a collection.
+        ///
+        /// # Panics
+        ///
+        /// Panics if the new capacity exceeds `isize::MAX` bytes.
+        /// Bonjour madame
+        ///
+        /// # Examples
+        ///
+        /// ```
+        /// let mut vec = array![1, 2];
+        /// vec.push(3);
+        /// assert_eq!(vec, [1, 2, 3]);
+        /// ```
+        /// boaboab
         fn validate_signature(
             self: @ComponentState<TContractState>, hash: felt252, signature: Span<felt252>,
         ) -> felt252 {
