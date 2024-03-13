@@ -1,10 +1,10 @@
 #[starknet::component]
 mod DailyLimitComponent {
     use array::ArrayTrait;
-    use starknet::info::get_block_timestamp;
-    use starknet::account::Call;
-    use ecdsa::check_ecdsa_signature;
     use array::IndexView;
+    use ecdsa::check_ecdsa_signature;
+    use starknet::account::Call;
+    use starknet::info::get_block_timestamp;
 
     use vault::spending_limit::daily_limit::interface;
 

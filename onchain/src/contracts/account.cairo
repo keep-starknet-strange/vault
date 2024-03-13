@@ -1,9 +1,9 @@
 #[starknet::contract(account)]
 mod Account {
-    use starknet::account::Call;
     use openzeppelin::account::AccountComponent;
-    use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::account::interface::ISRC6;
+    use openzeppelin::introspection::src5::SRC5Component;
+    use starknet::account::Call;
 
     use vault::spending_limit::daily_limit::DailyLimitComponent;
     use vault::spending_limit::daily_limit::interface::IDailyLimit;

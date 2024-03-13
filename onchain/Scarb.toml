@@ -6,6 +6,9 @@ version = "0.1.0"
 starknet = ">=2.5.3"
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts", branch = "main" }
 
+[tool.fmt]
+sort-module-level-items = true
+
 [[target.starknet-contract]]
 sierra = true
 casm = true
