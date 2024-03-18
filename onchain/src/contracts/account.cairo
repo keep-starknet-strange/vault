@@ -7,10 +7,12 @@ mod Account {
 
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
+    use vault::whitelist::whitelist::WhitelistComponent;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
     component!(path: WeeklyLimitComponent, storage: weekly_limit, event: WeeklyLimitEvent);
+    component!(path: WhitelistComponent, storage: whitelist, event: WhitelistEvent);
 
     // Account
     #[abi(embed_v0)]
@@ -21,8 +23,19 @@ mod Account {
     impl DeclarerImpl = AccountComponent::DeclarerImpl<ContractState>;
     impl AccountInternalImpl = AccountComponent::InternalImpl<ContractState>;
 
-    // Daily Limit
+    // Weekly Limit
     impl WeeklyLimitInternalImpl = WeeklyLimitComponent::InternalImpl<ContractState>;
+
+    // Whitelisting
+    impl WhitelistContractsInternalImpl = WhitelistComponent::WhitelistContractsImpl<ContractState>;
+    impl WhitelistClassHashesInternalImpl =
+        WhitelistComponent::WhitelistClassHashesImpl<ContractState>;
+    impl WhitelistEntrypointsInternalImpl =
+        WhitelistComponent::WhitelistEntrypointsImpl<ContractState>;
+    impl WhitelistContractEntrypointInternalImpl =
+        WhitelistComponent::WhitelistContractEntrypointImpl<ContractState>;
+    impl WhitelistClassHashEntrypointInternalImpl =
+        WhitelistComponent::WhitelistClassHashEntrypointImpl<ContractState>;
 
     // SRC5
     #[abi(embed_v0)]
@@ -36,6 +49,8 @@ mod Account {
         src5: SRC5Component::Storage,
         #[substorage(v0)]
         weekly_limit: WeeklyLimitComponent::Storage,
+        #[substorage(v0)]
+        whitelist: WhitelistComponent::Storage,
     }
 
     #[event]
@@ -47,6 +62,8 @@ mod Account {
         SRC5Event: SRC5Component::Event,
         #[flat]
         WeeklyLimitEvent: WeeklyLimitComponent::Event,
+        #[flat]
+        WhitelistEvent: WhitelistComponent::Event,
     }
 
     //
