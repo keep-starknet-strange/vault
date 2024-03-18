@@ -1,16 +1,16 @@
 #[starknet::contract(account)]
 mod Account {
-    use starknet::account::Call;
     use openzeppelin::account::AccountComponent;
-    use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::account::interface::ISRC6;
+    use openzeppelin::introspection::src5::SRC5Component;
+    use starknet::account::Call;
 
-    use vault::spending_limit::daily_limit::DailyLimitComponent;
-    use vault::spending_limit::daily_limit::interface::IDailyLimit;
+    use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
+    use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
-    component!(path: DailyLimitComponent, storage: daily_limit, event: DailyLimitEvent);
+    component!(path: WeeklyLimitComponent, storage: weekly_limit, event: WeeklyLimitEvent);
 
     // Account
     #[abi(embed_v0)]
@@ -19,12 +19,10 @@ mod Account {
     impl PublicKeyCamelImpl = AccountComponent::PublicKeyCamelImpl<ContractState>;
     #[abi(embed_v0)]
     impl DeclarerImpl = AccountComponent::DeclarerImpl<ContractState>;
-    #[abi(embed_v0)]
-    impl DeployableImpl = AccountComponent::DeployableImpl<ContractState>;
     impl AccountInternalImpl = AccountComponent::InternalImpl<ContractState>;
 
     // Daily Limit
-    impl DailyLimitInternalImpl = DailyLimitComponent::InternalImpl<ContractState>;
+    impl WeeklyLimitInternalImpl = WeeklyLimitComponent::InternalImpl<ContractState>;
 
     // SRC5
     #[abi(embed_v0)]
@@ -37,7 +35,7 @@ mod Account {
         #[substorage(v0)]
         src5: SRC5Component::Storage,
         #[substorage(v0)]
-        daily_limit: DailyLimitComponent::Storage,
+        weekly_limit: WeeklyLimitComponent::Storage,
     }
 
     #[event]
@@ -48,7 +46,7 @@ mod Account {
         #[flat]
         SRC5Event: SRC5Component::Event,
         #[flat]
-        DailyLimitEvent: DailyLimitComponent::Event,
+        WeeklyLimitEvent: WeeklyLimitComponent::Event,
     }
 
     //
@@ -58,7 +56,7 @@ mod Account {
     #[constructor]
     fn constructor(ref self: ContractState, public_key: felt252, limit: u256) {
         self.account.initializer(:public_key);
-        self.daily_limit.initializer(:limit);
+        self.weekly_limit.initializer(:limit);
     }
 
     //
@@ -89,13 +87,9 @@ mod Account {
     //
 
     #[abi(embed_v0)]
-    impl DailyLimit of IDailyLimit<ContractState> {
-        fn get_daily_limit(self: @ContractState) -> u256 {
-            self.daily_limit.get_daily_limit()
-        }
-
-        fn set_daily_limit(ref self: ContractState, new_limit: u256) {
-            self.daily_limit.set_daily_limit(:new_limit);
+    impl WeeklyLimit of IWeeklyLimit<ContractState> {
+        fn get_weekly_limit(self: @ContractState) -> u256 {
+            self.weekly_limit.get_weekly_limit()
         }
     }
 }

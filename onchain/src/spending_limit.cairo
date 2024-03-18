@@ -1,1 +1,1 @@
-pub mod daily_limit;
+pub mod weekly_limit;
