@@ -3,7 +3,7 @@ name = "vault"
 version = "0.1.0"
 
 [dependencies]
-starknet = ">=2.5.3"
+starknet = "2.6.0"
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts", branch = "main" }
 
 [tool.fmt]
