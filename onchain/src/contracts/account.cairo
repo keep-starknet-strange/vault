@@ -3,14 +3,20 @@ mod Account {
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
+    use starknet::ContractAddress;
     use starknet::account::Call;
-
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
+    use vault::tx_approval::tx_approval::TransactionApprovalComponent;
     use vault::whitelist::whitelist::WhitelistComponent;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
+    component!(
+        path: TransactionApprovalComponent,
+        storage: transaction_approval,
+        event: TransactionApprovalEvent
+    );
     component!(path: WeeklyLimitComponent, storage: weekly_limit, event: WeeklyLimitEvent);
     component!(path: WhitelistComponent, storage: whitelist, event: WhitelistEvent);
 
@@ -37,6 +43,10 @@ mod Account {
     impl WhitelistClassHashEntrypointInternalImpl =
         WhitelistComponent::WhitelistClassHashEntrypointImpl<ContractState>;
 
+    // Transaction approval
+    impl TransactionApprovalInternalImpl =
+        TransactionApprovalComponent::InternalImpl<ContractState>;
+
     // SRC5
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
@@ -47,6 +57,8 @@ mod Account {
         account: AccountComponent::Storage,
         #[substorage(v0)]
         src5: SRC5Component::Storage,
+        #[substorage(v0)]
+        transaction_approval: TransactionApprovalComponent::Storage,
         #[substorage(v0)]
         weekly_limit: WeeklyLimitComponent::Storage,
         #[substorage(v0)]
@@ -61,6 +73,8 @@ mod Account {
         #[flat]
         SRC5Event: SRC5Component::Event,
         #[flat]
+        TransactionApprovalEvent: TransactionApprovalComponent::Event,
+        #[flat]
         WeeklyLimitEvent: WeeklyLimitComponent::Event,
         #[flat]
         WhitelistEvent: WhitelistComponent::Event,
@@ -71,8 +85,11 @@ mod Account {
     //
 
     #[constructor]
-    fn constructor(ref self: ContractState, public_key: felt252, limit: u256) {
+    fn constructor(
+        ref self: ContractState, public_key: felt252, admin: ContractAddress, limit: u256
+    ) {
         self.account.initializer(:public_key);
+        self.transaction_approval.initializer(:admin);
         self.weekly_limit.initializer(:limit);
     }
 
