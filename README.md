@@ -13,20 +13,16 @@
 
 Vault is a cutting-edge tool that transforms how you manage your digital assets on Starknet. It lets you create custom accounts with unique rules and limits, ensuring your transactions are secure and tailored to your needs. Simple, flexible, and secure – Vault puts you in full control of your financial world.
 
-## Vault backend
+Start your journey now: <https://vlt.finance>
 
-### Start
+**1-click onboarding. 1-click DeFi. Invisible Wallet. Powered by Starknet.**
 
-```bash
-cd backend
-bun i
-bun start
-```
+## Features
 
-## Onchain
-
-## App
-
-## Architecture
-
-![Architecture](./resources/architecture.png)
+- 1-click onboarding.
+- Web2-like UX which doesn't compromise on security and sovereignty of your assets.
+- Custom account rules
+  - `Teen account`: Low spending limits, restricted access to certain types of contracts.
+  - `Savings Account`: Higher security measures, limited transaction frequency, focus on long-term holding.
+  - `Daily Expenses Account`: Moderate spending limits, streamlined transactions for everyday use.
+  - `Trading Account`: High spending limits, access to all types of contracts, focus on short-term trading.
