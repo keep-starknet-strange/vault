@@ -6,12 +6,12 @@
 
 Vault is a cutting-edge tool that transforms how you manage your digital assets on Starknet. It lets you create custom accounts with unique rules and limits, ensuring your transactions are secure and tailored to your needs. Simple, flexible, and secure – Vault puts you in full control of your financial world.
 
-## Vault service
+## Vault backend
 
 ### Start
 
 ```bash
-cd service
+cd backend
 bun i
 bun start
 ```
