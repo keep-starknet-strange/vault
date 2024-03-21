@@ -32,9 +32,19 @@ pub mod TransactionApprovalComponent {
     impl InternalImpl<
         TContractState, +HasComponent<TContractState>
     > of InternalTrait<TContractState> {
+        /// Sets the admin contract address. This should be called in the constructor
+        /// of the contract.
         fn initializer(ref self: ComponentState<TContractState>, admin: ContractAddress) {
             self.admin.write(admin);
         }
+
+        /// Register a transaction that requires an approval.
+        ///
+        /// # Arguments
+        ///
+        /// * `self` - Component storage.
+        /// * `transaction` - The [Call] to register.
+        /// * `transaction_hash` - The transaction hash.
         fn register_transaction(
             ref self: ComponentState<TContractState>,
             mut transaction: Call,
@@ -57,6 +67,16 @@ pub mod TransactionApprovalComponent {
                 }
         }
 
+        /// Returns the [Call] from a transaction hash if it exists.
+        ///
+        /// # Arguments
+        ///
+        /// * `self` - Component storage.
+        /// * `transaction_hash` - The transaction hash.
+        ///
+        /// # Returns
+        ///
+        /// Returns the [Call] if the selector isn't 0.
         fn get_transaction(
             self: @ComponentState<TContractState>, transaction_hash: felt252
         ) -> Call {
@@ -81,6 +101,24 @@ pub mod TransactionApprovalComponent {
             Call { to, selector, calldata: calldata.span() }
         }
 
+        /// Approve a transaction request. This will check the signature of the 
+        /// admin against the transaction hash.
+        ///
+        /// # Arguments
+        ///
+        /// * `self` - Component storage.
+        /// * `signature` - The admin signature to approve the transaction.
+        /// * `transaction_hash` - The transaction hash.
+        ///
+        /// # Returns
+        ///
+        /// Returns the result of the [Call] execution.
+        ///
+        /// # Panic
+        ///
+        /// Panics if the target contract isn't deployed, if the selector isn't found,
+        /// if the signature is incorrect and if the target selector is 0
+        /// (if selector is 0 we consider that this transaction was not found)
         fn approve_transaction(
             self: @ComponentState<TContractState>,
             signature: Array<felt252>,
