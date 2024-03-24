@@ -14,7 +14,6 @@ pub mod WhitelistComponent {
 
     /// We don't declare the contract whitelist because [ContractAddress]is already a hash so no
     /// need to hash it again. We'll store them directly with the storage write syscall.
-    ///
     #[storage]
     struct Storage {
         contract_entrypoints: LegacyMap<(ContractAddress, felt252), bool>,
