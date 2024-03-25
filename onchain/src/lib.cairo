@@ -1,4 +1,5 @@
 mod contracts;
+pub mod freeze;
 pub mod spending_limit;
 
 #[cfg(test)]

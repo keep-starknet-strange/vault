@@ -86,10 +86,10 @@ mod Account {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, public_key: felt252, admin: ContractAddress, limit: u256
+        ref self: ContractState, public_key: felt252, approver: ContractAddress, limit: u256
     ) {
         self.account.initializer(:public_key);
-        self.transaction_approval.initializer(:admin);
+        self.transaction_approval.initializer(:approver);
         self.weekly_limit.initializer(:limit);
     }
 
