@@ -36,9 +36,9 @@ struct NotificationView: View {
                 }
             }
         }
-        //        .navigationDestination(isPresented: $presentingNextView) {
-        //            FaceIDView()
-        //        }
+        .navigationDestination(isPresented: $presentingNextView) {
+            AccessCodeView()
+        }
     }
 }
 

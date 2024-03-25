@@ -35,7 +35,7 @@ struct ThemedText: View {
                 .font(.system(size: 32))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
-                .tracking(1.36)
+                .tracking(1.2)
         }
     }
 }
