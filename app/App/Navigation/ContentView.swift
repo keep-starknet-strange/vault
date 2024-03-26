@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    // Navigation path
-    @State private var path = NavigationPath()
+    @StateObject private var settingsModel = SettingsModel()
 
     init() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -22,6 +21,7 @@ struct ContentView: View {
         NavigationStack {
             OnboardingView()
         }
+        .environmentObject(settingsModel)
         .preferredColorScheme(.dark)
     }
 }

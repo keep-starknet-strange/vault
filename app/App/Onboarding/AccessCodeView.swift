@@ -7,35 +7,35 @@
 
 import SwiftUI
 
-struct AskSurnameView: View {
-    @EnvironmentObject private var settingsModel: SettingsModel
-
+struct AccessCodeView: View {
     @State private var presentingNextView = false
+    @State private var accessCode = ""
 
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("A Personalized Touch", theme: .headline)
+                ThemedText("Early User Access", theme: .headline)
 
-                ThemedText("Introduce yourself with your surname. Change it anytime.", theme: .body)
+                ThemedText("To join our exclusive early users, please enter your access code.", theme: .body)
 
-                TextInput("Surname", text: $settingsModel.surname)
+                TextInput("Access Code", text: $accessCode)
             }
 
             Spacer()
 
-            PrimaryButton("Next", disabled: settingsModel.surname.isEmpty) {
+            PrimaryButton("Start", disabled: accessCode.isEmpty) {
+                // TODO: Verify access code
                 presentingNextView = true
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            FaceIDView()
+            CelebrationView()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        AskSurnameView()
+        AccessCodeView()
     }
 }
