@@ -1,0 +1,25 @@
+//
+//  SettingsModel.swift
+//  Vault
+//
+//  Created by Charles Lanier on 26/03/2024.
+//
+
+import Foundation
+
+// UserDefaults Keys
+enum UserDefaultsKeys: String {
+    case surname
+}
+
+class SettingsModel: ObservableObject {
+    @Published var surname: String {
+        didSet {
+            UserDefaults.standard.set(surname, forKey: UserDefaultsKeys.surname.rawValue)
+        }
+    }
+
+    init() {
+        self.surname = UserDefaults.standard.string(forKey: UserDefaultsKeys.surname.rawValue) ?? ""
+    }
+}

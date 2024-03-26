@@ -15,6 +15,7 @@
 		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
+		9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */; };
 		9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */; };
 		9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4002BAB3428000466B9 /* ContentView.swift */; };
 		9CDFD4032BAB3429000466B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CDFD4022BAB3429000466B9 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
+		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		9CDFD3FB2BAB3428000466B9 /* Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultApp.swift; sourceTree = "<group>"; };
 		9CDFD4002BAB3428000466B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 		9CDFD4412BADA288000466B9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
