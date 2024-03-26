@@ -19,7 +19,7 @@ pub mod AdminComponent {
         fn emergency_withdraw(self: @TContractState);
     }
 
-    #[embeddable_as(Admin)]
+    #[embeddable_as(AdminImpl)]
     impl AdminExternal<
         TContractState, +Drop<TContractState>, +HasComponent<TContractState>
     > of AdminTrait<ComponentState<TContractState>> {
