@@ -1,0 +1,286 @@
+openapi: 3.0.0
+info:
+  title: Vault
+  version: 1.0.0
+  description: |
+    This document describes the endpoints of the Vault backend.
+
+paths:
+  /register:
+    post:
+      summary: |
+        Register a phone number and an address that will need to be activated
+        by validating the phone number and deploying the contract.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number:
+                  type: string
+                  pattern: '^\+[1-9]\d{1,14}$'
+                address:
+                  $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /transaction_history:
+    get:
+      summary: Retrieve transaction history
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+        - in: query
+          name: pagination
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+  /get_balance:
+    get:
+      summary: Get the current usd balance of an account
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Balance of the account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/U256'
+  /get_limit:
+    get:
+      summary: Get the account spending limit
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Account current spending limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/U256'
+  /get_current_expense:
+    get:
+      summary: Get the cumulated expensed amount on the 7 previous days 
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Cumulated expensed amount on the 7 previous days
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/U256'
+  /get_whitelisted_contracts:
+    get:
+      summary: Get whitelisted contracts
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+        - in: query
+          name: pagination
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of whitelisted contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hash'
+  /get_whitelisted_entrypoints:
+    get:
+      summary: Get whitelisted entry points
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+        - in: query
+          name: pagination
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of whitelisted entry points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hash'
+  /get_whitelisted_contracts_entrypoints:
+    get:
+      summary: Get whitelisted contracts and entry points
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+        - in: query
+          name: pagination
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of whitelisted entrypoints of contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/HashTuple'
+  /get_teen_accounts:
+    get:
+      summary: Get all the teen accounts controlled by this account
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Successful retrieval of teen accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hash'
+  /get_historical_balance:
+    get:
+      summary: Get historical balance
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Successful retrieval of historical balance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    balance:
+                      $ref: '#/components/schemas/U256'
+
+  /generate_claim_link:
+    post:
+      summary: Generate a link that will allow anyone to claim a specific amount of usd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                address:
+                  $ref: '#/components/schemas/Hash'
+      responses:
+        '200':
+          description: Claim link generated successfully
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uri
+  /consume_link:
+    post:
+      summary: Consume a claim link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Link consumed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Call:
+                    type: string
+                  signature:
+                    type: string
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/U256'
+        from:
+          $ref: '#/components/schemas/Hash'
+        to:
+          $ref: '#/components/schemas/Hash'
+      oneOf:
+        - required: ["from"]
+        - required: ["to"]
+    Hash:
+      type: string
+      pattern: '^0x0[0-9a-fA-F]{63}$'
+    U256:
+      type: string
+      pattern: '^0x[0-9a-fA-F]{1,64}$'
+    HashTuple:
+      type: array
+      items:
+        $ref: '#/components/schemas/Hash'
+      minItems: 2
+      maxItems: 2
