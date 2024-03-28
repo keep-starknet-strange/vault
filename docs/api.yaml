@@ -22,7 +22,13 @@ paths:
                   type: string
                   pattern: '^\+[1-9]\d{1,14}$'
                 address:
-                  $ref: '#/components/schemas/Hash'
+                  $ref: '#/components/schemas/Address'
+                first_name:
+                  type: string
+                  pattern: '^[A-Za-z]{1,20}$'
+                last_name:
+                  type: string
+                  pattern: '^[A-Za-z]{1,20}$'
       responses:
         '200':
           description: Registration successful
@@ -35,10 +41,10 @@ paths:
       summary: Retrieve transaction history
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
         - in: query
           name: pagination
           schema:
@@ -49,18 +55,23 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transaction'
+                type: object
+                properties:
+                  page_count:
+                    type: integer
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
   /get_balance:
     get:
       summary: Get the current usd balance of an account
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Balance of the account.
@@ -73,10 +84,10 @@ paths:
       summary: Get the account spending limit
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Account current spending limit
@@ -89,10 +100,10 @@ paths:
       summary: Get the cumulated expensed amount on the 7 previous days 
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Cumulated expensed amount on the 7 previous days
@@ -105,10 +116,10 @@ paths:
       summary: Get whitelisted contracts
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
         - in: query
           name: pagination
           schema:
@@ -119,18 +130,23 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Hash'
+                type: object
+                properties:
+                  page_count:
+                    type: integer
+                  contracts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Address'
   /get_whitelisted_entrypoints:
     get:
       summary: Get whitelisted entry points
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
         - in: query
           name: pagination
           schema:
@@ -146,13 +162,13 @@ paths:
                   $ref: '#/components/schemas/Hash'
   /get_whitelisted_contracts_entrypoints:
     get:
-      summary: Get whitelisted contracts and entry points
+      summary: Get whitelisted entrypoints of contracts
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
         - in: query
           name: pagination
           schema:
@@ -173,10 +189,10 @@ paths:
       summary: Get all the teen accounts controlled by this account
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Successful retrieval of teen accounts
@@ -185,16 +201,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Hash'
+                  $ref: '#/components/schemas/Address'
   /get_historical_balance:
     get:
       summary: Get historical balance
       parameters:
         - in: query
-          name: identifier
+          name: address
           required: true
           schema:
-            $ref: '#/components/schemas/Hash'
+            $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Successful retrieval of historical balance
@@ -224,7 +240,7 @@ paths:
                 amount:
                   type: integer
                 address:
-                  $ref: '#/components/schemas/Hash'
+                  $ref: '#/components/schemas/Address'
       responses:
         '200':
           description: Claim link generated successfully
@@ -266,15 +282,22 @@ components:
         amount:
           $ref: '#/components/schemas/U256'
         from:
-          $ref: '#/components/schemas/Hash'
+          $ref: '#/components/schemas/Address'
         to:
+          $ref: '#/components/schemas/Address'
+        hash:
           $ref: '#/components/schemas/Hash'
+        name:
+          type: string
+          pattern: '^[A-Za-z]{2,40}$'
       oneOf:
         - required: ["from"]
         - required: ["to"]
     Hash:
       type: string
       pattern: '^0x0[0-9a-fA-F]{63}$'
+    Address:
+     $ref: '#/components/schemas/Hash'
     U256:
       type: string
       pattern: '^0x[0-9a-fA-F]{1,64}$'
