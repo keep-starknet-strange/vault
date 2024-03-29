@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: indexer
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  indexer:
+    environment:
+      - AUTH_TOKEN=${AUTH_TOKEN}
+    image: quay.io/apibara/sink-postgres:latest
+    command: "run ./app/usdcIndexer.js --connection-string postgresql://admin:password@postgres:5432/indexer -A ${AUTH_TOKEN}"
+    volumes:
+      - ./usdcIndexer.js:/app/usdcIndexer.js
+      - ./indexer_config.js:/app/indexer_config.js
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
