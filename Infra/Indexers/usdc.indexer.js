@@ -44,6 +44,7 @@ function decodeUSDCTransfer({ header, events }) {
       from_address: from_address,
       to_address: to_address,
       amount: amount,
+      created_at: new Date().toISOString(),
     };
   });
 }
