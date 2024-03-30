@@ -2,7 +2,7 @@ create table transfer_usdc(
     network text,
     block_hash text,
     block_number bigint,
-    block_timestamp text,
+    block_timestamp timestamp,
     transaction_hash text,
     transfer_id text unique primary key,
     from_address text,

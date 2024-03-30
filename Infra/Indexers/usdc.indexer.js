@@ -34,13 +34,11 @@ function decodeUSDCTransfer({ header, events }) {
     });
     const amount = formatUnits(amount_bn, USDC_DECIMALS);
 
-    const block_timestamp = (new Date(timestamp).getTime() / 1000).toString();
-
     return {
       network: "starknet-mainnet",
       block_hash: blockHash,
       block_number: +blockNumber,
-      block_timestamp: block_timestamp,
+      block_timestamp: timestamp,
       transaction_hash: transactionHash,
       transfer_id: transferId,
       from_address: from_address,
