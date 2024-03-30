@@ -11,7 +11,7 @@ spec:
       revision: main
       subpath: Infra/Indexers
   sink:
-    script: usdcIndexer.js
+    script: usdc.indexer.js
     type: postgres
   env:
     - name: AUTH_TOKEN

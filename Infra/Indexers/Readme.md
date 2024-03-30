@@ -9,7 +9,7 @@ Current Status :
 To run the indexer :
 
 ```sh
-docker-compose up
+AUTH_TOKEN=<AUTH_TOKEN> docker-compose up
 ```
 
 To configure the k8s indexer :

@@ -18,10 +18,9 @@ services:
     environment:
       - AUTH_TOKEN=${AUTH_TOKEN}
     image: quay.io/apibara/sink-postgres:latest
-    command: "run ./app/usdcIndexer.js --connection-string postgresql://admin:password@postgres:5432/indexer -A ${AUTH_TOKEN}"
+    command: "run ./app/usdc.indexer.js --connection-string postgresql://admin:password@postgres:5432/indexer -A ${AUTH_TOKEN}"
     volumes:
-      - ./usdcIndexer.js:/app/usdcIndexer.js
-      - ./indexer_config.js:/app/indexer_config.js
+      - ./usdc.indexer.js:/app/usdc.indexer.js
     depends_on:
       - postgres
     networks:

@@ -1,7 +1,8 @@
-create table transferUSDC(
+create table transfer_usdc(
     network text,
     block_hash text,
     block_number bigint,
+    block_timestamp text,
     transaction_hash text,
     transfer_id text unique primary key,
     from_address text,
