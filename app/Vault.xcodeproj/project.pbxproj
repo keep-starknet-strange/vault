@@ -16,6 +16,9 @@
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
 		9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */; };
+		9CD778AB2BBAF8BE00BA4677 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778AA2BBAF8BE00BA4677 /* Home.swift */; };
+		9CD778AE2BBC1A7300BA4677 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778AD2BBC1A7300BA4677 /* GraphView.swift */; };
+		9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778AF2BBC1A9C00BA4677 /* View+if.swift */; };
 		9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */; };
 		9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4002BAB3428000466B9 /* ContentView.swift */; };
 		9CDFD4032BAB3429000466B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CDFD4022BAB3429000466B9 /* Assets.xcassets */; };
@@ -59,6 +62,9 @@
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		9CD778AA2BBAF8BE00BA4677 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		9CD778AD2BBC1A7300BA4677 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		9CD778AF2BBC1A9C00BA4677 /* View+if.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+if.swift"; sourceTree = "<group>"; };
 		9CDFD3FB2BAB3428000466B9 /* Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultApp.swift; sourceTree = "<group>"; };
 		9CDFD4002BAB3428000466B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -119,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				9C637CDD2BB0A564005816B4 /* AppIcon.swift */,
+				9CD778AF2BBC1A9C00BA4677 /* View+if.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -128,6 +135,22 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9CD778A92BBAF89F00BA4677 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				9CD778AA2BBAF8BE00BA4677 /* Home.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		9CD778AC2BBC1A5C00BA4677 /* Curve */ = {
+			isa = PBXGroup;
+			children = (
+				9CD778AD2BBC1A7300BA4677 /* GraphView.swift */,
+			);
+			path = Curve;
 			sourceTree = "<group>";
 		};
 		9CDFD3F22BAB3428000466B9 = {
@@ -155,6 +178,8 @@
 		9CDFD3FD2BAB3428000466B9 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				9CD778AC2BBC1A5C00BA4677 /* Curve */,
+				9CD778A92BBAF89F00BA4677 /* Core */,
 				9C637CDC2BB0A4DA005816B4 /* Utils */,
 				9C637CD72BB096F5005816B4 /* Managers */,
 				9CDFD4412BADA288000466B9 /* Model */,
@@ -373,6 +398,7 @@
 			files = (
 				9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
+				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9CDFD4432BADA297000466B9 /* BiometricAuthManager.swift in Sources */,
@@ -380,11 +406,13 @@
 				9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */,
 				9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
+				9CD778AB2BBAF8BE00BA4677 /* Home.swift in Sources */,
 				9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */,
 				9CDFD42F2BAB7641000466B9 /* OnboardingView.swift in Sources */,
 				9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */,
 				9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */,
 				9CDFD4402BAD83E7000466B9 /* ThemedText.swift in Sources */,
+				9CD778AE2BBC1A7300BA4677 /* GraphView.swift in Sources */,
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,

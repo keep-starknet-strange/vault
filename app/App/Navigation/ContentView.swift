@@ -19,7 +19,8 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            OnboardingView()
+//            OnboardingView()
+            Home()
         }
         .environmentObject(settingsModel)
         .preferredColorScheme(.dark)
