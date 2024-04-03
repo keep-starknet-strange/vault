@@ -269,10 +269,25 @@ paths:
               schema:
                 type: object
                 properties:
-                  Call:
-                    type: string
+                  call:
+                    type: object
+                    properties:
+                      to:
+                        $ref: '#/components/schemas/Address'
+                        description: Address of the contract to call.
+                      selector:
+                        $ref: '#/components/schemas/Hash'
+                        description: Selector of the function to call.
+                      calldata:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Felt'
+                        description: Calldata for the function call.
                   signature:
-                    type: string
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Felt'
+                    description: Signature for the function call.
 
 components:
   schemas:
@@ -296,6 +311,9 @@ components:
     Hash:
       type: string
       pattern: '^0x0[0-9a-fA-F]{63}$'
+    Felt:
+      type: string
+      pattern: '^0x0[0-9a-fA-F]{1, 63}$'
     Address:
      $ref: '#/components/schemas/Hash'
     U256:
