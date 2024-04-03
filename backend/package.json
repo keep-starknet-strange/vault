@@ -3,15 +3,24 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "prettier": "^3.2.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "fastify": "^4.26.2"
+    "@fastify/postgres": "^5.2.2",
+    "@types/node": "^20.12.3",
+    "@types/pg": "^8.11.4",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "fastify-plugin": "^4.5.1",
+    "pg": "^8.11.5",
+    "typescript": "^5.4.3"
   }
 }
