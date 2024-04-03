@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
-    "drizzle:generate": "bunx drizzle-kit generate:pg"
+    "drizzle:generate": "bunx drizzle-kit generate:pg",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/pg": "^8.11.4",
