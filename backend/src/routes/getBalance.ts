@@ -18,9 +18,7 @@ export function getBalanceRoute(fastify: FastifyInstance) {
       );
 
       if (rows.length === 0) {
-        reply
-          .status(404)
-          .send({ error: 'Balance not found for the provided address' });
+        reply.send({ balance: 0 });
       } else {
         reply.send({ balance: rows[0].balance });
       }
