@@ -3,15 +3,21 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "drizzle:generate": "bunx drizzle-kit generate:pg"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/pg": "^8.11.4",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.14"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "fastify": "^4.26.2"
+    "drizzle-orm": "^0.30.7",
+    "fastify": "^4.26.2",
+    "fastify-plugin": "^4.5.1",
+    "postgres": "^3.4.4"
   }
 }

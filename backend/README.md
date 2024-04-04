@@ -1,15 +1,20 @@
 # vault-service
 
-To install dependencies:
+## Getting started
+
+**Install dependencies**
 
 ```bash
 bun install
 ```
 
-To run:
+**Run the server**
 
 ```bash
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.0.18. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+**Updating the database schema**
+
+1. Update the tables in `src/db/schema.ts`.
+2. Run `bunx drizzle-kit generate:pg` to generate the SQL migrations. 

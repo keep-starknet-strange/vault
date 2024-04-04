@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1712234094947,
+      "tag": "0000_dry_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1712236056306,
+      "tag": "0001_flawless_nehzno",
+      "breakpoints": true
+    }
+  ]
+}

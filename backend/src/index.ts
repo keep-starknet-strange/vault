@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import { declareRoutes } from "./routes";
+import { fastifyDrizzle } from "./db/plugin";
 
 // Handle configuration
 const PORT: number = parseInt(Bun.env.PORT || "8080");
@@ -7,6 +8,10 @@ const PORT: number = parseInt(Bun.env.PORT || "8080");
 // Create the Fastify instance
 const fastify = Fastify({
   logger: true,
+});
+
+fastify.register(fastifyDrizzle, {
+  connectionString: process.env.DATABASE_URL ?? "postgres://postgres:postgres@127.0.0.1:5432/postgres",
 });
 
 // Declare routes
