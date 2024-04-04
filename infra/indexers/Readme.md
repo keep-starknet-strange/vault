@@ -5,6 +5,7 @@ Current Status :
 | Indexer        | Dev | Prod |
 | -------------- | --- | ---- |
 | USDC::Transfer | ✅  |      |
+| USDC::Balances | ✅  |      |
 
 To run the indexer :
 
