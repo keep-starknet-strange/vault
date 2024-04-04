@@ -3,10 +3,12 @@ import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
+import getRegisterRoute from './register';
 
 export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
+  getRegisterRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
