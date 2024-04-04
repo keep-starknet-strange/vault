@@ -7,34 +7,105 @@
 
 import SwiftUI
 
-struct ActivePointView: View {
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.gradient1B)
-                .strokeBorder(Color.background1, lineWidth: 4)
-                .frame(width: 16, height: 16)
+class User {
+    let address: String
+    let username: String
+    let avatarUrl: String?
 
-            // Stroke color and width
-            Circle()
-                .stroke(Color.accentColor, lineWidth: 1)
-                .opacity(0.5)
-                .frame(width: 22, height: 22)
+    init(address: String, username: String, avatarUrl: String? = nil) {
+        self.address = address
+        self.username = username
+        self.avatarUrl = avatarUrl
+    }
+}
+
+class Transfer: Identifiable {
+    let from: User
+    let to: User
+    let amount: USDCAmount
+    let date: Date
+
+    init(from: User, to: User, amount: USDCAmount, timestamp: Double) {
+        self.from = from
+        self.to = to
+        self.amount = amount
+        self.date = Date(timeIntervalSince1970: timestamp)
+    }
+}
+
+class History {
+    let transfers: [Transfer]
+
+    var groupedTransfers: [Date: [Transfer]] {
+        get {
+            return Dictionary(grouping: self.transfers) { (transfer) -> Date in
+                Calendar.current.startOfDay(for: transfer.date)
+            }
         }
+    }
+
+    init(transfers: [Transfer]) {
+        self.transfers = transfers
     }
 }
 
 struct Home: View {
-    @State private var activePoint: CGPoint?
+    let users: [String: User] = [
+        "me": User(
+            address: "0xdead",
+            username: "Bobby"
+        ),
+        "sbf": User(
+            address: "0x1",
+            username: "SBF",
+            avatarUrl: "https://fortune.com/img-assets/wp-content/uploads/2022/11/SBF-1.jpg"
+        ),
+        "apple": User(
+            address: "0x2",
+            username: "Apple",
+            avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIHoznvT47BiebsgSlaiey1FKjGR8xZru6gROHvntwI3QSA2I7T08Ys7g1by9_iBw-ekI&usqp=CAU"
+        ),
+        "vitalik": User(
+            address: "0x3",
+            username: "Vitalik",
+            avatarUrl: "https://images.moneycontrol.com/static-mcnews/2021/05/vitalik-Buterin-ethereum.jpg?impolicy=website&width=1600&height=900"
+        ),
+        "satoshi": User(address: "0x4", username: "Satoshi N"),
+        "alex": User(
+            address: "0x5",
+            username: "Alex",
+            avatarUrl: "https://www.cryptotimes.io/wp-content/uploads/2024/02/Matter_Labs_co-founder_and_CEO_Alex_Gluchowski_proposed_an_Ethereum_court_system.jpg.webp"
+        ),
+        "abdel": User(
+            address: "0x6",
+            username: "Abdel.stark",
+            avatarUrl: "https://miro.medium.com/v2/resize:fit:1400/1*BTiOG6PF5d9ToTAZqlIjuw.jpeg"
+        ),
+    ]
 
-    private let STROKE_WIDTH: CGFloat = 5;
-    private let gradient = LinearGradient(gradient: Gradient(colors: [.gradient1A, .gradient1B]), startPoint: .leading, endPoint: .trailing)
+    private var me: User {
+        get {
+            return self.users["me"]!
+        }
+    }
+
+    let history: History
+
+    init() {
+        self.history = History(transfers: [
+            Transfer(from: users["me"]!, to: users["sbf"]!, amount: USDCAmount(1_604_568_230_000), timestamp: 1712199068),
+            Transfer(from: users["me"]!, to: users["apple"]!, amount: USDCAmount(4_249_990_000), timestamp: 1711924459),
+            Transfer(from: users["vitalik"]!, to: users["me"]!, amount: USDCAmount(70_000_000_000), timestamp: 1711878225),
+
+            Transfer(from: users["alex"]!, to: users["me"]!, amount: USDCAmount(1_000_000), timestamp: 1711847328),
+            Transfer(from: users["me"]!, to: users["satoshi"]!, amount: USDCAmount(32_570_000), timestamp: 1712000648),
+
+            Transfer(from: users["abdel"]!, to: users["me"]!, amount: USDCAmount(10_000), timestamp: 1711828026),
+        ])
+    }
 
     var body: some View {
-        let data: [CGFloat] = [10, 50, 38, 26, 54, 100, 36, 4, 40, 40]
-//        let data: [CGFloat] = [0, 0, 0, 0, 0, 1, 100, 0, 100, 100]
-
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(alignment: .leading, spacing: 16) {
 
             // BALANCE
 
@@ -42,8 +113,8 @@ struct Home: View {
 
                 Text("Total balance")
                     .font(.custom("Montserrat", size: 12))
-                    .foregroundStyle(.neutral2)
                     .fontWeight(.medium)
+                    .foregroundStyle(.neutral2)
 
                 Group {
                     Text("$")
@@ -65,81 +136,74 @@ struct Home: View {
                 .fontWeight(.semibold)
             }.padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
 
-            // GRAPH
+            HistoricalGraph()
 
-            ZStack {
-
-                // Second curve offset
-                ZStack {
-                    GraphView(data) { path in
-                        path
-                            .stroke(.background1, lineWidth: 50)
-                            .shadow(color: .neutral2, radius: 0, x: 0, y: -0.5)
-                            .shadow(color: .neutral2, radius: 0, x: -0.5, y: 0)
-                            .shadow(color: .neutral2, radius: 0, x: 0.5, y: 0)
-                            .opacity(0.2)
+            List {
+                ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
+                    Section {
+                        EmptyView()
                     }
-                    .frame(height: 80)
 
-                    GraphView(data) { path in
-                        path
-                            .stroke(.background1, lineWidth: 50)
-                            .shadow(color: .background1, radius: 0, x: 0, y: 5)
+                    Section {
+
+
+
+                        ForEach(0..<self.history.groupedTransfers[day]!.count, id: \.self) { index in
+                            let transfer = self.history.groupedTransfers[day]![index]
+                            let isFirst = index == 0;
+                            let isLast = index == self.history.groupedTransfers[day]!.count - 1
+
+                            TransferRow(transfer: transfer, me: self.me)
+                                .padding(
+                                    EdgeInsets(
+                                        top: isFirst ? 16 : 8,
+                                        leading: 16,
+                                        bottom: isLast ? 16 : 8,
+                                        trailing: 16
+                                    )
+                                )
+                                .background(.background2)
+                                .listRowInsets(EdgeInsets())
+                                .clipShape(
+                                    .rect(
+                                        topLeadingRadius: isFirst ? 16 : 0,
+                                        bottomLeadingRadius: isLast ? 16 : 0,
+                                        bottomTrailingRadius: isLast ? 16 : 0,
+                                        topTrailingRadius: isFirst ? 16 : 0
+                                    )
+                                )
+                        }
+                    } header: {
+                        Text(formatSectionHeader(for: day).uppercased())
+                            .font(.system(size: 18))
+                            .fontWeight(.medium)
+                            .foregroundStyle(.neutral1)
+                            .listRowInsets(EdgeInsets(top: 16, leading: 8, bottom: 12, trailing: 0))
                     }
-                    .frame(height: 80)
-                }.offset(x: 0, y: -10)
-
-                // First curve offset
-
-                ZStack {
-                    GraphView(data) { path in
-                        path
-                            .stroke(.background1, lineWidth: 25)
-                            .shadow(color: .neutral2, radius: 0, x: 0, y: -0.5)
-                            .shadow(color: .neutral2, radius: 0, x: -0.5, y: 0)
-                            .shadow(color: .neutral2, radius: 0, x: 0.5, y: 0)
-                            .opacity(0.5)
-                    }
-                    .frame(height: 80)
-
-                    GraphView(data) { path in
-                        path
-                            .stroke(.background1, lineWidth: 25)
-                            .shadow(color: .background1, radius: 0, x: 0, y: 5)
-                    }
-                    .frame(height: 80)
-                }.offset(x: 0, y: -5)
-
-                // real curve
-
-                GraphView(data, activePoint: $activePoint) { path in
-                    path
-                        .stroke(gradient, lineWidth: STROKE_WIDTH)
-                        .shadow(color: .accent.opacity(0.7), radius: 4, x: 0, y: 4)
-                        .overlay(activePointOverlay())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(EmptyView())
                 }
-                .frame(height: 80)
             }
-            .padding(EdgeInsets(top: 50, leading: 0, bottom: -16, trailing: 0))
+            .padding(16)
+            .scrollContentBackground(.hidden)
+            .listStyle(.grouped)
+            .scrollIndicators(.hidden)
 
-            // DATES
-
-            HStack {
-                ForEach(21...28, id: \.self) { day in
-                    Text("\(day)")
-                        .font(.system(size: 13))
-                        .fontWeight(.medium)
-                        .foregroundStyle(.neutral2)
-                        .frame(maxWidth: .infinity)
-                }
-            }.padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))
+            Spacer()
         }
     }
+    
+    func formatSectionHeader(for date: Date) -> String {
+        let calendar = Calendar.current
 
-    @ViewBuilder
-    private func activePointOverlay() -> some View {
-        if let activePoint = activePoint {
-            ActivePointView().position(activePoint)
+        if calendar.isDateInToday(date) {
+            return "Today"
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "EEEE d MMMM" // Day DD Month
+            return formatter.string(from: date)
         }
     }
 }
@@ -147,9 +211,6 @@ struct Home: View {
 #Preview {
     ZStack {
         Color.background1.edgesIgnoringSafeArea(.all)
-        VStack {
-            Home()
-            Spacer()
-        }
+        Home()
     }
 }
