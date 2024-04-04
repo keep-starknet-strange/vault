@@ -20,3 +20,12 @@ create table balance_usdc(
     balance text,
     _cursor bigint
 );
+
+create table registration(
+    address text,
+    phone_number text,
+    first_name text,
+    last_name text,
+    created_at timestamp,
+    _cursor bigint
+);
