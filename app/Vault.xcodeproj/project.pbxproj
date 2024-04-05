@@ -23,6 +23,9 @@
 		9CD778B62BBCB0DE00BA4677 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778B52BBCB0DE00BA4677 /* Constants.swift */; };
 		9CD778B82BBCB2A100BA4677 /* USDCAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778B72BBCB2A100BA4677 /* USDCAmount.swift */; };
 		9CD778BA2BBCB89C00BA4677 /* TransferRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778B92BBCB89C00BA4677 /* TransferRow.swift */; };
+		9CD778BC2BBED06700BA4677 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778BB2BBED06700BA4677 /* CustomTabBar.swift */; };
+		9CD778C02BBF1E5C00BA4677 /* EdgeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778BF2BBF1E5C00BA4677 /* EdgeBorder.swift */; };
+		9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778C12BBF1E9200BA4677 /* View+border.swift */; };
 		9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */; };
 		9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4002BAB3428000466B9 /* ContentView.swift */; };
 		9CDFD4032BAB3429000466B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CDFD4022BAB3429000466B9 /* Assets.xcassets */; };
@@ -73,6 +76,9 @@
 		9CD778B52BBCB0DE00BA4677 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9CD778B72BBCB2A100BA4677 /* USDCAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDCAmount.swift; sourceTree = "<group>"; };
 		9CD778B92BBCB89C00BA4677 /* TransferRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferRow.swift; sourceTree = "<group>"; };
+		9CD778BB2BBED06700BA4677 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		9CD778BF2BBF1E5C00BA4677 /* EdgeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeBorder.swift; sourceTree = "<group>"; };
+		9CD778C12BBF1E9200BA4677 /* View+border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+border.swift"; sourceTree = "<group>"; };
 		9CDFD3FB2BAB3428000466B9 /* Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultApp.swift; sourceTree = "<group>"; };
 		9CDFD4002BAB3428000466B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -135,6 +141,8 @@
 				9C637CDD2BB0A564005816B4 /* AppIcon.swift */,
 				9CD778AF2BBC1A9C00BA4677 /* View+if.swift */,
 				9CD778B72BBCB2A100BA4677 /* USDCAmount.swift */,
+				9CD778BF2BBF1E5C00BA4677 /* EdgeBorder.swift */,
+				9CD778C12BBF1E9200BA4677 /* View+border.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -242,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				9CDFD4002BAB3428000466B9 /* ContentView.swift */,
+				9CD778BB2BBED06700BA4677 /* CustomTabBar.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -425,9 +434,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */,
+				9CD778BC2BBED06700BA4677 /* CustomTabBar.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
+				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9CDFD4432BADA297000466B9 /* BiometricAuthManager.swift in Sources */,
 				9CD778B62BBCB0DE00BA4677 /* Constants.swift in Sources */,
@@ -444,6 +455,7 @@
 				9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */,
 				9CDFD4402BAD83E7000466B9 /* ThemedText.swift in Sources */,
 				9CD778AE2BBC1A7300BA4677 /* GraphView.swift in Sources */,
+				9CD778C02BBF1E5C00BA4677 /* EdgeBorder.swift in Sources */,
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
 				9CD778BA2BBCB89C00BA4677 /* TransferRow.swift in Sources */,

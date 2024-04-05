@@ -9,6 +9,8 @@ import SwiftUI
 import ConfettiSwiftUI
 
 struct CelebrationView: View {
+    @EnvironmentObject private var settingsModel: SettingsModel
+
     @State private var presentingNextView = false
     @State private var confetti = 0
 
@@ -35,15 +37,10 @@ struct CelebrationView: View {
 
             VStack(alignment: .center, spacing: 16) {
                 PrimaryButton("Start exploring") {
-                    NotificationsManager.shared.registerFromRemoteNotifications { _, _ in
-                        presentingNextView = true
-                    }
+                    settingsModel.isOnboarded = true
                 }
             }
         }
-//        .navigationDestination(isPresented: $presentingNextView) {
-//            AccessCodeView()
-//        }
     }
 }
 
