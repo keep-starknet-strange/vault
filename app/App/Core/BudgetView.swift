@@ -64,13 +64,9 @@ struct BudgetView: View {
                     Spacer(minLength: 0)
                 }
                 .frame(minWidth: 0, maxWidth: .infinity)
-                .foregroundStyle(.neutral1)
-                .frame(width: .infinity)
                 .padding(16)
-                .background(Constants.gradient1)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
-            .buttonStyle(NoEffectButtonStyle())
+            .buttonStyle(GradientButtonStyle())
 
             Spacer()
         }.padding(16)
