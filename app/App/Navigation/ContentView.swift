@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var settingsModel = SettingsModel()
-    @State private var selectedTab: Tab = .accounts
+    @StateObject private var navigationModel = NavigationModel()
 
     init() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -32,7 +32,7 @@ struct ContentView: View {
     var body: some View {
         if !settingsModel.isOnboarded {
             ZStack(alignment: .bottom) {
-                TabView(selection: $selectedTab) {
+                TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
                         Home().edgesIgnoringSafeArea(.bottom)
                     }
@@ -45,7 +45,7 @@ struct ContentView: View {
                     .tag(Tab.transfer)
 
                     NavigationStack {
-                        Text("Budget")
+                        BudgetView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.budget)
                 }
@@ -53,7 +53,7 @@ struct ContentView: View {
                 .environmentObject(settingsModel)
                 .preferredColorScheme(.dark)
 
-                CustomTabbar(selectedTab: $selectedTab)
+                CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }
         } else {
             NavigationStack {

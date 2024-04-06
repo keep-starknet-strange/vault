@@ -7,40 +7,6 @@
 
 import SwiftUI
 
-enum Tab: Int, CaseIterable{
-    case accounts = 0
-    case transfer
-    case budget
-
-    var iconName: String {
-        switch self {
-        case .accounts:
-            return "Accounts"
-        case .transfer:
-            return "Transfer"
-        case .budget:
-            return "Wallet"
-        }
-    }
-
-    var isLarge: Bool {
-        switch self {
-        case .transfer:
-            return true
-        default:
-            return false
-        }
-    }
-}
-
-struct TabItemButtonStyle: ButtonStyle {
-    let selected: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label.foregroundStyle(configuration.isPressed || selected ? .neutral1 : .neutral2)
-    }
-}
-
 struct CustomTabbar: View {
     @Binding var selectedTab: Tab
 

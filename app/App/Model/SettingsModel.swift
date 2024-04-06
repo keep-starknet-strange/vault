@@ -14,6 +14,7 @@ enum UserDefaultsKeys: String {
 }
 
 class SettingsModel: ObservableObject {
+
     @Published var surname: String {
         didSet {
             UserDefaults.standard.set(surname, forKey: UserDefaultsKeys.surname.rawValue)

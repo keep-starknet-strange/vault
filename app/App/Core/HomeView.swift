@@ -105,87 +105,85 @@ struct Home: View {
     }
 
     var body: some View {
-        List {
-            VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 40) {
 
-                // BALANCE
+            // MARK: BALANCE
 
-                VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
 
-                    Text("Total balance")
-                        .font(.custom("Montserrat", size: 12))
-                        .fontWeight(.medium)
-                        .foregroundStyle(.neutral2)
+                Text("Total balance")
+                    .font(.custom("Montserrat", size: 13))
+                    .fontWeight(.medium)
+                    .foregroundStyle(.neutral2)
 
-                    Group {
-                        Text("$")
-                            .font(.custom("Montserrat", size: 46))
-                            .foregroundStyle(.neutral1)
-
-                        +
-
-                        Text("12,578.")
-                            .font(.custom("Montserrat", size: 42))
-                            .foregroundStyle(.neutral1)
-
-                        +
-
-                        Text("00")
-                            .font(.custom("Montserrat", size: 28))
-                            .foregroundStyle(.neutral2)
-                    }
-                    .kerning(0.5)
-                    .fontWeight(.semibold)
-                }.padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-
-                HistoricalGraph()
-            }
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowSpacing(0)
-            .listRowSeparator(.hidden)
-            .background(.background1)
-
-            ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
-                Section {
-                    ForEach(0..<self.history.groupedTransfers[day]!.count, id: \.self) { index in
-                        let transfer = self.history.groupedTransfers[day]![index]
-                        let isFirst = index == 0;
-                        let isLast = index == self.history.groupedTransfers[day]!.count - 1
-
-                        TransferRow(transfer: transfer, me: self.me)
-                            .padding(
-                                EdgeInsets(
-                                    top: isFirst ? 16 : 8,
-                                    leading: 16,
-                                    bottom: isLast ? 16 : 8,
-                                    trailing: 16
-                                )
-                            )
-                            .background(.background2)
-                            .clipShape(
-                                .rect(
-                                    topLeadingRadius: isFirst ? 16 : 0,
-                                    bottomLeadingRadius: isLast ? 16 : 0,
-                                    bottomTrailingRadius: isLast ? 16 : 0,
-                                    topTrailingRadius: isFirst ? 16 : 0
-                                )
-                            )
-                    }
-                } header: {
-                    Text(formatSectionHeader(for: day).uppercased())
-                        .font(.system(size: 18))
-                        .fontWeight(.medium)
+                Group {
+                    Text("$")
+                        .font(.custom("Montserrat", size: 46))
                         .foregroundStyle(.neutral1)
-                        .listRowInsets(EdgeInsets(top: 16, leading: 24, bottom: 8, trailing: 0))
+
+                    +
+
+                    Text("12,578.")
+                        .font(.custom("Montserrat", size: 42))
+                        .foregroundStyle(.neutral1)
+
+                    +
+
+                    Text("00")
+                        .font(.custom("Montserrat", size: 28))
+                        .foregroundStyle(.neutral2)
                 }
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(EmptyView())
+                .kerning(0.6)
+                .fontWeight(.semibold)
+            }
+
+            // MARK: HISTORY
+
+            List {
+
+                ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
+                    Section {
+                        ForEach(0..<self.history.groupedTransfers[day]!.count, id: \.self) { index in
+                            let transfer = self.history.groupedTransfers[day]![index]
+                            let isFirst = index == 0;
+                            let isLast = index == self.history.groupedTransfers[day]!.count - 1
+
+                            TransferRow(transfer: transfer, me: self.me)
+                                .padding(
+                                    EdgeInsets(
+                                        top: isFirst ? 16 : 8,
+                                        leading: 16,
+                                        bottom: isLast ? 16 : 8,
+                                        trailing: 16
+                                    )
+                                )
+                                .background(.background2)
+                                .clipShape(
+                                    .rect(
+                                        topLeadingRadius: isFirst ? 16 : 0,
+                                        bottomLeadingRadius: isLast ? 16 : 0,
+                                        bottomTrailingRadius: isLast ? 16 : 0,
+                                        topTrailingRadius: isFirst ? 16 : 0
+                                    )
+                                )
+                        }
+                    } header: {
+                        Text(formatSectionHeader(for: day).uppercased())
+                            .font(.system(size: 18))
+                            .fontWeight(.medium)
+                            .foregroundStyle(.neutral1)
+                            .listRowInsets(EdgeInsets(top: 16, leading: 8, bottom: 8, trailing: 0))
+                    }
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(EmptyView())
+                }
             }
         }
         .safeAreaInset(edge: .bottom) {
             EmptyView().frame(height: 90)
         }
+        .padding(EdgeInsets(top: 32, leading: 16, bottom: 0, trailing: 16))
         .scrollContentBackground(.hidden)
         .listStyle(.grouped)
         .scrollIndicators(.hidden)

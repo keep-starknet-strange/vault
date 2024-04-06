@@ -11,13 +11,13 @@ struct ActivePointView: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(.accent)
-                .strokeBorder(Color.background1, lineWidth: 4)
-                .frame(width: 16, height: 16)
+                .fill(.gradient1B)
+                .strokeBorder(Color.neutral1, lineWidth: 2)
+                .frame(width: 14, height: 14)
 
             // Stroke color and width
             Circle()
-                .stroke(.accent, lineWidth: 1)
+                .stroke(.gradient1B, lineWidth: 1)
                 .opacity(0.5)
                 .frame(width: 22, height: 22)
         }
@@ -28,13 +28,12 @@ struct HistoricalGraph: View {
     @State private var activePoint: CGPoint?
 
     private let STROKE_WIDTH: CGFloat = 5;
-    private let gradient = LinearGradient(gradient: Gradient(colors: [.gradient1A, .gradient1B]), startPoint: .leading, endPoint: .trailing)
 
     var body: some View {
         let data: [CGFloat] = [10, 50, 38, 26, 54, 100, 36, 4, 40, 40]
 //        let data: [CGFloat] = [0, 0, 0, 0, 0, 1, 100, 0, 100, 100]
 
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(alignment: .leading, spacing: 40) {
 
             // GRAPH
 
@@ -85,8 +84,9 @@ struct HistoricalGraph: View {
 
                 GraphView(data, activePoint: $activePoint) { path in
                     path
-                        .stroke(gradient, lineWidth: STROKE_WIDTH)
-                        .shadow(color: .accent.opacity(0.7), radius: 4, x: 0, y: 4)
+                        .stroke(Constants.gradient1, lineWidth: STROKE_WIDTH)
+                        .shadow(color: .background1.opacity(0.2), radius: 3, x: 0, y: 3)
+                        .shadow(color: .accent.opacity(0.7), radius: 10, x: 0, y: 10)
                         .overlay(activePointOverlay())
                 }
                 .frame(height: 80)

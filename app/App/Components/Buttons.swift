@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// MARK: Primary button
+// MARK: Primary button
 
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -46,7 +46,7 @@ struct PrimaryButton: View {
     }
 }
 
-/// MARK: Secondary button
+// MARK: Secondary button
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -81,6 +81,24 @@ struct SecondaryButton: View {
         .buttonStyle(SecondaryButtonStyle())
         .opacity(disabled ? 0.5 : 1)
         .disabled(disabled)
+    }
+}
+
+// MARK: TabItem
+
+struct TabItemButtonStyle: ButtonStyle {
+    let selected: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.foregroundStyle(configuration.isPressed || selected ? .neutral1 : .neutral2)
+    }
+}
+
+// MARK: Common
+
+struct NoEffectButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
 
