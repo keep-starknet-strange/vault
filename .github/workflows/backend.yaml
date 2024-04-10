@@ -1,0 +1,24 @@
+name: 'Test'
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    permissions:
+      # Required to checkout the code
+      contents: read
+      # Required to put a comment into the pull-request
+      pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 8
+    - name: 'Install Deps'
+      run: pnpm install
+    - name: 'Test'
+      run: pnpm vitest --watch=false
