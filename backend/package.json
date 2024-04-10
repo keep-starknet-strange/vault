@@ -3,17 +3,20 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "drizzle:generate": "bunx drizzle-kit generate:pg",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "drizzle:generate": "drizzle-kit generate:pg",
     "format": "prettier --write .",
-    "test": "jest"
+    "test": "vitest"
   },
   "devDependencies": {
     "@testcontainers/postgresql": "^10.8.1",
-    "@types/pg": "^8.11.4",
-    "bun-types": "latest",
     "drizzle-kit": "^0.20.14",
-    "testcontainers": "^10.8.1"
+    "prettier": "^3.2.5",
+    "testcontainers": "^10.8.1",
+    "tsx": "^4.7.2",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.4.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -23,7 +26,6 @@
     "drizzle-orm": "^0.30.7",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
-    "pg": "^8.11.5",
     "postgres": "^3.4.4"
   }
 }

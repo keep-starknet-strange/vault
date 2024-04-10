@@ -7,7 +7,7 @@ import { FastifyInstance } from 'fastify';
 
 import { buildApp } from '@/app';
 
-describe('GET /get_balance route', () => {
+describe('GET /status route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
 
@@ -31,14 +31,12 @@ describe('GET /get_balance route', () => {
     await container.stop();
   });
 
-  test('should return the balance for a valid address', async () => {
-    const testAddress = '0x0abcdef0123456789abcdef0123456789abcdef0';
+  test('should return success', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `/get_balance?address=${testAddress}`,
+      url: `/status`,
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('balance', '1000');
   });
 });
