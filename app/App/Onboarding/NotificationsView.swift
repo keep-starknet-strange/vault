@@ -37,7 +37,7 @@ struct NotificationView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            AccessCodeView()
+            CelebrationView()
         }
     }
 }

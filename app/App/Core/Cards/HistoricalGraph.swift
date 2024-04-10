@@ -47,7 +47,7 @@ struct HistoricalGraph: View {
                             .shadow(color: .neutral2, radius: 0, x: 0, y: -0.5)
                             .shadow(color: .neutral2, radius: 0, x: -0.5, y: 0)
                             .shadow(color: .neutral2, radius: 0, x: 0.5, y: 0)
-                            .opacity(0.2)
+                            .opacity(0.15)
                     }
                     .frame(height: 80)
 
@@ -68,7 +68,7 @@ struct HistoricalGraph: View {
                             .shadow(color: .neutral2, radius: 0, x: 0, y: -0.5)
                             .shadow(color: .neutral2, radius: 0, x: -0.5, y: 0)
                             .shadow(color: .neutral2, radius: 0, x: 0.5, y: 0)
-                            .opacity(0.5)
+                            .opacity(0.3)
                     }
                     .frame(height: 80)
 
