@@ -4,19 +4,23 @@ import {
   StartedPostgreSqlContainer,
 } from '@testcontainers/postgresql';
 import { FastifyInstance } from 'fastify';
+import postgres from 'postgres';
 
 import { buildApp } from '@/app';
 
 describe('GET /get_balance route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
+  let sql: any;
+  const testAddress =
+    '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
-
+    const connectionUri = container.getConnectionUri();
     app = buildApp({
       database: {
-        connectionString: container.getConnectionUri(),
+        connectionString: connectionUri,
       },
       app: {
         port: 8080,
@@ -24,6 +28,9 @@ describe('GET /get_balance route', () => {
     });
 
     await app.ready();
+    sql = postgres(connectionUri);
+    // Insert balance to mock address
+    await sql`insert into balance_usdc (address, balance) values (${testAddress}, '1000')`;
   });
 
   afterAll(async () => {
@@ -32,7 +39,6 @@ describe('GET /get_balance route', () => {
   });
 
   test('should return the balance for a valid address', async () => {
-    const testAddress = '0x0abcdef0123456789abcdef0123456789abcdef0';
     const response = await app.inject({
       method: 'GET',
       url: `/get_balance?address=${testAddress}`,
@@ -40,5 +46,38 @@ describe('GET /get_balance route', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toHaveProperty('balance', '1000');
+  });
+
+  test('should return error, invalid address format', async () => {
+    const invalidAddress = '0x0';
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_balance?address=${invalidAddress}`,
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty('error', 'Invalid address format.');
+  });
+
+  test('should return error, no address provided', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_balance`,
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty('error', 'Address is required.');
+  });
+
+  test('should return 0, unknown address', async () => {
+    const unknownAddress =
+      '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07ae';
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_balance?address=${unknownAddress}`,
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toHaveProperty('balance', '0');
   });
 });

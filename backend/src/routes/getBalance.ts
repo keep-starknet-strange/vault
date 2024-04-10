@@ -9,7 +9,7 @@ export function getBalanceRoute(fastify: FastifyInstance) {
   fastify.get('/get_balance', async (request, reply) => {
     const { address } = request.query as { address?: string };
     if (!address) {
-      return reply.status(400).send({ error: 'Address is required' });
+      return reply.status(400).send({ error: 'Address is required.' });
     }
     // Validate address format
     if (!addressRegex.test(address)) {
@@ -18,15 +18,14 @@ export function getBalanceRoute(fastify: FastifyInstance) {
 
     try {
       // Use Drizzle ORM to find the balance by address
-      const balanceRecord = await fastify.db.query.usdcBalance
+      let balanceRecord = await fastify.db.query.usdcBalance
         .findFirst({ where: eq(usdcBalance.address, address) })
         .execute();
-      console.log(balanceRecord);
       if (!balanceRecord) {
-        return reply.status(404).send({ error: 'Balance not found' });
+        balanceRecord = { balance: '0' };
       }
 
-      return reply.send({ balance: balanceRecord });
+      return reply.send({ balance: balanceRecord.balance });
     } catch (error) {
       console.error(error);
       return reply.status(500).send({ error: 'Internal server error' });
