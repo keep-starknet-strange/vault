@@ -5,20 +5,25 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "drizzle:generate": "bunx drizzle-kit generate:pg",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "jest"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^10.8.1",
     "@types/pg": "^8.11.4",
     "bun-types": "latest",
-    "drizzle-kit": "^0.20.14"
+    "drizzle-kit": "^0.20.14",
+    "testcontainers": "^10.8.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.7",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
+    "pg": "^8.11.5",
     "postgres": "^3.4.4"
   }
 }

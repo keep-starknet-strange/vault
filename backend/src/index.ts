@@ -7,7 +7,7 @@ import postgres from '@fastify/postgres';
 const PORT: number = parseInt(Bun.env.PORT || '8080');
 dotenv.config();
 
-async function buildAndStartApp() {
+export async function buildAndStartApp() {
   const app = Fastify();
 
   app.register(fastifyDrizzle, {
