@@ -5,16 +5,28 @@
 **Install dependencies**
 
 ```bash
-bun install
+pnpm install
 ```
 
 **Run the server**
 
 ```bash
-bun run index.ts
+pnpm start
+```
+
+**Run tests**
+
+```bash
+pnpm test
+```
+
+If you get an error like `Failed to connect to Reaper` you must set the following environment variable.
+
+```bash
+export TESTCONTAINERS_HOST_OVERRIDE=127.0.0.1
 ```
 
 **Updating the database schema**
 
 1. Update the tables in `src/db/schema.ts`.
-2. Run `bunx drizzle-kit generate:pg` to generate the SQL migrations.
+2. Run `pnpm drizzle:generate` to generate the SQL migrations.

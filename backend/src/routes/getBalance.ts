@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { usdcBalance } from '../db/schema';
 import { eq } from 'drizzle-orm/pg-core/expressions';
+
+import { usdcBalance } from '@/db/schema';
 
 const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 

@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { Database } from '../db/plugin';
+import { Database } from '@/db/drizzle';
 import { sql } from 'drizzle-orm';
+
 import { getBalanceRoute } from './getBalance';
 
 export function declareRoutes(fastify: FastifyInstance) {
