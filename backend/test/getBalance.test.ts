@@ -4,14 +4,13 @@ import {
   StartedPostgreSqlContainer,
 } from '@testcontainers/postgresql';
 import { FastifyInstance } from 'fastify';
-import postgres from 'postgres';
+import * as schema from '../src/db/schema';
 
 import { buildApp } from '@/app';
 
 describe('GET /get_balance route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
-  let sql: any;
   const testAddress =
     '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
 
@@ -28,9 +27,10 @@ describe('GET /get_balance route', () => {
     });
 
     await app.ready();
-    sql = postgres(connectionUri);
     // Insert balance to mock address
-    await sql`insert into balance_usdc (address, balance) values (${testAddress}, '1000')`;
+    await app.db
+      .insert(schema.usdcBalance)
+      .values({ address: testAddress, balance: '1000' });
   });
 
   afterAll(async () => {
