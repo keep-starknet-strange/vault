@@ -1,9 +1,6 @@
-import { beforeAll, afterAll, describe, expect, test } from 'vitest';
-import {
-  PostgreSqlContainer,
-  StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
-import { FastifyInstance } from 'fastify';
+import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import type { FastifyInstance } from 'fastify';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { buildApp } from '@/app';
 
@@ -34,7 +31,7 @@ describe('GET /status route', () => {
   test('should return success', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `/status`,
+      url: '/status',
     });
 
     expect(response.statusCode).toBe(200);

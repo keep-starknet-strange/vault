@@ -1,5 +1,5 @@
-import { FastifyInstance } from 'fastify';
 import { eq } from 'drizzle-orm/pg-core/expressions';
+import type { FastifyInstance } from 'fastify';
 
 import { usdcBalance } from '@/db/schema';
 

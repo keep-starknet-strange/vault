@@ -6,13 +6,14 @@
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "drizzle:generate": "drizzle-kit generate:pg",
-    "format": "prettier --write .",
+    "check": "biome check .",
+    "fix": "biome check --apply .",
     "test": "vitest"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.6.4",
     "@testcontainers/postgresql": "^10.8.1",
     "drizzle-kit": "^0.20.14",
-    "prettier": "^3.2.5",
     "testcontainers": "^10.8.1",
     "tsx": "^4.7.2",
     "vite-tsconfig-paths": "^4.3.2",
