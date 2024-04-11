@@ -45,7 +45,7 @@ devDependencies:
     version: 4.7.2
   vite-tsconfig-paths:
     specifier: ^4.3.2
-    version: 4.3.2(typescript@5.4.4)
+    version: 4.3.2
   vitest:
     specifier: ^1.4.0
     version: 1.4.0
@@ -93,7 +93,7 @@ packages:
       json5: 2.2.3
       semver: 6.3.1
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /@babel/generator@7.24.4:
@@ -195,7 +195,7 @@ packages:
       '@babel/traverse': 7.24.1
       '@babel/types': 7.24.0
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /@babel/highlight@7.24.2:
@@ -240,7 +240,7 @@ packages:
       debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /@babel/types@7.24.0:
@@ -1241,7 +1241,7 @@ packages:
       test-exclude: 6.0.0
       vitest: 1.4.0
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /@vitest/expect@1.4.0:
@@ -2342,7 +2342,7 @@ packages:
       istanbul-lib-coverage: 3.2.2
       semver: 7.6.0
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /istanbul-lib-report@3.0.1:
@@ -2362,7 +2362,7 @@ packages:
       debug: 4.3.4
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
-    - supports-color
+      - supports-color
     dev: true
 
   /istanbul-reports@3.1.7:
@@ -3183,7 +3183,7 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: true
 
-  /tsconfck@3.0.3(typescript@5.4.4):
+  /tsconfck@3.0.3:
     resolution: {integrity: sha512-4t0noZX9t6GcPTfBAbIbbIU4pfpCwh0ueq3S4O/5qXI1VwK1outmxhe9dOiEWqMz3MW2LKgDTpqWV+37IWuVbA==}
     engines: {node: ^18 || >=20}
     hasBin: true
@@ -3192,8 +3192,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-    dependencies:
-      typescript: 5.4.4
     dev: true
 
   /tsx@4.7.2:
@@ -3224,6 +3222,7 @@ packages:
     resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: false
 
   /ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
@@ -3275,7 +3274,7 @@ packages:
     - terser
     dev: true
 
-  /vite-tsconfig-paths@4.3.2(typescript@5.4.4):
+  /vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
       vite: '*'
@@ -3285,7 +3284,7 @@ packages:
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
-      tsconfck: 3.0.3(typescript@5.4.4)
+      tsconfck: 3.0.3
     transitivePeerDependencies:
     - supports-color
     - typescript

@@ -1,4 +1,5 @@
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
+import * as schema from '../db/schema';
 
 // Define an interface for the request body
 interface RegisterRequestBody {
@@ -31,28 +32,23 @@ export function getRegisterRoute(fastify: FastifyInstance) {
       const { phone_number, address, first_name, last_name } = request.body;
 
       try {
-        const insertQuery = `
-        INSERT INTO registration (phone_number, address, first_name, last_name)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;
-      `;
-        await fastify.pg.query(insertQuery, [
+        await fastify.db.insert(schema.registration).values({
           phone_number,
           address,
           first_name,
           last_name,
-        ]);
+        });
 
         return reply.code(200).send(true);
+        // biome-ignore lint: has to be typed any or unknown otherwise typescript cries
       } catch (error: any) {
         fastify.log.error(error);
         if (error.code === '23505') {
           return reply.code(409).send({
-            error:
-              'A user with the given phone number or address already exists.',
+            message: 'A user with the given phone number already exists.',
           });
         }
-        return reply.code(500).send({ error: 'Internal server error' });
+        return reply.code(500).send({ message: 'Internal server error' });
       }
     },
   );
