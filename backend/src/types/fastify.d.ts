@@ -1,4 +1,4 @@
-import { Database } from '../db/plugin';
+import type { Database } from '../db/plugin';
 import type { db } from './db';
 import type { Redis } from './utils';
 

@@ -6,11 +6,10 @@ dotenv.config();
 
 const config: AppConfiguration = {
   database: {
-    connectionString:
-      process.env.DATABASE_URL || 'postgres://localhost:5432/postgres',
+    connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/postgres',
   },
   app: {
-    port: parseInt(process.env.PORT || '8080'),
+    port: Number.parseInt(process.env.PORT || '8080'),
   },
 };
 
