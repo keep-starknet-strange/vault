@@ -241,6 +241,10 @@ paths:
                   type: integer
                 address:
                   $ref: '#/components/schemas/Address'
+                signature:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Felt'
       responses:
         '200':
           description: Claim link generated successfully
