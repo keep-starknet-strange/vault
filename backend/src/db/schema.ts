@@ -1,4 +1,4 @@
-import { bigint, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const usdcTransfer = pgTable('transfer_usdc', {
   transferId: text('transfer_id').primaryKey(),
@@ -21,4 +21,14 @@ export const usdcBalance = pgTable('balance_usdc', {
   address: text('address'),
   balance: text('balance'),
   cursor: bigint('_cursor', { mode: 'number' }),
+});
+
+export const registration = pgTable('registration', {
+  phone_number: text('phone_number').primaryKey(),
+  address: text('address'),
+  first_name: text('first_name'),
+  last_name: text('last_name'),
+  created_at: timestamp('created_at').defaultNow(),
+  is_confirmed: boolean('is_confirmed').default(false),
+  _cursor: bigint('_cursor', { mode: 'number' }),
 });
