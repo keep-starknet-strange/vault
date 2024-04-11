@@ -1,4 +1,4 @@
-name: 'Test'
+name: Backend
 on: [push, pull_request]
 
 jobs:
@@ -20,5 +20,7 @@ jobs:
         version: 8
     - name: 'Install Deps'
       run: pnpm install
+    - name: 'Check format and lint'
+      run: pnpm check
     - name: 'Test'
       run: pnpm vitest --watch=false
