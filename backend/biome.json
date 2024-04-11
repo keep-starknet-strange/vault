@@ -7,7 +7,8 @@
     "enabled": true,
     "rules": {
       "recommended": true
-    }
+    },
+    "ignore": ["./coverage"]
   },
   "formatter": {
     "enabled": true,
