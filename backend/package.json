@@ -8,11 +8,13 @@
     "drizzle:generate": "drizzle-kit generate:pg",
     "check": "biome check .",
     "fix": "biome check --apply .",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "@testcontainers/postgresql": "^10.8.1",
+    "@vitest/coverage-istanbul": "^1.4.0",
     "drizzle-kit": "^0.20.14",
     "testcontainers": "^10.8.1",
     "tsx": "^4.7.2",
