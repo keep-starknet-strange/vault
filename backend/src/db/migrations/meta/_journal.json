@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1712234094947,
+      "tag": "0000_dry_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1712236056306,
+      "tag": "0001_flawless_nehzno",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712840044794,
+      "tag": "0002_misty_puma",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1712841321064,
+      "tag": "0003_fuzzy_forgotten_one",
+      "breakpoints": true
+    }
+  ]
+}

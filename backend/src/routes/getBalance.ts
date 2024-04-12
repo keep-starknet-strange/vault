@@ -1,30 +1,33 @@
-import { FastifyInstance } from 'fastify';
+import { eq } from 'drizzle-orm/pg-core/expressions';
+import type { FastifyInstance } from 'fastify';
 
-const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
+import { usdcBalance } from '@/db/schema';
+import { addressRegex } from '.';
 
 export function getBalanceRoute(fastify: FastifyInstance) {
   fastify.get('/get_balance', async (request, reply) => {
     const { address } = request.query as { address?: string };
-
-    if (!address || !addressRegex.test(address)) {
-      reply.status(400).send({ error: 'Invalid address format' });
-      return;
+    if (!address) {
+      return reply.status(400).send({ message: 'Address is required.' });
+    }
+    // Validate address format
+    if (!addressRegex.test(address)) {
+      return reply.status(400).send({ message: 'Invalid address format.' });
     }
 
     try {
-      const { rows } = await fastify.pg.query<{ balance: string }>(
-        'SELECT balance FROM balance_usdc WHERE address = $1 ORDER BY block_number DESC LIMIT 1',
-        [address],
-      );
-
-      if (rows.length === 0) {
-        reply.send({ balance: 0 });
-      } else {
-        reply.send({ balance: rows[0].balance });
+      // Use Drizzle ORM to find the balance by address
+      let balanceRecord = await fastify.db.query.usdcBalance
+        .findFirst({ where: eq(usdcBalance.address, address) })
+        .execute();
+      if (!balanceRecord) {
+        balanceRecord = { balance: '0' };
       }
-    } catch (err) {
-      fastify.log.error(err);
-      reply.status(500).send({ error: 'Internal Server Error' });
+
+      return reply.send({ balance: balanceRecord.balance });
+    } catch (error) {
+      console.error(error);
+      return reply.status(500).send({ message: 'Internal server error' });
     }
   });
 }
