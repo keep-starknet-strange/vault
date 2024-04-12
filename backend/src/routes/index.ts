@@ -4,6 +4,8 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
 import getRegisterRoute from './register';
+import getOtp from './getOtp';
+import verifyOtp from './verifyOtp';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
@@ -11,12 +13,17 @@ export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
   getRegisterRoute(fastify);
+  getOtp(fastify);
+  verifyOtp(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
-  fastify.get('/status', async function handler(_request: FastifyRequest, _reply: FastifyReply) {
-    return await handleGetStatus(fastify.db);
-  });
+  fastify.get(
+    '/status',
+    async function handler(_request: FastifyRequest, _reply: FastifyReply) {
+      return await handleGetStatus(fastify.db);
+    },
+  );
 }
 
 async function handleGetStatus(db: Database) {

@@ -32,3 +32,10 @@ export const registration = pgTable('registration', {
   is_confirmed: boolean('is_confirmed').default(false),
   _cursor: bigint('_cursor', { mode: 'number' }),
 });
+
+export const otp = pgTable('otp', {
+  phone_number: text('phone_number'),
+  otp: text('otp'),
+  used: boolean('used').default(false),
+  created_at: timestamp('created_at').defaultNow(),
+});
