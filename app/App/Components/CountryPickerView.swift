@@ -8,64 +8,34 @@
 import SwiftUI
 import PhoneNumberKit
 
-struct CountryData: Hashable {
-    let country: String
-    let name: String
-    let code: String
-}
-
 struct CountryPickerView: View {
+
     @Environment(\.presentationMode) var presentationMode
-    @Binding var selectedCountry: CountryData?
-
-    let phoneNumberKit = PhoneNumberKit()
-    var countries: [CountryData] {
-        phoneNumberKit.allCountries()
-            .map { country in
-                let countryName = Locale.current.localizedString(forRegionCode: country)  ?? "world"
-                let countryCode = phoneNumberKit.countryCode(for: country) ?? 0
-                return CountryData(
-                    country: country,
-                    name: countryName,
-                    code: "+\(countryCode)"
-                )
-            }
-            .filter { $0.name != "world" }
-            .sorted { $0.name < $1.name }
-    }
-
-    @State private var searchText = ""
-
-    var filteredCountries: [CountryData] {
-        if searchText.isEmpty {
-            return countries
-        } else {
-            return countries.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-        }
-    }
+    
+    @EnvironmentObject private var countryPickerModel: CountryPickerModel
 
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
                     HStack(spacing: 8) {
-                        SearchBar(search: $searchText)
+                        SearchBar(search: $countryPickerModel.searchedCountry)
                         Button {
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
-                            Text("Cancel")
-                                .foregroundStyle(.accent)
+                            Text("Cancel").foregroundStyle(.accent)
                         }
                     }
                     .padding(16)
 
-                    List(Array(self.filteredCountries.enumerated()), id: \.element) { index, countryData in
-                        let flagRessource = ImageResource(name: countryData.country.lowercased(), bundle: Bundle.main)
+                    List(self.countryPickerModel.filteredCountries.indexed(), id: \.element) { index, countryData in
+                        let flagRessource = ImageResource(name: countryData.regionCode.lowercased(), bundle: Bundle.main)
                         let isFirst = index == 0;
-                        let isLast = index == self.filteredCountries.count - 1
+                        let isLast = index == self.countryPickerModel.filteredCountries.count - 1
+                        let isSelected = self.countryPickerModel.isSelected(countryData.regionCode)
 
                         Button {
-                            self.selectedCountry = countryData
+                            self.countryPickerModel.selectedRegionCode = countryData.regionCode
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
                             HStack(spacing: 16) {
@@ -75,7 +45,7 @@ struct CountryPickerView: View {
                                     .scaledToFill()
                                     .clipShape(Capsule())
 
-                                Text("\(countryData.code)")
+                                Text("\(countryData.phoneCode)")
                                     .foregroundStyle(.neutral2)
                                     .fontWeight(.medium)
                                     .frame(width: 48, alignment: .leading)
@@ -90,6 +60,9 @@ struct CountryPickerView: View {
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                         .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
                         .background(.background3)
+                        .if(isSelected) { view in
+                            view.background(.accent.opacity(0.2))
+                        }
                         .listRowBackground(EmptyView())
                         .listRowSeparator(.hidden)
                         .clipShape(
@@ -114,7 +87,11 @@ struct CountryPickerView: View {
 
 #if DEBUG
 struct CountryPickerViewPreviews : PreviewProvider {
+
+    @StateObject static var countryPickerModel = CountryPickerModel()
+
     @State static var isPresented = true
+    @State static var selectedRegionCode = Locale.current.regionOrFrance.identifier
 
     static var previews: some View {
         NavigationStack {
@@ -123,8 +100,9 @@ struct CountryPickerViewPreviews : PreviewProvider {
                     self.isPresented = true
                 }
                 .sheet(isPresented: $isPresented) {
-                    CountryPickerView(selectedCountry: .constant(nil))
+                    CountryPickerView()
                         .preferredColorScheme(.dark)
+                        .environmentObject(self.countryPickerModel)
                 }
             }
         }.preferredColorScheme(.dark)

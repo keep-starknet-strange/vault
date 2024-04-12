@@ -9,21 +9,24 @@ import SwiftUI
 import PhoneNumberKit
 
 struct PhoneInput: View {
-    @State private var selectedCountry: CountryData?
+    
+    @StateObject private var countryPickerModel = CountryPickerModel()
+
     @Binding var phoneNumber: String
 
     var body: some View {
         VStack {
-            if let country = selectedCountry {
-                Text("Selected Country: \(country.name) \(country.code)")
-            }
+            Text("Selected Country: \(self.countryPickerModel.selectedRegionCode)")
+
             Button("Select Country") {
                 showingPicker = true
             }
         }
         .sheet(isPresented: $showingPicker) {
-            CountryPickerView(selectedCountry: $selectedCountry)
+            CountryPickerView()
+                .environmentObject(self.countryPickerModel)
                 .preferredColorScheme(.dark)
+                .onAppear { self.countryPickerModel.searchedCountry = "" }
         }
     }
 
