@@ -1,21 +1,16 @@
-import Fastify from "fastify";
-import { declareRoutes } from "./routes";
+import dotenv from 'dotenv';
 
-// Handle configuration
-const PORT: number = parseInt(Bun.env.PORT || "8080");
+import { type AppConfiguration, buildAndStartApp } from '@/app';
 
-// Create the Fastify instance
-const fastify = Fastify({
-  logger: true,
-});
+dotenv.config();
 
-// Declare routes
-declareRoutes(fastify);
+const config: AppConfiguration = {
+  database: {
+    connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/postgres',
+  },
+  app: {
+    port: Number.parseInt(process.env.PORT || '8080'),
+  },
+};
 
-// Run the server
-try {
-  await fastify.listen({ port: PORT });
-} catch (err) {
-  fastify.log.error(err);
-  process.exit(1);
-}
+buildAndStartApp(config);

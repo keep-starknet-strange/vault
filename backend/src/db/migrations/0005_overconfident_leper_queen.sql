@@ -1,0 +1,1 @@
+ALTER TABLE "otp" ADD COLUMN "used" boolean DEFAULT false;

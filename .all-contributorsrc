@@ -1,0 +1,61 @@
+{
+  "projectName": "vault",
+  "projectOwner": "keep-starknet-strange",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "gitmoji",
+  "contributors": [
+    {
+      "login": "AbdelStark",
+      "name": "Abdel @ StarkWare ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45264458?v=4",
+      "profile": "https://github.com/AbdelStark",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "LucasLvy",
+      "name": "Lucas @ StarkWare",
+      "avatar_url": "https://avatars.githubusercontent.com/u/70894690?v=4",
+      "profile": "https://github.com/LucasLvy",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "0xChqrles",
+      "name": "Charles Lanier",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19663399?v=4",
+      "profile": "https://rules.art/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ocdbytes",
+      "name": "Arun Jangra",
+      "avatar_url": "https://avatars.githubusercontent.com/u/71868585?v=4",
+      "profile": "https://ocdbyt.es/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "fracek",
+      "name": "Francesco Ceccon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/282580?v=4",
+      "profile": "https://ceccon.me/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}

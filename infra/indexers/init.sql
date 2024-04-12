@@ -11,3 +11,21 @@ create table transfer_usdc(
     created_at timestamp default current_timestamp,
     _cursor bigint
 );
+
+create table balance_usdc(
+    network text,
+    block_number bigint,
+    block_timestamp timestamp,
+    address text,
+    balance text,
+    _cursor bigint
+);
+
+create table registration(
+    address text,
+    phone_number text,
+    first_name text,
+    last_name text,
+    created_at timestamp,
+    _cursor bigint
+);
