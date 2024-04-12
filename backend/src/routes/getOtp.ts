@@ -1,9 +1,9 @@
-import type { FastifyInstance } from 'fastify';
-import { desc, eq } from 'drizzle-orm';
 import { otp, registration } from '@/db/schema';
-import * as schema from '../db/schema';
-import otpGenerator from 'otp-generator';
 import { sendMessage } from '@/utils/sms';
+import { desc, eq } from 'drizzle-orm';
+import type { FastifyInstance } from 'fastify';
+import otpGenerator from 'otp-generator';
+import * as schema from '../db/schema';
 
 interface GetOtpRequestBody {
   phone_number: string;
@@ -30,9 +30,8 @@ export default function getOtp(fastify: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const { phone_number } = request.query as {phone_number: string};
+        const { phone_number } = request.query as { phone_number: string };
 
-        
         const processed_phone_number = `+${phone_number.trimStart()}`;
         // console.log("phone number: ", processed_phone_number);
 
@@ -42,9 +41,7 @@ export default function getOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!record_phone_number) {
-          return reply
-            .code(500)
-            .send({ message: 'No record exists with current phone number' });
+          return reply.code(500).send({ message: 'No record exists with current phone number' });
         }
 
         const record = await fastify.db.query.otp
@@ -60,20 +57,18 @@ export default function getOtp(fastify: FastifyInstance) {
           const time_added = Date.parse(record.created_at) / 1000;
           const current_time = Date.now() / 1000;
 
-          console.log('>>>>> ',current_time - time_added);
+          console.log('>>>>> ', current_time - time_added);
 
           // Checking if otp already requested
           // - if time_diff <= 15 mins or otp is used: deny new otp
           // - else send new otp
           if (current_time - time_added <= OTP_VALIDITY_TIME) {
-            return reply
-              .code(200)
-              .send({ message: `You have already requested the OTP` });
+            return reply.code(200).send({ message: 'You have already requested the OTP' });
           }
 
-          if (record.used == true) {
+          if (record.used === true) {
             return reply.code(200).send({
-              message: `You have provided the otp which is already used`,
+              message: 'You have provided the otp which is already used',
             });
           }
         }
@@ -81,10 +76,8 @@ export default function getOtp(fastify: FastifyInstance) {
         const otp_gen = generateOtp();
 
         const send_msg_res = await sendMessage(otp_gen, processed_phone_number);
-        if (send_msg_res == false) {
-          fastify.log.error(
-            `Error sending message to phone number : ${processed_phone_number}`,
-          );
+        if (send_msg_res === false) {
+          fastify.log.error(`Error sending message to phone number : ${processed_phone_number}`);
           return reply.code(500).send({
             message: 'We are facing some issues. Please try again later',
           });

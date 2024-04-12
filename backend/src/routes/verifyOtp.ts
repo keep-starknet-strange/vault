@@ -1,6 +1,6 @@
-import type { FastifyInstance } from 'fastify';
-import { desc } from 'drizzle-orm';
 import { otp } from '@/db/schema';
+import { desc } from 'drizzle-orm';
+import type { FastifyInstance } from 'fastify';
 
 interface VerifyOtpRequestBody {
   phone_number: string;
@@ -41,9 +41,7 @@ export default function verifyOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!otp_record) {
-          return reply
-            .code(200)
-            .send({ message: 'You need to request the otp first' });
+          return reply.code(200).send({ message: 'You need to request the otp first' });
         }
 
         // update the otp as used
