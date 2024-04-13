@@ -3,16 +3,21 @@ import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 
 export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
+  getHistoricalBalanceRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
-  fastify.get('/status', async function handler(_request: FastifyRequest, _reply: FastifyReply) {
-    return await handleGetStatus(fastify.db);
-  });
+  fastify.get(
+    '/status',
+    async function handler(_request: FastifyRequest, _reply: FastifyReply) {
+      return await handleGetStatus(fastify.db);
+    },
+  );
 }
 
 async function handleGetStatus(db: Database) {
