@@ -5,7 +5,7 @@ import {
 import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
-import { buildApp } from '../app';
+import { buildApp } from '@/app';
 import * as schema from '../db/schema';
 
 describe('GET /get_historical_balance route', () => {
@@ -25,8 +25,6 @@ describe('GET /get_historical_balance route', () => {
         port: 8080,
       },
     });
-
-    console.log(app);
 
     await app.ready();
     await app.db.insert(schema.usdcBalance).values([
