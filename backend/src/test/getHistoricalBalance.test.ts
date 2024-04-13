@@ -69,9 +69,7 @@ describe('GET /get_historical_balance route', () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toBe([
       {
-        id: '2',
-        address: testAddress,
-        blockTimestamp: new Date('2024-04-10 14:03:05'),
+        date: '2024-04-10',
         balance: '3.8AE83A109D0635A426BB',
       },
       {
