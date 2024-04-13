@@ -21,7 +21,7 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
       // Use Drizzle ORM to find historical balances by address
       const historicalBalances = await fastify.db.execute(
         sql`
-          SELECT *
+          SELECT balance, DATE(block_timestamp) AS date
           FROM ${usdcBalance}
           WHERE (address, block_timestamp) IN (
             SELECT address, MAX(block_timestamp) AS max_timestamp
