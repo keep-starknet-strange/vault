@@ -52,8 +52,6 @@ export default function getOtp(fastify: FastifyInstance) {
           })
           .execute();
 
-        // console.log(await fastify.db.query.otp.findMany());
-
         if (record) {
           const time_added = Date.parse(record.created_at) / 1000;
           const current_time = Math.floor(Date.now() / 1000);
@@ -63,12 +61,6 @@ export default function getOtp(fastify: FastifyInstance) {
           // - else send new otp
           if (current_time - time_added <= OTP_VALIDITY_TIME) {
             return reply.code(500).send({ message: 'You have already requested the OTP' });
-          }
-
-          if (record.used === true) {
-            return reply.code(500).send({
-              message: 'You have provided the otp which is already used',
-            });
           }
         }
 
