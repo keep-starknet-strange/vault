@@ -1,5 +1,5 @@
-import { FastifyInstance } from 'fastify';
 import { sql } from 'drizzle-orm';
+import type { FastifyInstance } from 'fastify';
 import { usdcBalance } from '../db/schema';
 
 const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
@@ -18,7 +18,6 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
     }
 
     try {
-      // Use Drizzle ORM to find historical balances by address
       const historicalBalances = await fastify.db.execute(
         sql`
           SELECT balance, DATE(block_timestamp) AS date
