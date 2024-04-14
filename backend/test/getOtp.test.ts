@@ -1,14 +1,17 @@
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import {
+  PostgreSqlContainer,
+  type StartedPostgreSqlContainer,
+} from '@testcontainers/postgresql';
 import type { FastifyInstance } from 'fastify';
 import { assert, afterAll, beforeAll, describe, expect, test } from 'vitest';
-
 import { buildApp } from '@/app';
-
 import * as schema from '../src/db/schema';
-describe('OTP test', () => {
+
+describe('Get OTP test', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
-  const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
+  const testAddress =
+    '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = '+918591509868';
   const testFirstName = 'Jean';
   const testLastName = 'Dupont';
@@ -28,8 +31,15 @@ describe('OTP test', () => {
     });
 
     await app.ready();
+
+    // reset db
+    await app.db.delete(schema.registration);
+    await app.db.delete(schema.otp);
+
     // Insert balance to mock address
-    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' });
+    await app.db
+      .insert(schema.usdcBalance)
+      .values({ address: testAddress, balance: '1000' });
 
     // adding a user
     await app.db.insert(schema.registration).values({
@@ -50,8 +60,6 @@ describe('OTP test', () => {
       method: 'GET',
       url: `/get_otp?phone_number=${testPhoneNumber}`,
     });
-
-    console.log(response);
 
     expect(response.statusCode).toBe(200);
   });

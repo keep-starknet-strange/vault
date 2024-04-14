@@ -1,5 +1,6 @@
-import { otp } from '@/db/schema';
-import { desc } from 'drizzle-orm';
+import { otp, registration } from '@/db/schema';
+import { eq } from 'drizzle-orm/pg-core/expressions';
+import { desc, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 
 interface VerifyOtpRequestBody {
@@ -11,7 +12,7 @@ export default function verifyOtp(fastify: FastifyInstance) {
   fastify.post<{
     Body: VerifyOtpRequestBody;
   }>(
-    '/verify-otp',
+    '/verify_otp',
     {
       schema: {
         body: {
@@ -19,7 +20,7 @@ export default function verifyOtp(fastify: FastifyInstance) {
           required: ['phone_number'],
           properties: {
             phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
-            sent_otp: { type: 'string', pattern: '^d{6}$' },
+            sent_otp: { type: 'string' },
           },
         },
       },
@@ -32,44 +33,39 @@ export default function verifyOtp(fastify: FastifyInstance) {
         // - if otp is old or otp is already used
         const otp_record = await fastify.db.query.otp
           .findFirst({
-            where: {
-              phone_number: phone_number,
-              otp: sent_otp,
-            },
+            where: sql`phone_number = ${phone_number} and otp = ${sent_otp} and used = false`,
             orderBy: [desc(otp.created_at)],
           })
           .execute();
 
         if (!otp_record) {
-          return reply.code(200).send({ message: 'You need to request the otp first' });
+          return reply
+            .code(500)
+            .send({ message: 'You need to request the otp first' });
         }
 
         // update the otp as used
-        await fastify.db.query.otp.updateOne({
-          where: {
-            phone_number: phone_number,
-            otp: sent_otp,
-          },
-          set: {
+        await fastify.db
+          .update(otp)
+          .set({
             used: true,
-          },
-        });
+          })
+          .where(eq(otp.phone_number, phone_number));
 
         // update the user record as confirmed
-        await fastify.db.query.registration.updateOne({
-          where: {
-            phone_number: phone_number,
-          },
-          set: {
+        await fastify.db
+          .update(registration)
+          .set({
             is_confirmed: true,
-          },
-        });
+          })
+          .where(eq(registration.phone_number, phone_number));
 
         return reply.code(200).send({
           message: 'OTP verified successfully',
         });
       } catch (error) {
         fastify.log.error(error);
+        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },
