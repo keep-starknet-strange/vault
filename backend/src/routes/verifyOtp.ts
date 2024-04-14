@@ -1,6 +1,6 @@
 import { otp, registration } from '@/db/schema';
-import { eq } from 'drizzle-orm/pg-core/expressions';
 import { desc, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
 interface VerifyOtpRequestBody {
@@ -39,9 +39,7 @@ export default function verifyOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!otp_record) {
-          return reply
-            .code(500)
-            .send({ message: 'You need to request the otp first' });
+          return reply.code(500).send({ message: 'You need to request the otp first' });
         }
 
         // update the otp as used

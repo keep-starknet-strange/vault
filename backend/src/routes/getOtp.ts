@@ -42,9 +42,7 @@ export default function getOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!record_phone_number) {
-          return reply
-            .code(500)
-            .send({ message: 'No record exists with current phone number' });
+          return reply.code(500).send({ message: 'No record exists with current phone number' });
         }
 
         const record = await fastify.db.query.otp
@@ -64,9 +62,7 @@ export default function getOtp(fastify: FastifyInstance) {
           // - if time_diff <= 15 mins or otp is used: deny new otp
           // - else send new otp
           if (current_time - time_added <= OTP_VALIDITY_TIME) {
-            return reply
-              .code(500)
-              .send({ message: 'You have already requested the OTP' });
+            return reply.code(500).send({ message: 'You have already requested the OTP' });
           }
 
           if (record.used === true) {
@@ -80,9 +76,7 @@ export default function getOtp(fastify: FastifyInstance) {
 
         const send_msg_res = await sendMessage(otp_gen, processed_phone_number);
         if (send_msg_res === false) {
-          fastify.log.error(
-            `Error sending message to phone number : ${processed_phone_number}`,
-          );
+          fastify.log.error(`Error sending message to phone number : ${processed_phone_number}`);
           return reply.code(500).send({
             message: 'We are facing some issues. Please try again later',
           });
