@@ -1,9 +1,45 @@
 {
-  "id": "9ef1e1c1-43aa-4d77-a535-e301ab1d09f3",
-  "prevId": "2e782cb5-83f3-45c4-94d7-72bd2cdabf88",
+  "id": "1773a5e6-0a72-4af8-8741-0c5f2bd29705",
+  "prevId": "9ef1e1c1-43aa-4d77-a535-e301ab1d09f3",
   "version": "5",
   "dialect": "pg",
   "tables": {
+    "otp": {
+      "name": "otp",
+      "schema": "",
+      "columns": {
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "otp": {
+          "name": "otp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "used": {
+          "name": "used",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "registration": {
       "name": "registration",
       "schema": "",
@@ -45,6 +81,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "_cursor": {
+          "name": "_cursor",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

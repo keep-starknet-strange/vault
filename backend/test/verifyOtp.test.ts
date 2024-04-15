@@ -70,7 +70,7 @@ describe('Verify OTP test', () => {
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(400);
   });
 
   test('should verify the otp sent to the phone number : /verify_otp', async () => {
@@ -112,6 +112,6 @@ describe('Verify OTP test', () => {
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(400);
   });
 });

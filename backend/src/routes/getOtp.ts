@@ -64,7 +64,7 @@ export function getOtp(fastify: FastifyInstance) {
 
         const send_msg_res = await sendMessage(otp_gen, phone_number);
         if (!send_msg_res) {
-          fastify.log.error(`Error sending message to phone number`);
+          fastify.log.error('Error sending message to phone number');
           return reply.code(500).send({
             message: 'We are facing some issues. Please try again later',
           });

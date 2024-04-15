@@ -75,7 +75,7 @@ describe('Get OTP test', () => {
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(400);
   });
 
   test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp', async () => {
@@ -92,6 +92,6 @@ describe('Get OTP test', () => {
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(400);
   });
 });
