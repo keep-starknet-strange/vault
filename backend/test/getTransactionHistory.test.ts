@@ -48,7 +48,9 @@ function generateMockData(
     }
   }
 
-  return mockData;
+  // Silence the type error since it's an helper for testing.
+  // The issue is that `transferId` is a required field for inserting data.
+  return mockData as (typeof schema.usdcTransfer.$inferInsert)[];
 }
 
 describe('GET /transaction history route', () => {
