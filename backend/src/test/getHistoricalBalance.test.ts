@@ -1,7 +1,4 @@
-import {
-  PostgreSqlContainer,
-  type StartedPostgreSqlContainer,
-} from '@testcontainers/postgresql';
+import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
@@ -11,8 +8,7 @@ import * as schema from '../db/schema';
 describe('GET /get_historical_balance route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
-  const testAddress =
-    '0x064a24243f2aabae8d2148fa878276e6e6e452e3941b417f3c33b1649ea83e11';
+  const testAddress = '0x064a24243f2aabae8d2148fa878276e6e6e452e3941b417f3c33b1649ea83e11';
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
@@ -104,8 +100,7 @@ describe('GET /get_historical_balance route', () => {
   });
 
   test('should return [], unknown address', async () => {
-    const unknownAddress =
-      '0x064a24243f2aabae8d2148fa878276e6e6e452e3941b417f3c33b1649ea83e12';
+    const unknownAddress = '0x064a24243f2aabae8d2148fa878276e6e6e452e3941b417f3c33b1649ea83e12';
     const response = await app.inject({
       method: 'GET',
       url: `/get_historical_balance?address=${unknownAddress}`,
