@@ -12,8 +12,6 @@ interface GetOtpRequestBody {
 // OTP validity duration : 15 mins
 const OTP_VALIDITY_TIME = 900;
 
-// as + symbol is not taken into query params
-// - + will be added after the number is processed
 export function getOtp(fastify: FastifyInstance) {
   fastify.post<{ Body: GetOtpRequestBody }>(
     '/get_otp',
