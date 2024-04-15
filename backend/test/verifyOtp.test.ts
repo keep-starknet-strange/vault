@@ -65,6 +65,11 @@ describe('Verify OTP test', () => {
       },
     });
 
+    const msg = {
+      message: 'You need to request the otp first | Invalid OTP provided',
+    };
+
+    expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(500);
   });
 
@@ -84,6 +89,11 @@ describe('Verify OTP test', () => {
       },
     });
 
+    const msg = {
+      message: 'OTP verified successfully',
+    };
+
+    expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(200);
   });
 
@@ -97,6 +107,11 @@ describe('Verify OTP test', () => {
       },
     });
 
+    const msg = {
+      message: 'You need to request the otp first | Invalid OTP provided',
+    };
+
+    expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(500);
   });
 });

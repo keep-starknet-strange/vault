@@ -8,7 +8,7 @@ interface VerifyOtpRequestBody {
   sent_otp: string;
 }
 
-export default function verifyOtp(fastify: FastifyInstance) {
+export function verifyOtp(fastify: FastifyInstance) {
   fastify.post<{
     Body: VerifyOtpRequestBody;
   }>(
@@ -39,7 +39,9 @@ export default function verifyOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!otp_record) {
-          return reply.code(500).send({ message: 'You need to request the otp first' });
+          return reply
+            .code(500)
+            .send({ message: 'You need to request the otp first | Invalid OTP provided' });
         }
 
         // update the otp as used
@@ -63,7 +65,6 @@ export default function verifyOtp(fastify: FastifyInstance) {
         });
       } catch (error) {
         fastify.log.error(error);
-        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },

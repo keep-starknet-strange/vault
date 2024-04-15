@@ -49,30 +49,49 @@ describe('Get OTP test', () => {
     await container.stop();
   });
 
-  test('should send the otp to valid registered user : /get_otp/:phone_number', async () => {
+  test('should send the otp to valid registered user : /get_otp', async () => {
     const response = await app.inject({
-      method: 'GET',
-      url: `/get_otp?phone_number=${testPhoneNumber}`,
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: testPhoneNumber,
+      },
     });
 
     expect(response.statusCode).toBe(200);
   });
 
-  test('should not send the otp to invalid registered user : /get_otp/:phone_number', async () => {
+  test('should not send the otp to invalid registered user : /get_otp', async () => {
     const response = await app.inject({
-      method: 'GET',
-      url: `/get_otp?phone_number=${nonRegisteredNumber}`,
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: nonRegisteredNumber,
+      },
     });
 
+    const msg = {
+      message: 'No record exists with current phone number',
+    };
+
+    expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(500);
   });
 
-  test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp/:phone_number', async () => {
+  test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp', async () => {
     const response = await app.inject({
-      method: 'GET',
-      url: `/get_otp?phone_number=${testPhoneNumber}`,
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: testPhoneNumber,
+      },
     });
 
+    const msg = {
+      message: 'You have already requested the OTP',
+    };
+
+    expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(500);
   });
 });
