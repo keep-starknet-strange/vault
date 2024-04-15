@@ -9,6 +9,8 @@ import { getRegisterRoute } from './register';
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 
+export const ADDRESS_REGEX = /^0x0[0-9a-fA-F]{63}$/;
+
 export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
