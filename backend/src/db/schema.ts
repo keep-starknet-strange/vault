@@ -15,7 +15,6 @@ export const usdcTransfer = pgTable('transfer_usdc', {
 });
 
 export const usdcBalance = pgTable('balance_usdc', {
-  balanceId: text('balance_id').primaryKey(),
   network: text('network'),
   blockNumber: bigint('block_number', { mode: 'number' }),
   blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
