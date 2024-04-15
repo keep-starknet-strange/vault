@@ -12,7 +12,7 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
     }
 
     // Validate address format
-    if (!addressRegex.test(address)) {
+    if (!ADDRESS_REGEX.test(address)) {
       return reply.status(400).send({ error: 'Invalid address format' });
     }
 
