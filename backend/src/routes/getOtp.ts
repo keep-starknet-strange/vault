@@ -1,9 +1,9 @@
-import { otp, registration } from "@/db/schema";
-import { sendMessage } from "@/utils/sms";
-import { desc, eq } from "drizzle-orm";
-import type { FastifyInstance } from "fastify";
-import otpGenerator from "otp-generator";
-import * as schema from "../db/schema";
+import { otp, registration } from '@/db/schema';
+import { sendMessage } from '@/utils/sms';
+import { desc, eq } from 'drizzle-orm';
+import type { FastifyInstance } from 'fastify';
+import otpGenerator from 'otp-generator';
+import * as schema from '../db/schema';
 
 interface GetOtpRequestBody {
   phone_number: string;
@@ -16,14 +16,14 @@ const OTP_VALIDITY_TIME = 900;
 // - + will be added after the number is processed
 export function getOtp(fastify: FastifyInstance) {
   fastify.post<{ Body: GetOtpRequestBody }>(
-    "/get_otp",
+    '/get_otp',
     {
       schema: {
         body: {
-          type: "object",
-          required: ["phone_number"],
+          type: 'object',
+          required: ['phone_number'],
           properties: {
-            phone_number: { type: "string", pattern: "^\\+[1-9]\\d{1,14}$" },
+            phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
           },
         },
       },
@@ -40,9 +40,7 @@ export function getOtp(fastify: FastifyInstance) {
           .execute();
 
         if (!record_phone_number) {
-          return reply
-            .code(500)
-            .send({ message: "No record exists with current phone number" });
+          return reply.code(500).send({ message: 'No record exists with current phone number' });
         }
 
         const record = await fastify.db.query.otp
@@ -60,9 +58,7 @@ export function getOtp(fastify: FastifyInstance) {
           // - if time_diff <= 15 mins or otp is used: deny new otp
           // - else send new otp
           if (current_time - time_added <= OTP_VALIDITY_TIME) {
-            return reply
-              .code(500)
-              .send({ message: "You have already requested the OTP" });
+            return reply.code(500).send({ message: 'You have already requested the OTP' });
           }
         }
 
@@ -70,11 +66,9 @@ export function getOtp(fastify: FastifyInstance) {
 
         const send_msg_res = await sendMessage(otp_gen, phone_number);
         if (!send_msg_res) {
-          fastify.log.error(
-            `Error sending message to phone number : ${phone_number}`
-          );
+          fastify.log.error(`Error sending message to phone number : ${phone_number}`);
           return reply.code(500).send({
-            message: "We are facing some issues. Please try again later",
+            message: 'We are facing some issues. Please try again later',
           });
         }
         await fastify.db.insert(schema.otp).values({
@@ -86,9 +80,9 @@ export function getOtp(fastify: FastifyInstance) {
       } catch (error) {
         fastify.log.error(error);
         console.log(error);
-        return reply.code(500).send({ message: "Internal Server Error" });
+        return reply.code(500).send({ message: 'Internal Server Error' });
       }
-    }
+    },
   );
 }
 
