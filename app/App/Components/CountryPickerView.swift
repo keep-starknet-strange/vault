@@ -12,14 +12,14 @@ struct CountryPickerView: View {
 
     @Environment(\.presentationMode) var presentationMode
     
-    @EnvironmentObject private var countryPickerModel: CountryPickerModel
+    @EnvironmentObject private var phoneNumberModel: PhoneNumberModel
 
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
                     HStack(spacing: 8) {
-                        SearchBar(search: $countryPickerModel.searchedCountry)
+                        SearchBar(search: $phoneNumberModel.searchedCountry)
                         Button {
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
@@ -28,14 +28,14 @@ struct CountryPickerView: View {
                     }
                     .padding(16)
 
-                    List(self.countryPickerModel.filteredCountries.indexed(), id: \.element) { index, countryData in
+                    List(self.phoneNumberModel.filteredCountries.indexed(), id: \.element) { index, countryData in
                         let flagRessource = ImageResource(name: countryData.regionCode.lowercased(), bundle: Bundle.main)
                         let isFirst = index == 0;
-                        let isLast = index == self.countryPickerModel.filteredCountries.count - 1
-                        let isSelected = self.countryPickerModel.isSelected(countryData.regionCode)
+                        let isLast = index == self.phoneNumberModel.filteredCountries.count - 1
+                        let isSelected = self.phoneNumberModel.isSelected(countryData.regionCode)
 
                         Button {
-                            self.countryPickerModel.selectedRegionCode = countryData.regionCode
+                            self.phoneNumberModel.selectedRegionCode = countryData.regionCode
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
                             HStack(spacing: 16) {
@@ -88,7 +88,7 @@ struct CountryPickerView: View {
 #if DEBUG
 struct CountryPickerViewPreviews : PreviewProvider {
 
-    @StateObject static var countryPickerModel = CountryPickerModel()
+    @StateObject static var phoneNumberModel = PhoneNumberModel()
 
     @State static var isPresented = true
     @State static var selectedRegionCode = Locale.current.regionOrFrance.identifier
@@ -102,7 +102,7 @@ struct CountryPickerViewPreviews : PreviewProvider {
                 .sheet(isPresented: $isPresented) {
                     CountryPickerView()
                         .preferredColorScheme(.dark)
-                        .environmentObject(self.countryPickerModel)
+                        .environmentObject(self.phoneNumberModel)
                 }
             }
         }.preferredColorScheme(.dark)

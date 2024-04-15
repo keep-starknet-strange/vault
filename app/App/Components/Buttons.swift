@@ -96,7 +96,7 @@ struct TabItemButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: Common
+// MARK: Gradient
 
 struct GradientButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -113,6 +113,14 @@ struct GradientButtonStyle: ButtonStyle {
                 .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// MARK: Noop
+
+struct NoopButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
 

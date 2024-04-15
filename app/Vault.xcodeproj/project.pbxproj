@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		9C5CFDA62BC69446001776E1 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDA52BC69446001776E1 /* CountryPickerView.swift */; };
 		9C5CFDA82BC73DB0001776E1 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDA72BC73DB0001776E1 /* SearchBar.swift */; };
-		9C5CFDAE2BC828C9001776E1 /* CountryPickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDAD2BC828C9001776E1 /* CountryPickerModel.swift */; };
+		9C5CFDAE2BC828C9001776E1 /* PhoneNumberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDAD2BC828C9001776E1 /* PhoneNumberModel.swift */; };
 		9C5CFDB02BC828DE001776E1 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDAF2BC828DE001776E1 /* Locale.swift */; };
 		9C5CFDB22BC82C57001776E1 /* Array+indexed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5CFDB12BC82C57001776E1 /* Array+indexed.swift */; };
 		9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CD52BB09334005816B4 /* NotificationsView.swift */; };
@@ -75,7 +75,7 @@
 /* Begin PBXFileReference section */
 		9C5CFDA52BC69446001776E1 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
 		9C5CFDA72BC73DB0001776E1 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
-		9C5CFDAD2BC828C9001776E1 /* CountryPickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerModel.swift; sourceTree = "<group>"; };
+		9C5CFDAD2BC828C9001776E1 /* PhoneNumberModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberModel.swift; sourceTree = "<group>"; };
 		9C5CFDAF2BC828DE001776E1 /* Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		9C5CFDB12BC82C57001776E1 /* Array+indexed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+indexed.swift"; sourceTree = "<group>"; };
 		9C637CD52BB09334005816B4 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
@@ -325,8 +325,8 @@
 		9CDFD4412BADA288000466B9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9C5CFDAD2BC828C9001776E1 /* CountryPickerModel.swift */,
 				9CD778C52BC1DEEA00BA4677 /* NavigationModel.swift */,
+				9C5CFDAD2BC828C9001776E1 /* PhoneNumberModel.swift */,
 				9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */,
 			);
 			path = Model;
@@ -505,7 +505,7 @@
 				9CD778D42BC4426D00BA4677 /* View+placeholder.swift in Sources */,
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
 				9CD778BA2BBCB89C00BA4677 /* TransferRow.swift in Sources */,
-				9C5CFDAE2BC828C9001776E1 /* CountryPickerModel.swift in Sources */,
+				9C5CFDAE2BC828C9001776E1 /* PhoneNumberModel.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,
 				9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */,
 				9CD778C62BC1DEEA00BA4677 /* NavigationModel.swift in Sources */,

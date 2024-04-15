@@ -10,6 +10,8 @@ import SwiftUI
 struct TextInput: View {
     @Binding var text: String
 
+    @FocusState private var isFocused: Bool
+
     let placeholder: String
 
     init(_ placeholder: String = "", text: Binding<String>) {
@@ -19,16 +21,15 @@ struct TextInput: View {
 
     var body: some View {
         TextField("", text: $text)
+            .focused($isFocused)
             .placeholder(when: text.isEmpty) {
                 Text(placeholder).foregroundColor(.neutral2)
             }
             .textFieldStyle(.plain)
             .padding(16)
             .foregroundColor(.neutral1)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.background3)
-            )
+            .background(.background3.opacity(isFocused ? 1.5 : 1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
