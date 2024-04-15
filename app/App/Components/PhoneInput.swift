@@ -67,8 +67,6 @@ struct PhoneInput: View {
                 })
                 .keyboardType(.numberPad)
                 .onChange(of: self.phoneNumber, initial: false) { (_, newValue) in
-                    print("test")
-                    print(self.phoneNumberModel.format(phoneNumber: newValue))
                     self.phoneNumber = self.phoneNumberModel.format(phoneNumber: newValue)
                 }
         }
@@ -82,16 +80,21 @@ struct PhoneInput: View {
     @State private var textInputHeight: CGFloat?
 }
 
-#Preview {
-    @State var text: String = ""
-    @State var phoneNumber: PhoneNumber?
+#if DEBUG
+struct PhoneInputPreviews : PreviewProvider {
 
-    return NavigationStack {
-        ZStack {
-            Color.background1.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-            VStack(alignment: .leading, spacing: 16) {
-                PhoneInput(phoneNumber: $text, parsedPhoneNumber: $phoneNumber)
+    @State static var text: String = ""
+    @State static var phoneNumber: PhoneNumber?
+
+    static var previews: some View {
+        NavigationStack {
+            ZStack {
+                Color.background1.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                VStack(alignment: .leading, spacing: 16) {
+                    PhoneInput(phoneNumber: $text, parsedPhoneNumber: $phoneNumber)
+                }
             }
-        }
-    }.preferredColorScheme(.dark)
+        }.preferredColorScheme(.dark)
+    }
 }
+#endif

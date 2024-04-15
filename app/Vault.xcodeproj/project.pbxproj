@@ -17,6 +17,8 @@
 		9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDA2BB09C4D005816B4 /* Notification.swift */; };
 		9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDD2BB0A564005816B4 /* AppIcon.swift */; };
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
+		9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */; };
+		9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8B2BCD5D790077A60B /* String+character.swift */; };
 		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
@@ -83,6 +85,8 @@
 		9C637CDA2BB09C4D005816B4 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		9C637CDD2BB0A564005816B4 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
+		9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInput.swift; sourceTree = "<group>"; };
+		9CD1BE8B2BCD5D790077A60B /* String+character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+character.swift"; sourceTree = "<group>"; };
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 				9CD778D32BC4426D00BA4677 /* View+placeholder.swift */,
 				9C5CFDAF2BC828DE001776E1 /* Locale.swift */,
 				9C5CFDB12BC82C57001776E1 /* Array+indexed.swift */,
+				9CD1BE8B2BCD5D790077A60B /* String+character.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -318,6 +323,7 @@
 				9C5CFDA72BC73DB0001776E1 /* SearchBar.swift */,
 				9CD778D12BC4423C00BA4677 /* PhoneInput.swift */,
 				9C5CFDA52BC69446001776E1 /* CountryPickerView.swift */,
+				9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -486,6 +492,7 @@
 				9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */,
 				9CD778B32BBC38F400BA4677 /* HistoricalGraph.swift in Sources */,
 				9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */,
+				9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */,
 				9CD778B82BBCB2A100BA4677 /* USDCAmount.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
 				9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */,
@@ -498,6 +505,7 @@
 				9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */,
 				9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */,
 				9CDFD4402BAD83E7000466B9 /* ThemedText.swift in Sources */,
+				9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */,
 				9CD778AE2BBC1A7300BA4677 /* GraphView.swift in Sources */,
 				9CD778C02BBF1E5C00BA4677 /* EdgeBorder.swift in Sources */,
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,

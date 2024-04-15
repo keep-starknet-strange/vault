@@ -35,7 +35,7 @@ struct PhoneRequestView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            PhoneValidationView()
+            PhoneValidationView(phoneNumber: parsedPhoneNumber)
         }
     }
 }

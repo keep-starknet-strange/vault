@@ -18,4 +18,6 @@ struct Constants {
         startPoint: .leading,
         endPoint: .trailing
     )
+
+    static let registrationCodeDigitsCount = 6
 }
