@@ -2,18 +2,17 @@ import { eq } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
 import { usdcBalance } from '@/db/schema';
-
-const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
+import { addressRegex } from '.';
 
 export function getBalanceRoute(fastify: FastifyInstance) {
   fastify.get('/get_balance', async (request, reply) => {
     const { address } = request.query as { address?: string };
     if (!address) {
-      return reply.status(400).send({ error: 'Address is required.' });
+      return reply.status(400).send({ message: 'Address is required.' });
     }
     // Validate address format
     if (!addressRegex.test(address)) {
-      return reply.status(400).send({ error: 'Invalid address format.' });
+      return reply.status(400).send({ message: 'Invalid address format.' });
     }
 
     try {
@@ -28,7 +27,7 @@ export function getBalanceRoute(fastify: FastifyInstance) {
       return reply.send({ balance: balanceRecord.balance });
     } catch (error) {
       console.error(error);
-      return reply.status(500).send({ error: 'Internal server error' });
+      return reply.status(500).send({ message: 'Internal server error' });
     }
   });
 }
