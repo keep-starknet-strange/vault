@@ -15,13 +15,15 @@ function generateMockData(
   const mockData = [];
   const numEntries = upperLimit;
   const startCnt = lowerLimit ? lowerLimit : 1;
+  const mockTxnHash = '0x71dc653ae79444baeca2f182154bbd0ebb2bff2d73a4cf4c13774b2c613e17c';
+  const mockToAddrs = '0x00057c4b510d66eb1188a7173f31cccee47b9736d40185da8144377b896d5ff3';
 
   for (let i = startCnt; i <= numEntries; i++) {
-    const transferId = `transfer_id_${i}`;
-    const network = `network_${i}`;
-    const transactionHash = `transaction_hash_${i}`;
-    const toAddress = '0xabc';
-    const amount = `amount_${i}`;
+    const transferId = `${mockTxnHash}_${i}`;
+    const network = 'starknet-mainnet';
+    const transactionHash = mockTxnHash;
+    const toAddress = mockToAddrs;
+    const amount = `0x${i.toString(16)}`;
 
     const blockTimestamp = null;
     if (isResponseMock) {
@@ -94,6 +96,7 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 10, 1, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(10);
   });
 
   test('should return the default txns obj limit, total 9 entries, no pagination', async () => {
@@ -108,6 +111,7 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 9, 1, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(9);
   });
 
   test('should return the 1 to 10 txns obj, total 33 entries, pagination 1 default', async () => {
@@ -123,6 +127,7 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 10, 1, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(10);
   });
 
   test('should return the 11 to 20 txns obj, total 33 entries, pagination 2', async () => {
@@ -138,6 +143,7 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 20, 11, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(10);
   });
 
   test('should return the 21 to 30 txns obj, total 33 entries, pagination 3', async () => {
@@ -153,6 +159,7 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 30, 21, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(10);
   });
 
   test('should return the 31 to 33 txns obj, total 33 entries, pagination 4', async () => {
@@ -168,9 +175,10 @@ describe('GET /transaction history route', () => {
 
     const mockResponseObj = generateMockData(testAddress, 33, 31, true);
     expect(response.json().transactions).toMatchObject(mockResponseObj);
+    expect(response.json().transactions).toHaveLength(3);
   });
 
-  test('should return error, invalid starkent address', async () => {
+  test('should return error, invalid starknet address', async () => {
     await app.db.insert(schema.usdcTransfer).values(generateMockData(testAddress, 5));
     const paginationStr = '1';
     const response = await app.inject({
@@ -194,6 +202,18 @@ describe('GET /transaction history route', () => {
 
   test('should return empty transactions arr and zero page cnt, invalid from address', async () => {
     await app.db.insert(schema.usdcTransfer).values(generateMockData(testAddress, 5));
+    const paginationStr = '1';
+    const response = await app.inject({
+      method: 'GET',
+      url: `/transaction_history?address=${invalidFromAddress}&pagination=${paginationStr}`,
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toHaveProperty('page_count', 0);
+    expect(response.json()).toHaveProperty('transactions', []);
+  });
+
+  test('should return empty transactions arr and zero page cnt, valid from address, no db entries', async () => {
     const paginationStr = '1';
     const response = await app.inject({
       method: 'GET',

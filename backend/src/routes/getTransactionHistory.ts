@@ -3,11 +3,12 @@ import type { FastifyInstance } from 'fastify';
 import { usdcTransfer } from '@/db/schema';
 import { count, eq } from 'drizzle-orm';
 
+import { addressRegex } from '.';
+
 interface TransactionHistoryQuery {
   address: string;
   pagination?: string;
 }
-const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
 export function getTransactionHistory(fastify: FastifyInstance) {
   fastify.get('/transaction_history', async (request, reply) => {
