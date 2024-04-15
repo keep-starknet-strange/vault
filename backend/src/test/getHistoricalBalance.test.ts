@@ -26,23 +26,28 @@ describe('GET /get_historical_balance route', () => {
     await app.db.insert(schema.usdcBalance).values([
       {
         address: testAddress,
+        blockTimestamp: new Date('2024-01-10 13:03:05'),
+        balance: '42.234567',
+      },
+      {
+        address: testAddress,
         blockTimestamp: new Date('2024-04-10 13:03:05'),
-        balance: '1000',
+        balance: '1.234567',
       },
       {
         address: testAddress,
         blockTimestamp: new Date('2024-04-10 14:03:05'),
-        balance: '1200',
+        balance: '2.136537',
       },
       {
         address: testAddress,
         blockTimestamp: new Date('2024-04-11 13:03:05'),
-        balance: '300',
+        balance: '4.244537',
       },
       {
         address: testAddress,
         blockTimestamp: new Date('2024-04-11 14:03:05'),
-        balance: '450',
+        balance: '9.934467',
       },
     ]);
   });
@@ -63,11 +68,11 @@ describe('GET /get_historical_balance route', () => {
       historicalBalances: [
         {
           date: '2024-04-10',
-          balance: '1200',
+          balance: '2.136537',
         },
         {
           date: '2024-04-11',
-          balance: '450',
+          balance: '9.934467',
         },
       ],
     });
