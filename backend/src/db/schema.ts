@@ -30,5 +30,4 @@ export const registration = pgTable('registration', {
   last_name: text('last_name'),
   created_at: timestamp('created_at').defaultNow(),
   is_confirmed: boolean('is_confirmed').default(false),
-  _cursor: bigint('_cursor', { mode: 'number' }),
 });

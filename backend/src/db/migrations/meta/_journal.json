@@ -19,15 +19,8 @@
     {
       "idx": 2,
       "version": "5",
-      "when": 1712840044794,
-      "tag": "0002_misty_puma",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1712841321064,
-      "tag": "0003_fuzzy_forgotten_one",
+      "when": 1713181694478,
+      "tag": "0002_medical_darwin",
       "breakpoints": true
     }
   ]
