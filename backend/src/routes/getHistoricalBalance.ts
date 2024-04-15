@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { ADDRESS_REGEX } from '.';
 import { usdcBalance } from '../db/schema';
@@ -17,18 +17,20 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
     }
 
     try {
-      const historicalBalances = await fastify.db.execute(
-        sql`
-          SELECT balance, DATE(block_timestamp) AS date
-          FROM ${usdcBalance}
-          WHERE (address, block_timestamp) IN (
-            SELECT address, MAX(block_timestamp) AS max_timestamp
-            FROM ${usdcBalance}
-            WHERE address = ${address}
-            GROUP BY address, DATE(block_timestamp) 
-          )
-        `,
-      );
+      const subquery = sql`
+        SELECT address, MAX(block_timestamp) AS max_timestamp
+        FROM ${usdcBalance}
+        WHERE address = ${address} AND block_timestamp >= NOW() - INTERVAL '30 days'
+        GROUP BY address, DATE(block_timestamp)
+      `;
+
+      const historicalBalances = await fastify.db
+        .select({
+          balance: usdcBalance.balance,
+          date: sql`DATE(${usdcBalance.blockTimestamp})`,
+        })
+        .from(usdcBalance)
+        .where(sql`(${usdcBalance.address}, ${usdcBalance.blockTimestamp}) IN (${subquery})`);
 
       if (!historicalBalances) {
         return reply.status(404).send({ error: 'Error while retrieving historical balance' });
