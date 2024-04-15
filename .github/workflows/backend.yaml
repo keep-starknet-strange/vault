@@ -23,7 +23,7 @@ jobs:
     - name: 'Check format and lint'
       run: pnpm check
     - name: 'Test'
-      run: pnpm vitest --watch=false
+      run: pnpm vitest --pool=forks --watch=false
     - name: 'Coverage'
       run: pnpm vitest --coverage.enabled true
     - name: "Upload Coverage"
