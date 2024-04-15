@@ -9,7 +9,7 @@ interface RegisterRequestBody {
   last_name: string;
 }
 
-export default function getRegisterRoute(fastify: FastifyInstance) {
+export function getRegisterRoute(fastify: FastifyInstance) {
   fastify.post<{
     Body: RegisterRequestBody;
   }>(

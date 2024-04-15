@@ -1,5 +1,5 @@
 {
-  "id": "2b2c4f57-8c0d-4595-acfb-6cfcdfa0bb71",
+  "id": "9ef1e1c1-43aa-4d77-a535-e301ab1d09f3",
   "prevId": "2e782cb5-83f3-45c4-94d7-72bd2cdabf88",
   "version": "5",
   "dialect": "pg",
@@ -8,14 +8,14 @@
       "name": "registration",
       "schema": "",
       "columns": {
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "phone_number": {
           "name": "phone_number",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -36,13 +36,15 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
-        "_cursor": {
-          "name": "_cursor",
-          "type": "bigint",
+        "is_confirmed": {
+          "name": "is_confirmed",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},

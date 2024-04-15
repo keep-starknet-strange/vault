@@ -54,7 +54,7 @@ devDependencies:
     version: 4.7.2
   vite-tsconfig-paths:
     specifier: ^4.3.2
-    version: 4.3.2(typescript@5.4.4)
+    version: 4.3.2
   vitest:
     specifier: ^1.4.0
     version: 1.4.0
@@ -1180,8 +1180,8 @@ packages:
     dependencies:
       testcontainers: 10.8.1
     transitivePeerDependencies:
-      - encoding
-      - supports-color
+    - encoding
+    - supports-color
     dev: true
 
   /@types/docker-modem@3.0.6:
@@ -1454,7 +1454,7 @@ packages:
       debug: 4.3.4
       fastq: 1.17.1
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: false
 
   /axios@0.26.1:
@@ -1803,7 +1803,7 @@ packages:
       split-ca: 1.0.1
       ssh2: 1.15.0
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: true
 
   /dockerode@3.3.5:
@@ -1814,7 +1814,7 @@ packages:
       docker-modem: 3.0.8
       tar-fs: 2.0.1
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: true
 
   /dotenv@16.4.5:
@@ -1848,7 +1848,7 @@ packages:
       semver: 7.6.0
       zod: 3.22.4
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: true
 
   /drizzle-orm@0.30.7(postgres@3.4.4):
@@ -2011,7 +2011,7 @@ packages:
       debug: 4.3.4
       esbuild: 0.19.12
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: true
 
   /esbuild@0.18.20:
@@ -2237,7 +2237,7 @@ packages:
       semver: 7.6.0
       toad-cache: 3.7.0
     transitivePeerDependencies:
-      - supports-color
+    - supports-color
     dev: false
 
   /fastq@1.17.1:
@@ -3406,8 +3406,8 @@ packages:
       tar-fs: 3.0.5
       tmp: 0.2.3
     transitivePeerDependencies:
-      - encoding
-      - supports-color
+    - encoding
+    - supports-color
     dev: true
 
   /thread-stream@2.4.1:
@@ -3456,7 +3456,7 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: true
 
-  /tsconfck@3.0.3(typescript@5.4.4):
+  /tsconfck@3.0.3:
     resolution: {integrity: sha512-4t0noZX9t6GcPTfBAbIbbIU4pfpCwh0ueq3S4O/5qXI1VwK1outmxhe9dOiEWqMz3MW2LKgDTpqWV+37IWuVbA==}
     engines: {node: ^18 || >=20}
     hasBin: true
@@ -3465,8 +3465,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-    dependencies:
-      typescript: 5.4.4
     dev: true
 
   /tsx@4.7.2:
@@ -3517,6 +3515,7 @@ packages:
     resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: false
 
   /ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
@@ -3565,17 +3564,17 @@ packages:
       picocolors: 1.0.0
       vite: 5.2.8
     transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
+    - '@types/node'
+    - less
+    - lightningcss
+    - sass
+    - stylus
+    - sugarss
+    - supports-color
+    - terser
     dev: true
 
-  /vite-tsconfig-paths@4.3.2(typescript@5.4.4):
+  /vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
       vite: '*'
@@ -3585,10 +3584,10 @@ packages:
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
-      tsconfck: 3.0.3(typescript@5.4.4)
+      tsconfck: 3.0.3
     transitivePeerDependencies:
-      - supports-color
-      - typescript
+    - supports-color
+    - typescript
     dev: true
 
   /vite@5.2.8:
@@ -3672,13 +3671,13 @@ packages:
       vite-node: 1.4.0
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
+    - less
+    - lightningcss
+    - sass
+    - stylus
+    - sugarss
+    - supports-color
+    - terser
     dev: true
 
   /weak-map@1.0.8:
