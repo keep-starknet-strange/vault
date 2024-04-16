@@ -3,9 +3,9 @@ import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
-import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
@@ -18,9 +18,12 @@ export function declareRoutes(fastify: FastifyInstance) {
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
-  fastify.get('/status', async function handler(_request: FastifyRequest, _reply: FastifyReply) {
-    return await handleGetStatus(fastify.db);
-  });
+  fastify.get(
+    '/status',
+    async function handler(_request: FastifyRequest, _reply: FastifyReply) {
+      return await handleGetStatus(fastify.db);
+    },
+  );
 }
 
 async function handleGetStatus(db: Database) {
