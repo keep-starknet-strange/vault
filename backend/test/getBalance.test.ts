@@ -50,7 +50,7 @@ describe('GET /get_balance route', () => {
     });
 
     expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty('error', 'Invalid address format.');
+    expect(response.json()).toHaveProperty('message', 'Invalid address format.');
   });
 
   test('should return error, no address provided', async () => {
@@ -60,7 +60,7 @@ describe('GET /get_balance route', () => {
     });
 
     expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty('error', 'Address is required.');
+    expect(response.json()).toHaveProperty('message', 'Address is required.');
   });
 
   test('should return 0, unknown address', async () => {

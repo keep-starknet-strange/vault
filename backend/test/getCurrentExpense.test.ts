@@ -25,12 +25,14 @@ describe('/get_current_expense route', () => {
 
     await app.ready();
     // Insert transfer to mock address
+
+    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' });
+    await app.db
+      .insert(schema.usdcTransfer).values({transferId: "1", fromAddress: testAddress, amount: amount.toString() });
+
     await app.db
       .insert(schema.usdcTransfer)
-      .values({ fromAddress: testAddress, amount: amount.toString() });
-    await app.db
-      .insert(schema.usdcTransfer)
-      .values({ fromAddress: testAddress, amount: amount.toString() });
+      .values({ transferId: "2", fromAddress: testAddress, amount: amount.toString() });
   });
 
   afterAll(async () => {

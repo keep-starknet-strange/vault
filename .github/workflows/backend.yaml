@@ -23,7 +23,7 @@ jobs:
     - name: 'Check format and lint'
       run: pnpm check
     - name: 'Test'
-      run: pnpm vitest --watch=false
+      run: pnpm vitest --pool=forks --watch=false
     - name: 'Coverage'
       run: pnpm vitest --coverage.enabled true
     - name: "Upload Coverage"
@@ -31,3 +31,8 @@ jobs:
       with:
         name: coverage
         path: ./backend/coverage
+    - name: "Upload vitest config"
+      uses: actions/upload-artifact@v4
+      with:
+        name: vitest.config.ts
+        path: ./backend/vitest.config.ts

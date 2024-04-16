@@ -3,8 +3,7 @@ import { and, between, eq, gte } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
 import { usdcBalance, usdcTransfer } from '@/db/schema';
-
-const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
+import { addressRegex } from '.';
 
 export function getCurrentExpenseRoute(fastify: FastifyInstance) {
   fastify.get('/get_current_expense', async (request, reply) => {

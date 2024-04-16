@@ -4,11 +4,17 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
+import { getTransactionHistory } from './getTransactionHistory';
+import { getRegisterRoute } from './register';
+
+export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
 export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
   getCurrentExpenseRoute(fastify);
+  getTransactionHistory(fastify);
+  getRegisterRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
