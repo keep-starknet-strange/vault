@@ -17,14 +17,13 @@ export function getBalanceRoute(fastify: FastifyInstance) {
 
     try {
       // Use Drizzle ORM to find the balance by address
-      let balanceRecord = await fastify.db.query.usdcBalance
+      const balanceRecord = await fastify.db.query.usdcBalance
         .findFirst({ where: eq(usdcBalance.address, address) })
         .execute();
-      if (!balanceRecord) {
-        balanceRecord = { balance: '0' };
-      }
 
-      return reply.send({ balance: balanceRecord.balance });
+      const balance = balanceRecord?.balance ?? '0';
+
+      return reply.send({ balance });
     } catch (error) {
       console.error(error);
       return reply.status(500).send({ message: 'Internal server error' });
