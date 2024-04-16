@@ -3,8 +3,8 @@ import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
-import { getOtp } from './getOtp';
 import { getHistoricalBalanceRoute } from './getHistoricalBalance';
+import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
 import { verifyOtp } from './verifyOtp';
