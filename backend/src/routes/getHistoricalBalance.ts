@@ -1,4 +1,4 @@
-import { and, eq, exists, gte, inArray, sql } from 'drizzle-orm';
+import { and, eq, gte, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { ADDRESS_REGEX } from '.';
 import { usdcBalance } from '../db/schema';
