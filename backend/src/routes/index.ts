@@ -20,9 +20,12 @@ export function declareRoutes(fastify: FastifyInstance) {
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
-  fastify.get('/status', async function handler(_request: FastifyRequest, _reply: FastifyReply) {
-    return await handleGetStatus(fastify.db);
-  });
+  fastify.get(
+    '/status',
+    async function handler(_request: FastifyRequest, _reply: FastifyReply) {
+      return await handleGetStatus(fastify.db);
+    },
+  );
 }
 
 async function handleGetStatus(db: Database) {
