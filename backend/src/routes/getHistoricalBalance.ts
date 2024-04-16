@@ -46,6 +46,10 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
           ),
         );
 
+      if (!historicalBalances) {
+        return reply.status(404).send({ error: 'Error while retrieving historical balance' });
+      }
+
       return reply.send({
         historicalBalances,
       });
