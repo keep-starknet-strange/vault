@@ -4,6 +4,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
 import { getOtp } from './getOtp';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
 import { verifyOtp } from './verifyOtp';
@@ -17,6 +18,7 @@ export function declareRoutes(fastify: FastifyInstance) {
   getRegisterRoute(fastify);
   getOtp(fastify);
   verifyOtp(fastify);
+  getHistoricalBalanceRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
