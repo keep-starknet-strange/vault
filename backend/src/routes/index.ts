@@ -4,6 +4,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
 
@@ -15,6 +16,7 @@ export function declareRoutes(fastify: FastifyInstance) {
   getCurrentExpenseRoute(fastify);
   getTransactionHistory(fastify);
   getRegisterRoute(fastify);
+  getHistoricalBalanceRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
