@@ -16,7 +16,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
           type: 'object',
           required: ['address', 'amount', 'signature'],
           properties: {
-            amount: { type: 'string', pattern: '^[0-9]{1,78}.[0-9]{6}$' },
+            amount: { type: 'string', pattern: '^[0-9]{1,78}.[0-9]{1,6}$' },
             address: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
             signature: {
               type: 'array',
@@ -30,7 +30,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
       const { amount, address, signature } = request.body;
 
       // Validate the input
-      if (/^0{1,78}.000000$/.test(amount)) {
+      if (/^0{1,78}.0{1,6}$/.test(amount)) {
         return reply.status(400).send({ message: "Amount can't be zero." });
       }
       if (!signature.length) {

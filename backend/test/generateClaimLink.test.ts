@@ -64,12 +64,12 @@ describe('POST /generate_claim_link route', () => {
     );
   });
 
-  test('should fail for invalid amount', async () => {
+  test('should fail for negative amount', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/generate_claim_link',
       body: {
-        amount: '123.2',
+        amount: '-123.2',
         address: testAddress,
         signature: [testAddress, testAddress],
       },
@@ -78,7 +78,25 @@ describe('POST /generate_claim_link route', () => {
     expect(response.statusCode).toBe(400);
     expect(response.json()).toHaveProperty(
       'message',
-      'body/amount must match pattern "^[0-9]{1,78}.[0-9]{6}$"',
+      'body/amount must match pattern "^[0-9]{1,78}.[0-9]{1,6}$"',
+    );
+  });
+
+  test('should fail for too many decimals amount', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/generate_claim_link',
+      body: {
+        amount: '123.4567891',
+        address: testAddress,
+        signature: [testAddress, testAddress],
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/amount must match pattern "^[0-9]{1,78}.[0-9]{1,6}$"',
     );
   });
 
@@ -87,7 +105,7 @@ describe('POST /generate_claim_link route', () => {
       method: 'POST',
       url: '/generate_claim_link',
       body: {
-        amount: '0.000000',
+        amount: '0.0000',
         address: testAddress,
         signature: [testAddress, testAddress],
       },
