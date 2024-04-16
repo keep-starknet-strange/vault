@@ -3,13 +3,11 @@ import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getBalanceRoute } from './getBalance';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
-import { getHistoricalBalanceRoute } from './getHistoricalBalance';
-
-export const ADDRESS_REGEX = /^0x0[0-9a-fA-F]{63}$/;
 
 export function declareRoutes(fastify: FastifyInstance) {
   getStatusRoute(fastify);

@@ -1,6 +1,6 @@
 import { and, eq, gte, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
-import { ADDRESS_REGEX } from '.';
+import { addressRegex } from '.';
 import { usdcBalance } from '../db/schema';
 
 export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
@@ -12,7 +12,7 @@ export function getHistoricalBalanceRoute(fastify: FastifyInstance) {
     }
 
     // Validate address format
-    if (!ADDRESS_REGEX.test(address)) {
+    if (!addressRegex.test(address)) {
       return reply.status(400).send({ error: 'Invalid address format' });
     }
 
