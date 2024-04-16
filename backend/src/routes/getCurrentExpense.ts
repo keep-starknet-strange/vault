@@ -1,4 +1,5 @@
-import { and, eq, gte } from 'drizzle-orm/pg-core/expressions';
+import { sql } from 'drizzle-orm';
+import { and, between, eq, gte } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
 import { usdcBalance, usdcTransfer } from '@/db/schema';
@@ -18,26 +19,21 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
     }
 
     try {
-      // Get the current date
-      const currentDate = new Date();
-
-      // Calculate the date 7 days ago
-      const sevenDaysAgo = new Date(currentDate);
-      sevenDaysAgo.setDate(currentDate.getDate() - 7);
       // Use Drizzle ORM to find expense by address
-      const expenses = await fastify.db.query.usdcTransfer
-        .findMany({
-          where: and(
-            eq(usdcTransfer.fromAddress, address),
-            gte(usdcTransfer.createdAt, sevenDaysAgo),
-          ),
+      const expenses = await fastify.db
+        .select({
+          totalAmount: sql`sum(CAST(${usdcTransfer.amount} AS NUMERIC))`.mapWith(Number),
         })
+        .from(usdcTransfer)
+        .where(
+          and(
+            eq(usdcTransfer.fromAddress, address),
+            between(usdcTransfer.createdAt, sql`now()`, sql`now() - interval '7 days'`),
+          ),
+        )
         .execute();
 
-      let totalAmount = 0;
-      for (let i = 0; i < expenses.length; i++) {
-        totalAmount += Number(expenses[i].amount);
-      }
+      const totalAmount = expenses[0].totalAmount ?? 0;
 
       return reply.send({ cumulated_expense: `0x${totalAmount.toString(16)}` });
     } catch (error) {
