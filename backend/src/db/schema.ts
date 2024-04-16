@@ -45,3 +45,8 @@ export const claims = pgTable('claims', {
   nonce: serial('nonce'),
   signature: text('signature').array(),
 });
+
+export const mockLimit = pgTable("mock_limit", {
+  address: text("address").primaryKey(),
+  limit: text("limit"),
+});
