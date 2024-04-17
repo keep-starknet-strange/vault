@@ -1,5 +1,5 @@
 import { otp, registration } from '@/db/schema';
-import { desc, sql } from 'drizzle-orm';
+import { and, desc, sql } from 'drizzle-orm';
 import { eq } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
@@ -31,14 +31,16 @@ export function verifyOtp(fastify: FastifyInstance) {
 
         // validating the otp
         // - if otp is old or otp is already used
-        const otp_record = await fastify.db.query.otp
-          .findFirst({
-            where: sql`phone_number = ${phone_number} and otp = ${sent_otp} and used = false`,
-            orderBy: [desc(otp.created_at)],
-          })
-          .execute();
+        const otp_record = await fastify.db
+          .select()
+          .from(otp)
+          .where(
+            and(eq(otp.phone_number, phone_number), eq(otp.otp, sent_otp), eq(otp.used, false)),
+          )
+          .orderBy(desc(otp.created_at))
+          .limit(1);
 
-        if (!otp_record) {
+        if (otp_record.length === 0) {
           return reply
             .code(400)
             .send({ message: 'You need to request the otp first | Invalid OTP provided' });

@@ -25,6 +25,7 @@ jobs:
           echo TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} >> .env
           echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env
           echo TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} >> .env
+          echo TEST_PHONE_NUMBER=${{ secrets.TEST_PHONE_NUMBER }} >> .env
       - name: "Check format and lint"
         run: pnpm check
       - name: "Test"
