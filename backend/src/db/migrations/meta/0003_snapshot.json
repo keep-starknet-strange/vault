@@ -18,7 +18,7 @@
           "name": "otp",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "used": {
           "name": "used",

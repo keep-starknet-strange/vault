@@ -2,6 +2,7 @@ import {
   bigint,
   boolean,
   pgTable,
+  serial,
   text,
   timestamp,
   uuid,
@@ -49,6 +50,6 @@ export const otp = pgTable("otp", {
 export const claims = pgTable("claims", {
   id: uuid("id").defaultRandom().primaryKey(),
   amount: text("amount"),
-  address: text("address"),
+  nonce: serial("nonce"),
   signature: text("signature").array(),
 });

@@ -3,7 +3,6 @@ import * as schema from '../db/schema';
 
 interface ClaimRequestBody {
   amount: string;
-  address: string;
   signature: string[];
 }
 
@@ -14,10 +13,9 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
       schema: {
         body: {
           type: 'object',
-          required: ['address', 'amount', 'signature'],
+          required: ['amount', 'signature'],
           properties: {
             amount: { type: 'string', pattern: '^[0-9]{1,78}.[0-9]{1,6}$' },
-            address: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
             signature: {
               type: 'array',
               items: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
@@ -27,7 +25,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
       },
     },
     async (request, reply) => {
-      const { amount, address, signature } = request.body;
+      const { amount, signature } = request.body;
 
       // Validate the input
       if (/^0{1,78}.0{1,6}$/.test(amount)) {
@@ -40,7 +38,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
       // Generate the claim link
       try {
         const claimToken = (
-          await fastify.db.insert(schema.claims).values({ amount, address }).returning()
+          await fastify.db.insert(schema.claims).values({ amount }).returning()
         )[0].id;
 
         const claimLink = `https://vlt.finance/claim?token=${claimToken}`;

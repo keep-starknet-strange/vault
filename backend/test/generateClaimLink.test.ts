@@ -31,37 +31,18 @@ describe('POST /generate_claim_link route', () => {
     await container.stop();
   });
 
-  test('should return a claimlink for valid (address, amount, signature)', async () => {
+  test('should return a claimlink for valid (amount, signature)', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/generate_claim_link',
       body: {
         amount: testAmount,
-        address: testAddress,
         signature: [testAddress, testAddress],
       },
     });
 
     expect(response.statusCode).toBe(200);
     assert(claimUrlRegex.test((await response.json()).claimLink));
-  });
-
-  test('should fail for invalid address', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/generate_claim_link',
-      body: {
-        amount: testAmount,
-        address: '0x0',
-        signature: [testAddress, testAddress],
-      },
-    });
-
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty(
-      'message',
-      'body/address must match pattern "^0x0[0-9a-fA-F]{63}$"',
-    );
   });
 
   test('should fail for negative amount', async () => {
