@@ -36,7 +36,7 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
         0,
       );
 
-      return reply.send({ cumulated_expense: `0x${totalAmount.toString(16)}` });
+      return reply.send({ cumulated_expense: totalAmount });
     } catch (error) {
       console.error(error);
       return reply.status(500).send({ error: 'Internal server error' });

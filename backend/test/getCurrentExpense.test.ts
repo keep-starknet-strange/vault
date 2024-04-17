@@ -72,7 +72,7 @@ describe('/get_current_expense route', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('cumulated_expense', `0x${(amount * 2).toString(16)}`);
+    expect(response.json()).toHaveProperty('cumulated_expense', 2000);
   });
 
   test('should return error, invalid address format', async () => {
