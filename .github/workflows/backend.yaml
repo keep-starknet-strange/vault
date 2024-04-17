@@ -1,5 +1,5 @@
 name: Backend
-on: [push, pull_request]
+on: [push, pull_request_target]
 
 jobs:
   test:
@@ -14,25 +14,30 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v3
-      with:
-        version: 8
-    - name: 'Install Deps'
-      run: pnpm install
-    - name: 'Check format and lint'
-      run: pnpm check
-    - name: 'Test'
-      run: pnpm vitest --pool=forks --watch=false
-    - name: 'Coverage'
-      run: pnpm vitest --coverage.enabled true
-    - name: "Upload Coverage"
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage
-        path: ./backend/coverage
-    - name: "Upload vitest config"
-      uses: actions/upload-artifact@v4
-      with:
-        name: vitest.config.ts
-        path: ./backend/vitest.config.ts
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: "Install Deps"
+        run: pnpm install
+      - name: "Build .env"
+        run: |
+          echo TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} >> .env
+          echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env
+          echo TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} >> .env
+      - name: "Check format and lint"
+        run: pnpm check
+      - name: "Test"
+        run: pnpm vitest --pool=forks --watch=false
+      - name: "Coverage"
+        run: pnpm vitest --pool=forks --coverage.enabled true
+      - name: "Upload Coverage"
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ./backend/coverage
+      - name: "Upload vitest config"
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest.config.ts
+          path: ./backend/vitest.config.ts
