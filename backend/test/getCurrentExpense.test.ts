@@ -10,6 +10,18 @@ describe('/get_current_expense route', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const amount = 1000;
+  const transactionHash = '0x040d8bb0da6fdfb7825567920fceb1bee209cde3310b1548d17d06cde847348c';
+
+  const getDate = (daysDifference?: number): Date => {
+    if (daysDifference) {
+      const date = new Date();
+      const formatDate = new Date(date);
+      formatDate.setDate(date.getDate() - daysDifference);
+      return formatDate;
+    }
+    const currentDate = new Date();
+    return currentDate;
+  };
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
@@ -26,14 +38,26 @@ describe('/get_current_expense route', () => {
     await app.ready();
     // Insert transfer to mock address
 
-    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' });
-    await app.db
-      .insert(schema.usdcTransfer)
-      .values({ transferId: '1', fromAddress: testAddress, amount: amount.toString() });
+    await app.db.insert(schema.usdcTransfer).values({
+      transferId: `${transactionHash}_1`,
+      fromAddress: testAddress,
+      amount: amount.toString(),
+      createdAt: getDate(10),
+    });
 
-    await app.db
-      .insert(schema.usdcTransfer)
-      .values({ transferId: '2', fromAddress: testAddress, amount: amount.toString() });
+    await app.db.insert(schema.usdcTransfer).values({
+      transferId: `${transactionHash}_2`,
+      fromAddress: testAddress,
+      amount: amount.toString(),
+      createdAt: getDate(),
+    });
+
+    await app.db.insert(schema.usdcTransfer).values({
+      transferId: `${transactionHash}_3`,
+      fromAddress: testAddress,
+      amount: amount.toString(),
+      createdAt: getDate(),
+    });
   });
 
   afterAll(async () => {

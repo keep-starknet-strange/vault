@@ -1,20 +1,20 @@
-import { sql } from "drizzle-orm";
-import { and, between, eq, gte } from "drizzle-orm/pg-core/expressions";
-import type { FastifyInstance } from "fastify";
+import { sql } from 'drizzle-orm';
+import { and, between, eq, gte } from 'drizzle-orm/pg-core/expressions';
+import type { FastifyInstance } from 'fastify';
 
-import { usdcBalance, usdcTransfer } from "@/db/schema";
-import { addressRegex } from ".";
+import { usdcBalance, usdcTransfer } from '@/db/schema';
+import { addressRegex } from '.';
 
 export function getCurrentExpenseRoute(fastify: FastifyInstance) {
-  fastify.get("/get_current_expense", async (request, reply) => {
+  fastify.get('/get_current_expense', async (request, reply) => {
     const { address } = request.query as { address?: string };
 
     if (!address) {
-      return reply.status(400).send({ error: "Address is required." });
+      return reply.status(400).send({ error: 'Address is required.' });
     }
     // Validate address format
     if (!addressRegex.test(address)) {
-      return reply.status(400).send({ error: "Invalid address format." });
+      return reply.status(400).send({ error: 'Invalid address format.' });
     }
 
     try {
@@ -27,21 +27,21 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
         .findMany({
           where: and(
             eq(usdcTransfer.fromAddress, address),
-            gte(usdcTransfer.createdAt, sevenDaysAgo)
+            gte(usdcTransfer.createdAt, sevenDaysAgo),
           ),
         })
         .execute();
 
       // Calculate the sum of amounts
       const totalAmount = expenses.reduce(
-        (acc, curr) => acc + parseFloat(curr.amount || "0"),
-        0
+        (acc, curr) => acc + Number.parseFloat(curr.amount || '0'),
+        0,
       );
 
       return reply.send({ cumulated_expense: `0x${totalAmount.toString(16)}` });
     } catch (error) {
       console.error(error);
-      return reply.status(500).send({ error: "Internal server error" });
+      return reply.status(500).send({ error: 'Internal server error' });
     }
   });
 }
