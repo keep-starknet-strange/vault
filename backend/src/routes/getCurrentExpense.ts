@@ -23,14 +23,20 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
       const sevenDaysAgo = new Date(currentDate);
       sevenDaysAgo.setDate(currentDate.getDate() - 7);
       // Use Drizzle ORM to find expense by address
-      const expenses = await fastify.db.query.usdcTransfer
-        .findMany({
-          where: and(
-            eq(usdcTransfer.fromAddress, address),
-            gte(usdcTransfer.createdAt, sevenDaysAgo),
-          ),
-        })
-        .execute();
+      const expenses = await fastify.db
+        .select()
+        .from(usdcTransfer)
+        .where(
+          and(eq(usdcTransfer.fromAddress, address), gte(usdcTransfer.createdAt, sevenDaysAgo)),
+        );
+      // const expenses = await fastify.db.query.usdcTransfer
+      //   .findMany({
+      //     where: and(
+      //       eq(usdcTransfer.fromAddress, address),
+      //       gte(usdcTransfer.createdAt, sevenDaysAgo),
+      //     ),
+      //   })
+      //   .execute();
 
       // Calculate the sum of amounts
       const totalAmount = expenses.reduce(

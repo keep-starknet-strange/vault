@@ -9,7 +9,7 @@ describe('/get_current_expense route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
-  const amount = 1000;
+  const amount = 1000.000000;
   const transactionHash = '0x040d8bb0da6fdfb7825567920fceb1bee209cde3310b1548d17d06cde847348c';
 
   const getDate = (daysDifference?: number): Date => {
