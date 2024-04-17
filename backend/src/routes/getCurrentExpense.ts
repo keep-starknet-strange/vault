@@ -29,14 +29,6 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
         .where(
           and(eq(usdcTransfer.fromAddress, address), gte(usdcTransfer.createdAt, sevenDaysAgo)),
         );
-      // const expenses = await fastify.db.query.usdcTransfer
-      //   .findMany({
-      //     where: and(
-      //       eq(usdcTransfer.fromAddress, address),
-      //       gte(usdcTransfer.createdAt, sevenDaysAgo),
-      //     ),
-      //   })
-      //   .execute();
 
       // Calculate the sum of amounts
       const totalAmount = expenses.reduce(
