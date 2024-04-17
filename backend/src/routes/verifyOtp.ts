@@ -41,9 +41,9 @@ export function verifyOtp(fastify: FastifyInstance) {
           .limit(1);
 
         if (!otp_record.length) {
-          return reply
-            .code(400)
-            .send({ message: 'You need to request the otp first | Invalid OTP provided' });
+          return reply.code(400).send({
+            message: 'You need to request the otp first | Invalid OTP provided',
+          });
         }
 
         // update the otp as used
