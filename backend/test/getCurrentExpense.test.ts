@@ -104,6 +104,6 @@ describe('/get_current_expense route', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('cumulated_expense', '0x0');
+    expect(response.json()).toHaveProperty('cumulated_expense', '0');
   });
 });
