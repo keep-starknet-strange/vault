@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { buildApp } from '@/app';
 
-import * as schema from '../db/schema';
+import * as schema from '../src/db/schema';
 
 describe('GET /get_limit route', () => {
   let container: StartedPostgreSqlContainer;
@@ -27,7 +27,7 @@ describe('GET /get_limit route', () => {
     // Insert limit to mock address
     await app.db
       .insert(schema.mockLimit)
-      .values({ address: testAddress, limit: '7714789860048896' });
+      .values({ address: testAddress, limit: '7714789860.048896' });
   });
 
   afterAll(async () => {
@@ -42,13 +42,7 @@ describe('GET /get_limit route', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({
-      limit: [
-        {
-          limit: '7714789860048896',
-        },
-      ],
-    });
+    expect(response.json()).toHaveProperty('limit', '7714789860.048896');
   });
 
   test('should return error, invalid address format', async () => {
@@ -72,7 +66,7 @@ describe('GET /get_limit route', () => {
     expect(response.json()).toHaveProperty('message', 'Address is required');
   });
 
-  test('should return [], unknown address', async () => {
+  test('should return 0, unknown address', async () => {
     const unknownAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07ae';
     const response = await app.inject({
       method: 'GET',
@@ -80,6 +74,6 @@ describe('GET /get_limit route', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ limit: [] });
+    expect(response.json()).toHaveProperty('limit', '0');
   });
 });

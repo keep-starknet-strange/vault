@@ -22,7 +22,9 @@ export function getLimitRoute(fastify: FastifyInstance) {
         .from(mockLimit)
         .where(eq(mockLimit.address, address));
 
-      return reply.send({ limit });
+      const result = limit[0]?.limit ?? '0';
+
+      return reply.send({ limit: result });
     } catch (error) {
       console.error(error);
       return reply.status(500).send({ message: 'Internal server error' });
