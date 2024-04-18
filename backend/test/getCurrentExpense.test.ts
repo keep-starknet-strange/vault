@@ -9,7 +9,7 @@ describe('/get_current_expense route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
-  const amount = 1000.000000;
+  const amount = '1000.000000';
   const transactionHash = '0x040d8bb0da6fdfb7825567920fceb1bee209cde3310b1548d17d06cde847348c';
 
   const getDate = (daysDifference?: number): Date => {
@@ -41,21 +41,21 @@ describe('/get_current_expense route', () => {
     await app.db.insert(schema.usdcTransfer).values({
       transferId: `${transactionHash}_1`,
       fromAddress: testAddress,
-      amount: amount.toString(),
+      amount,
       createdAt: getDate(10),
     });
 
     await app.db.insert(schema.usdcTransfer).values({
       transferId: `${transactionHash}_2`,
       fromAddress: testAddress,
-      amount: amount.toString(),
+      amount,
       createdAt: getDate(),
     });
 
     await app.db.insert(schema.usdcTransfer).values({
       transferId: `${transactionHash}_3`,
       fromAddress: testAddress,
-      amount: amount.toString(),
+      amount,
       createdAt: getDate(),
     });
   });
@@ -72,7 +72,7 @@ describe('/get_current_expense route', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('cumulated_expense', 2000);
+    expect(response.json()).toHaveProperty('cumulated_expense', '2000');
   });
 
   test('should return error, invalid address format', async () => {

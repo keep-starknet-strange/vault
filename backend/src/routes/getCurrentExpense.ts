@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { and, between, eq, gte } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
+import { formatUnits, parseUnits } from 'viem';
 
 import { usdcBalance, usdcTransfer } from '@/db/schema';
 import { addressRegex } from '.';
@@ -8,6 +9,7 @@ import { addressRegex } from '.';
 export function getCurrentExpenseRoute(fastify: FastifyInstance) {
   fastify.get('/get_current_expense', async (request, reply) => {
     const { address } = request.query as { address?: string };
+    const decimal = 6;
 
     if (!address) {
       return reply.status(400).send({ error: 'Address is required.' });
@@ -32,11 +34,13 @@ export function getCurrentExpenseRoute(fastify: FastifyInstance) {
 
       // Calculate the sum of amounts
       const totalAmount = expenses.reduce(
-        (acc, curr) => acc + Number.parseFloat(curr.amount || '0'),
-        0,
+        (acc, curr) => acc + parseUnits(curr.amount || '0', decimal),
+        parseUnits('0', decimal),
       );
 
-      return reply.send({ cumulated_expense: totalAmount });
+      return reply.send({
+        cumulated_expense: formatUnits(totalAmount, decimal),
+      });
     } catch (error) {
       console.error(error);
       return reply.status(500).send({ error: 'Internal server error' });

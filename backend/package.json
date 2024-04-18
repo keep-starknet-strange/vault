@@ -29,6 +29,7 @@
     "drizzle-orm": "^0.30.7",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "viem": "^2.9.21"
   }
 }
