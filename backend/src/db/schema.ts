@@ -31,3 +31,10 @@ export const registration = pgTable('registration', {
   created_at: timestamp('created_at').defaultNow(),
   is_confirmed: boolean('is_confirmed').default(false),
 });
+
+export const otp = pgTable('otp', {
+  phone_number: text('phone_number'),
+  otp: text('otp'),
+  used: boolean('used').default(false),
+  created_at: timestamp('created_at').defaultNow(),
+});
