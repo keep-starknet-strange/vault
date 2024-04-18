@@ -40,7 +40,7 @@ export function verifyOtp(fastify: FastifyInstance) {
           .orderBy(desc(otp.created_at))
           .limit(1);
 
-        if (otp_record.length === 0) {
+        if (!otp_record.length) {
           return reply
             .code(400)
             .send({ message: 'You need to request the otp first | Invalid OTP provided' });
