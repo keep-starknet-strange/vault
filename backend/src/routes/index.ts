@@ -5,8 +5,10 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
 import { getHistoricalBalanceRoute } from './getHistoricalBalance';
+import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
+import { verifyOtp } from './verifyOtp';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
@@ -16,6 +18,8 @@ export function declareRoutes(fastify: FastifyInstance) {
   getCurrentExpenseRoute(fastify);
   getTransactionHistory(fastify);
   getRegisterRoute(fastify);
+  getOtp(fastify);
+  verifyOtp(fastify);
   getHistoricalBalanceRoute(fastify);
 }
 
