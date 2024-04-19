@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { buildApp } from '@/app';
-import * as schema from '../db/schema';
+import * as schema from '../src/db/schema';
 
 describe('GET /get_historical_balance route', () => {
   let container: StartedPostgreSqlContainer;
