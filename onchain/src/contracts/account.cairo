@@ -1,14 +1,19 @@
 #[starknet::contract(account)]
 mod Account {
+    use core::hash::HashStateTrait;
+    use core::pedersen::{HashStateImpl, PedersenImpl};
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::ContractAddress;
     use starknet::account::Call;
+    use starknet::{get_caller_address, contract_address_const};
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
     use vault::tx_approval::tx_approval::TransactionApprovalComponent;
     use vault::whitelist::whitelist::WhitelistComponent;
+
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
@@ -55,6 +60,8 @@ mod Account {
     struct Storage {
         #[substorage(v0)]
         account: AccountComponent::Storage,
+        claims: LegacyMap<felt252, bool>,
+        usdc_address: ContractAddress,
         #[substorage(v0)]
         src5: SRC5Component::Storage,
         #[substorage(v0)]
@@ -86,11 +93,47 @@ mod Account {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, public_key: felt252, approver: ContractAddress, limit: u256
+        ref self: ContractState, public_key: felt252, approver: ContractAddress, limit: u256,
     ) {
         self.account.initializer(:public_key);
         self.transaction_approval.initializer(:approver);
         self.weekly_limit.initializer(:limit);
+    }
+
+    #[derive(Serde, Drop)]
+    struct Claim {
+        amount: u256,
+        nonce: felt252,
+        signature: Array<felt252>
+    }
+    #[starknet::interface]
+    pub trait ClaimLinkTrait<T> {
+        fn claim(ref self: T, claim: Claim);
+        #[cfg(test)]
+        fn set_usdc_address(ref self: T, usdc_address: ContractAddress);
+    }
+    #[abi(embed_v0)]
+    impl ClaimLink of ClaimLinkTrait<ContractState> {
+        fn claim(ref self: ContractState, claim: Claim) {
+            let hash = PedersenImpl::new(claim.nonce);
+            let hash = hash
+                .update(claim.amount.low.into())
+                .update(claim.amount.high.into())
+                .finalize();
+            assert!(!self.claims.read(hash), "Link already used");
+            assert!(
+                self.is_valid_signature(hash, claim.signature) == 'VALID',
+                "Invalid signature for claim"
+            );
+            self.claims.write(hash, true);
+            IERC20Dispatcher { contract_address: self.usdc_address.read() }
+                .transfer(get_caller_address(), claim.amount);
+        }
+
+        #[cfg(test)]
+        fn set_usdc_address(ref self: ContractState, usdc_address: ContractAddress) {
+            self.usdc_address.write(usdc_address);
+        }
     }
 
     //
