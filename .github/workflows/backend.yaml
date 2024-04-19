@@ -4,9 +4,6 @@ on: [push, pull_request_target]
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
     permissions:
       # Required to checkout the code
       contents: read
@@ -25,31 +22,50 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           path: 'pr-code'  # Check out to a separate path to avoid mixing code bases
 
-      - uses: actions/checkout@v4
+      # Setting up the environment
       - uses: pnpm/action-setup@v3
         with:
           version: 8
+
+      # Install dependencies in the PR code's backend directory
       - name: "Install Deps"
         run: pnpm install
+        working-directory: ./pr-code/backend
+
+      # Build environment variables
       - name: "Build .env"
         run: |
           echo TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} >> .env
           echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env
           echo TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} >> .env
           echo TEST_PHONE_NUMBER=${{ secrets.TEST_PHONE_NUMBER }} >> .env
+        working-directory: ./pr-code/backend
+
+      # Check format and lint in the PR code's backend directory
       - name: "Check format and lint"
         run: pnpm check
+        working-directory: ./pr-code/backend
+
+      # Run tests in the PR code's backend directory
       - name: "Test"
         run: pnpm vitest --pool=forks --watch=false
+        working-directory: ./pr-code/backend
+
+      # Generate coverage report in the PR code's backend directory
       - name: "Coverage"
         run: pnpm vitest --pool=forks --coverage.enabled true
+        working-directory: ./pr-code/backend
+
+      # Upload coverage report artifact
       - name: "Upload Coverage"
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: ./backend/coverage
+          path: ./pr-code/backend/coverage
+
+      # Upload vitest config file
       - name: "Upload vitest config"
         uses: actions/upload-artifact@v4
         with:
           name: vitest.config.ts
-          path: ./backend/vitest.config.ts
+          path: ./pr-code/backend/vitest.config.ts
