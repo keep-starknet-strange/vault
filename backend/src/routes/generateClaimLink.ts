@@ -45,7 +45,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
         return reply.send({ claimLink });
       } catch (error) {
         console.error('Failed to generate claim link:', error);
-        return reply.status(500).send({ error: 'Failed to generate claim link.' });
+        return reply.status(500).send({ message: 'Failed to generate claim link.' });
       }
     },
   );
