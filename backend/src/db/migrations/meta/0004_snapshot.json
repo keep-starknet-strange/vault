@@ -1,9 +1,44 @@
 {
-  "id": "7847dae8-7463-4192-9e74-49cda4580451",
-  "prevId": "1773a5e6-0a72-4af8-8741-0c5f2bd29705",
+  "id": "dce629a6-17e5-438e-8bc5-5f044726fd3b",
+  "prevId": "ddbf7704-31b7-4326-aa2c-d23b4d774bc8",
   "version": "5",
   "dialect": "pg",
   "tables": {
+    "claims": {
+      "name": "claims",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "amount": {
+          "name": "amount",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nonce": {
+          "name": "nonce",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "otp": {
       "name": "otp",
       "schema": "",

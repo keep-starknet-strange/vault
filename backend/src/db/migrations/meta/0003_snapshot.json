@@ -1,5 +1,5 @@
 {
-  "id": "1773a5e6-0a72-4af8-8741-0c5f2bd29705",
+  "id": "ddbf7704-31b7-4326-aa2c-d23b4d774bc8",
   "prevId": "9ef1e1c1-43aa-4d77-a535-e301ab1d09f3",
   "version": "5",
   "dialect": "pg",
@@ -18,7 +18,7 @@
           "name": "otp",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "used": {
           "name": "used",
@@ -81,12 +81,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
-        },
-        "_cursor": {
-          "name": "_cursor",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
