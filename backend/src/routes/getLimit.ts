@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm/pg-core/expressions';
+import { desc, eq } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
 
 import { mockLimit } from '@/db/schema';
@@ -20,7 +20,9 @@ export function getLimitRoute(fastify: FastifyInstance) {
       const limit = await fastify.db
         .select({ limit: mockLimit.limit })
         .from(mockLimit)
-        .where(eq(mockLimit.address, address));
+        .where(eq(mockLimit.address, address))
+        .orderBy(desc(mockLimit.blockTimestamp))
+        .limit(1);
 
       const result = limit[0]?.limit ?? '0';
 

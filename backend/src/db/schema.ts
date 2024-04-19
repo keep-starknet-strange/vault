@@ -46,7 +46,8 @@ export const claims = pgTable('claims', {
   signature: text('signature').array(),
 });
 
-export const mockLimit = pgTable("mock_limit", {
-  address: text("address").primaryKey(),
-  limit: text("limit"),
+export const mockLimit = pgTable('mock_limit', {
+  address: text('address').primaryKey(),
+  limit: text('limit'),
+  blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
 });
