@@ -2,6 +2,7 @@ import type { Database } from '@/db/drizzle';
 import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
+import { getGenerateClaimLinkRoute } from './generateClaimLink';
 import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
 import { getHistoricalBalanceRoute } from './getHistoricalBalance';
@@ -21,6 +22,7 @@ export function declareRoutes(fastify: FastifyInstance) {
   getOtp(fastify);
   verifyOtp(fastify);
   getHistoricalBalanceRoute(fastify);
+  getGenerateClaimLinkRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {

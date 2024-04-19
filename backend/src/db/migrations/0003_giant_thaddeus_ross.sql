@@ -4,5 +4,3 @@ CREATE TABLE IF NOT EXISTS "otp" (
 	"used" boolean DEFAULT false,
 	"created_at" timestamp DEFAULT now()
 );
---> statement-breakpoint
-ALTER TABLE "registration" ADD COLUMN "_cursor" bigint;
