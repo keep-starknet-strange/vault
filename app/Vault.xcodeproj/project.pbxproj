@@ -196,14 +196,6 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		9CD778AC2BBC1A5C00BA4677 /* Curve */ = {
-			isa = PBXGroup;
-			children = (
-				9CD778AD2BBC1A7300BA4677 /* GraphView.swift */,
-			);
-			path = Curve;
-			sourceTree = "<group>";
-		};
 		9CD778B12BBC38B700BA4677 /* Cards */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,14 +239,11 @@
 			isa = PBXGroup;
 			children = (
 				9CD778B42BBCB0CD00BA4677 /* Constants */,
-				9CD778AC2BBC1A5C00BA4677 /* Curve */,
-				9CD778A92BBAF89F00BA4677 /* Core */,
 				9C637CDC2BB0A4DA005816B4 /* Utils */,
 				9C637CD72BB096F5005816B4 /* Managers */,
 				9CDFD4412BADA288000466B9 /* Model */,
 				9CDFD4362BAB86E6000466B9 /* Components */,
 				9CDFD4302BAB7F74000466B9 /* fonts */,
-				9CDFD42B2BAB4CF8000466B9 /* Onboarding */,
 				9CDFD4282BAB44E8000466B9 /* Navigation */,
 				9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */,
 				9CDFD4022BAB3429000466B9 /* Assets.xcassets */,
@@ -282,6 +271,8 @@
 		9CDFD4282BAB44E8000466B9 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				9CD778A92BBAF89F00BA4677 /* Core */,
+				9CDFD42B2BAB4CF8000466B9 /* Onboarding */,
 				9CDFD4002BAB3428000466B9 /* ContentView.swift */,
 				9CD778BB2BBED06700BA4677 /* CustomTabBar.swift */,
 			);
@@ -316,6 +307,7 @@
 		9CDFD4362BAB86E6000466B9 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				9CD778AD2BBC1A7300BA4677 /* GraphView.swift */,
 				9CDFD4372BAB8934000466B9 /* Buttons.swift */,
 				9CDFD43F2BAD83E7000466B9 /* ThemedText.swift */,
 				9C637CDA2BB09C4D005816B4 /* Notification.swift */,
