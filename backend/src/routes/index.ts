@@ -7,6 +7,7 @@ import { getGenerateClaimLinkRoute } from './generateClaimLink';
 import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
 import { getHistoricalBalanceRoute } from './getHistoricalBalance';
+import { getLimitRoute } from './getLimit';
 import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
@@ -25,6 +26,7 @@ export function declareRoutes(fastify: FastifyInstance) {
   getHistoricalBalanceRoute(fastify);
   getGenerateClaimLinkRoute(fastify);
   getClaimRoute(fastify);
+  getLimitRoute(fastify);
 }
 
 function getStatusRoute(fastify: FastifyInstance) {

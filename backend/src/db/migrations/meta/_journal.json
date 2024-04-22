@@ -36,6 +36,13 @@
       "when": 1713519395837,
       "tag": "0004_thin_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1713774641394,
+      "tag": "0005_first_madripoor",
+      "breakpoints": true
     }
   ]
 }
