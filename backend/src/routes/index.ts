@@ -4,14 +4,14 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getClaimRoute } from './claim';
 import { getGenerateClaimLinkRoute } from './generateClaimLink';
+import { getBalanceRoute } from './getBalance';
 import { getCurrentExpenseRoute } from './getCurrentExpense';
+import { getHistoricalBalanceRoute } from './getHistoricalBalance';
+import { getLimitRoute } from './getLimit';
 import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
 import { getRegisterRoute } from './register';
 import { verifyOtp } from './verifyOtp';
-import { getBalanceRoute } from "./getBalance";
-import { getHistoricalBalanceRoute } from "./getHistoricalBalance";
-import { getLimitRoute } from "./getLimit";
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
