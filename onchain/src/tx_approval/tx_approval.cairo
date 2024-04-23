@@ -59,12 +59,10 @@ pub mod TransactionApprovalComponent {
                 .unwrap_syscall();
             let begin_loop_value = transaction_hash.add(3);
             // If there is too much calldata it'll probably overwrite some storage vars here.
-            while let Option::Some(val) = transaction
-                .calldata
-                .pop_front() {
-                    storage_write_syscall(0, begin_loop_value.add(i), *val).unwrap_syscall();
-                    i += 1;
-                }
+            while let Option::Some(val) = transaction.calldata.pop_front() {
+                storage_write_syscall(0, begin_loop_value.add(i), *val).unwrap_syscall();
+                i += 1;
+            }
         }
 
         /// Returns the [Call] from a transaction hash if it exists.
@@ -101,7 +99,7 @@ pub mod TransactionApprovalComponent {
             Call { to, selector, calldata: calldata.span() }
         }
 
-        /// Approve a transaction request. This will check the signature of the 
+        /// Approve a transaction request. This will check the signature of the
         /// approver against the transaction hash.
         ///
         /// # Arguments
@@ -215,17 +213,18 @@ mod test {
 
     /// Deploys a mock erc20 contract.
     fn deploy_erc20(recipient: ContractAddress, initial_supply: u256) -> IERC20Dispatcher {
-        let name = 0;
-        let symbol = 0;
+        let name: ByteArray = "Fake token";
+        let symbol: ByteArray = "FT";
         let mut calldata = array![];
 
         calldata.append_serde(name);
         calldata.append_serde(symbol);
         calldata.append_serde(initial_supply);
         calldata.append_serde(recipient);
+        calldata.append_serde(recipient);
 
         let (address, _) = starknet::deploy_syscall(
-            openzeppelin::presets::ERC20::TEST_CLASS_HASH.try_into().unwrap(),
+            openzeppelin::presets::ERC20Upgradeable::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             calldata.span(),
             false
@@ -239,7 +238,7 @@ mod test {
         // private_key: 1234,
         // public_key: 0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa,
         // r: 0x6c8be1fb0fb5c730fbd7abaecbed9d980376ff2e660dfcd157e158d2b026891,
-        // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35 
+        // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35
 
         // Deploy approver account with public key and weekly limit and approver is 0.
         let (approver, _) = starknet::deploy_syscall(
@@ -268,7 +267,7 @@ mod test {
         // public_key: 0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa,
         let transaction_hash = 0x601d3d2e265c10ff645e1554c435e72ce6721f0ba5fc96f0c650bfc6231191a;
         // r: 0x6c8be1fb0fb5c730fbd7abaecbed9d980376ff2e660dfcd157e158d2b026891,
-        // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35 
+        // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35
         let recipient = contract_address_const::<0x123>();
         let to = contract_address_const::<0x1>();
 

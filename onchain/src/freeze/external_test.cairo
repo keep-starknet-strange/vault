@@ -48,17 +48,18 @@ mod external_test {
 
     /// Deploys a mock erc20 contract.
     fn deploy_erc20(recipient: ContractAddress, initial_supply: u256) -> IERC20Dispatcher {
-        let name = 0;
-        let symbol = 0;
+        let name: ByteArray = "Fake token";
+        let symbol: ByteArray = "FT";
         let mut calldata = array![];
 
         calldata.append_serde(name);
         calldata.append_serde(symbol);
         calldata.append_serde(initial_supply);
         calldata.append_serde(recipient);
+        calldata.append_serde(recipient);
 
         let (address, _) = starknet::deploy_syscall(
-            openzeppelin::presets::ERC20::TEST_CLASS_HASH.try_into().unwrap(),
+            openzeppelin::presets::ERC20Upgradeable::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             calldata.span(),
             false

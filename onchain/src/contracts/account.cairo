@@ -1,14 +1,17 @@
 #[starknet::contract(account)]
 mod Account {
-    use core::hash::HashStateTrait;
-    use core::pedersen::{HashStateImpl, PedersenImpl};
+    use core::poseidon::{HashStateTrait, PoseidonTrait};
+    use core::hash::{HashStateExTrait, Hash};
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::utils::cryptography::snip12::{
+        OffchainMessageHashImpl, StructHash, SNIP12Metadata
+    };
     use starknet::ContractAddress;
     use starknet::account::Call;
-    use starknet::{get_caller_address, contract_address_const};
+    use starknet::{get_caller_address, contract_address_const, get_contract_address};
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
     use vault::tx_approval::tx_approval::TransactionApprovalComponent;
@@ -98,32 +101,62 @@ mod Account {
         self.account.initializer(:public_key);
         self.transaction_approval.initializer(:approver);
         self.weekly_limit.initializer(:limit);
+        self
+            .usdc_address
+            .write(
+                contract_address_const::<
+                    0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080
+                >()
+            );
     }
-
-    #[derive(Serde, Drop)]
+    #[derive(Drop, Serde, Clone, Copy, Hash)]
     struct Claim {
         amount: u256,
         nonce: felt252,
-        signature: Array<felt252>
+    }
+    const U256_TYPE_HASH: felt252 = selector!("\"u256\"(\"low\":\"u128\",\"high\":\"u128\")");
+    const CLAIM_TYPE_HASH: felt252 =
+        selector!(
+            "\"Claim\"(\"amount\":\"u256\",\"nonce\":\"felt\")\"u256\"(\"low\":\"u128\",\"high\":\"u128\")"
+        );
+
+    impl StructHashImpl of StructHash<Claim> {
+        fn hash_struct(self: @Claim) -> felt252 {
+            let hash_state = PoseidonTrait::new();
+            hash_state
+                .update_with(CLAIM_TYPE_HASH)
+                .update_with(
+                    PoseidonTrait::new()
+                        .update_with(U256_TYPE_HASH)
+                        .update_with(*self.amount)
+                        .finalize()
+                )
+                .update_with(*self.nonce)
+                .finalize()
+        }
     }
     #[starknet::interface]
     pub trait ClaimLinkTrait<T> {
-        fn claim(ref self: T, claim: Claim);
+        fn claim(ref self: T, claim: Claim, signature: Array<felt252>);
         #[cfg(test)]
         fn set_usdc_address(ref self: T, usdc_address: ContractAddress);
     }
+
+    impl SNIP12MetadataImpl of SNIP12Metadata {
+        fn name() -> felt252 {
+            'Vault'
+        }
+        fn version() -> felt252 {
+            0
+        }
+    }
     #[abi(embed_v0)]
     impl ClaimLink of ClaimLinkTrait<ContractState> {
-        fn claim(ref self: ContractState, claim: Claim) {
-            let hash = PedersenImpl::new(claim.nonce);
-            let hash = hash
-                .update(claim.amount.low.into())
-                .update(claim.amount.high.into())
-                .finalize();
+        fn claim(ref self: ContractState, claim: Claim, signature: Array<felt252>) {
+            let hash = claim.get_message_hash(get_contract_address());
             assert!(!self.claims.read(hash), "Link already used");
             assert!(
-                self.is_valid_signature(hash, claim.signature) == 'VALID',
-                "Invalid signature for claim"
+                self.is_valid_signature(hash, signature) == 'VALID', "Invalid signature for claim"
             );
             self.claims.write(hash, true);
             IERC20Dispatcher { contract_address: self.usdc_address.read() }
@@ -135,7 +168,6 @@ mod Account {
             self.usdc_address.write(usdc_address);
         }
     }
-
     //
     // SRC6 override
     //
