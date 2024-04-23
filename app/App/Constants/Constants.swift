@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct Constants {
+
     static let usdcDecimals = 6
     static let usdcDecimalPlaces: Double = pow(10, Double(usdcDecimals))
 
@@ -20,4 +21,14 @@ struct Constants {
     )
 
     static let registrationCodeDigitsCount = 6
+
+    // MARK: ENV
+
+    static let vaultBaseURL: URL = {
+        guard let urlString = ProcessInfo.processInfo.environment["VAULT_API_BASE_URL"],
+              let url = URL(string: urlString) else {
+            fatalError("Vault API Base URL not configured properly.")
+        }
+        return url
+    }()
 }

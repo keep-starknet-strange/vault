@@ -32,6 +32,8 @@ export function getOtp(fastify: FastifyInstance) {
       try {
         const { phone_number, nickname } = request.body;
 
+        return reply.code(200).send({ ok: true });
+
         // validating if phone number exists in db
         const record_by_phone_number = await fastify.db
           .select()

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @StateObject private var registrationModel: RegistrationModel
     @StateObject private var settingsModel = SettingsModel()
     @StateObject private var navigationModel = NavigationModel()
 
@@ -27,6 +29,12 @@ struct ContentView: View {
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.accentColor)]
 
         UITabBar.appearance().standardAppearance = tabBarAppearance
+
+        // init vault API models
+
+        let vaultService = VaultService()
+
+        self._registrationModel = StateObject(wrappedValue: RegistrationModel(vaultService: vaultService))
     }
 
     var body: some View {
@@ -60,6 +68,7 @@ struct ContentView: View {
                 OnboardingView()
             }
             .environmentObject(settingsModel)
+            .environmentObject(registrationModel)
             .preferredColorScheme(.dark)
         }
     }

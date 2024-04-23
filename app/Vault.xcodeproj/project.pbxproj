@@ -19,6 +19,9 @@
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
 		9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */; };
 		9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8B2BCD5D790077A60B /* String+character.swift */; };
+		9CD1BE902BD53F7A0077A60B /* VaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8F2BD53F7A0077A60B /* VaultService.swift */; };
+		9CD1BE962BD589AD0077A60B /* RegistrationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE952BD589AD0077A60B /* RegistrationModel.swift */; };
+		9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE972BD7C51A0077A60B /* PhoneNumber+Parse.swift */; };
 		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
@@ -87,6 +90,9 @@
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInput.swift; sourceTree = "<group>"; };
 		9CD1BE8B2BCD5D790077A60B /* String+character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+character.swift"; sourceTree = "<group>"; };
+		9CD1BE8F2BD53F7A0077A60B /* VaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultService.swift; sourceTree = "<group>"; };
+		9CD1BE952BD589AD0077A60B /* RegistrationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationModel.swift; sourceTree = "<group>"; };
+		9CD1BE972BD7C51A0077A60B /* PhoneNumber+Parse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+Parse.swift"; sourceTree = "<group>"; };
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
@@ -175,8 +181,17 @@
 				9C5CFDAF2BC828DE001776E1 /* Locale.swift */,
 				9C5CFDB12BC82C57001776E1 /* Array+indexed.swift */,
 				9CD1BE8B2BCD5D790077A60B /* String+character.swift */,
+				9CD1BE972BD7C51A0077A60B /* PhoneNumber+Parse.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		9CD1BE8E2BD510420077A60B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9CD1BE8F2BD53F7A0077A60B /* VaultService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		9CD778A12BB1939200BA4677 /* Frameworks */ = {
@@ -238,6 +253,7 @@
 		9CDFD3FD2BAB3428000466B9 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				9CD1BE8E2BD510420077A60B /* Services */,
 				9CD778B42BBCB0CD00BA4677 /* Constants */,
 				9C637CDC2BB0A4DA005816B4 /* Utils */,
 				9C637CD72BB096F5005816B4 /* Managers */,
@@ -326,6 +342,7 @@
 				9CD778C52BC1DEEA00BA4677 /* NavigationModel.swift */,
 				9C5CFDAD2BC828C9001776E1 /* PhoneNumberModel.swift */,
 				9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */,
+				9CD1BE952BD589AD0077A60B /* RegistrationModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -470,6 +487,7 @@
 			files = (
 				9C5CFDA62BC69446001776E1 /* CountryPickerView.swift in Sources */,
 				9CD778A82BB2CE7D00BA4677 /* SettingsModel.swift in Sources */,
+				9CD1BE962BD589AD0077A60B /* RegistrationModel.swift in Sources */,
 				9CD778BC2BBED06700BA4677 /* CustomTabBar.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
@@ -506,8 +524,10 @@
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
 				9CD778BA2BBCB89C00BA4677 /* TransferRow.swift in Sources */,
 				9C5CFDAE2BC828C9001776E1 /* PhoneNumberModel.swift in Sources */,
+				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,
 				9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */,
+				9CD1BE902BD53F7A0077A60B /* VaultService.swift in Sources */,
 				9CD778C62BC1DEEA00BA4677 /* NavigationModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -545,7 +565,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		9CDFD41D2BAB3429000466B9 /* Debug */ = {
+		9CD1BE912BD563710077A60B /* Debug(Staging) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -606,7 +626,138 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug(Staging)";
+		};
+		9CD1BE922BD563710077A60B /* Debug(Staging) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9JUU34PUVC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Vault-Info.plist";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chqrles.Vault;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug(Staging)";
+		};
+		9CD1BE932BD563710077A60B /* Debug(Staging) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9JUU34PUVC;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chqrles.VaultTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vault.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vault";
+			};
+			name = "Debug(Staging)";
+		};
+		9CD1BE942BD563710077A60B /* Debug(Staging) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9JUU34PUVC;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chqrles.VaultUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Vault;
+			};
+			name = "Debug(Staging)";
+		};
+		9CDFD41D2BAB3429000466B9 /* Debug(Development) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug(Development)";
 		};
 		9CDFD41E2BAB3429000466B9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -664,7 +815,7 @@
 			};
 			name = Release;
 		};
-		9CDFD4202BAB3429000466B9 /* Debug */ = {
+		9CDFD4202BAB3429000466B9 /* Debug(Development) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -692,7 +843,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Debug(Development)";
 		};
 		9CDFD4212BAB3429000466B9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -724,7 +875,7 @@
 			};
 			name = Release;
 		};
-		9CDFD4232BAB3429000466B9 /* Debug */ = {
+		9CDFD4232BAB3429000466B9 /* Debug(Development) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -742,7 +893,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vault.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vault";
 			};
-			name = Debug;
+			name = "Debug(Development)";
 		};
 		9CDFD4242BAB3429000466B9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -764,7 +915,7 @@
 			};
 			name = Release;
 		};
-		9CDFD4262BAB3429000466B9 /* Debug */ = {
+		9CDFD4262BAB3429000466B9 /* Debug(Development) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -780,7 +931,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Vault;
 			};
-			name = Debug;
+			name = "Debug(Development)";
 		};
 		9CDFD4272BAB3429000466B9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -806,7 +957,8 @@
 		9CDFD3F62BAB3428000466B9 /* Build configuration list for PBXProject "Vault" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9CDFD41D2BAB3429000466B9 /* Debug */,
+				9CDFD41D2BAB3429000466B9 /* Debug(Development) */,
+				9CD1BE912BD563710077A60B /* Debug(Staging) */,
 				9CDFD41E2BAB3429000466B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -815,7 +967,8 @@
 		9CDFD41F2BAB3429000466B9 /* Build configuration list for PBXNativeTarget "Vault" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9CDFD4202BAB3429000466B9 /* Debug */,
+				9CDFD4202BAB3429000466B9 /* Debug(Development) */,
+				9CD1BE922BD563710077A60B /* Debug(Staging) */,
 				9CDFD4212BAB3429000466B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -824,7 +977,8 @@
 		9CDFD4222BAB3429000466B9 /* Build configuration list for PBXNativeTarget "VaultTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9CDFD4232BAB3429000466B9 /* Debug */,
+				9CDFD4232BAB3429000466B9 /* Debug(Development) */,
+				9CD1BE932BD563710077A60B /* Debug(Staging) */,
 				9CDFD4242BAB3429000466B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -833,7 +987,8 @@
 		9CDFD4252BAB3429000466B9 /* Build configuration list for PBXNativeTarget "VaultUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9CDFD4262BAB3429000466B9 /* Debug */,
+				9CDFD4262BAB3429000466B9 /* Debug(Development) */,
+				9CD1BE942BD563710077A60B /* Debug(Staging) */,
 				9CDFD4272BAB3429000466B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
