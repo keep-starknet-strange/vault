@@ -23,9 +23,15 @@
         },
         "nonce": {
           "name": "nonce",
-          "type": "serial",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "signature": {
           "name": "signature",
@@ -37,7 +43,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "claims_address_nonce_unique": {
+          "name": "claims_address_nonce_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "address",
+            "nonce"
+          ]
+        }
+      }
     },
     "mock_limit": {
       "name": "mock_limit",
