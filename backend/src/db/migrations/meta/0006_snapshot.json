@@ -47,10 +47,7 @@
         "claims_address_nonce_unique": {
           "name": "claims_address_nonce_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "address",
-            "nonce"
-          ]
+          "columns": ["address", "nonce"]
         }
       }
     },

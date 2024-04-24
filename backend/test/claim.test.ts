@@ -28,7 +28,9 @@ describe('GET /claim route', () => {
 
     await app.ready();
     // Insert balance to mock address
-    await app.db.insert(schema.claims).values({ id: uuid, amount, nonce, signature });
+    await app.db
+      .insert(schema.claims)
+      .values({ id: uuid, amount, address: testAddress, nonce, signature });
   });
 
   afterAll(async () => {
@@ -42,7 +44,12 @@ describe('GET /claim route', () => {
       url: `/claim?id=${uuid}`,
     });
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('call', { id: uuid, amount, nonce, signature });
+    expect(response.json()).toHaveProperty('call', {
+      address: testAddress,
+      amount,
+      nonce,
+      signature,
+    });
   });
   test('should return an error for invalid uuid', async () => {
     const response = await app.inject({
