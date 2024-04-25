@@ -4,6 +4,7 @@ import { type AppConfiguration, buildAndStartApp } from '@/app';
 
 dotenv.config();
 
+console.log(process.env.DATABASE_URL);
 const config: AppConfiguration = {
   database: {
     connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/postgres',
