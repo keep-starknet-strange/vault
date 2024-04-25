@@ -1,4 +1,4 @@
-import { bigint, boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, boolean, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const usdcTransfer = pgTable('transfer_usdc', {
   transferId: text('transfer_id').primaryKey(),
@@ -37,4 +37,17 @@ export const otp = pgTable('otp', {
   otp: text('otp'),
   used: boolean('used').default(false),
   created_at: timestamp('created_at').defaultNow(),
+});
+
+export const claims = pgTable('claims', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  amount: text('amount'),
+  nonce: serial('nonce'),
+  signature: text('signature').array(),
+});
+
+export const mockLimit = pgTable('mock_limit', {
+  address: text('address').primaryKey(),
+  limit: text('limit'),
+  blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
 });

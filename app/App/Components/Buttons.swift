@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// MARK: Primary button
+// MARK: Primary button
 
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -46,7 +46,7 @@ struct PrimaryButton: View {
     }
 }
 
-/// MARK: Secondary button
+// MARK: Secondary button
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -84,16 +84,68 @@ struct SecondaryButton: View {
     }
 }
 
+// MARK: TabItem
+
+struct TabItemButtonStyle: ButtonStyle {
+    let selected: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(configuration.isPressed || selected ? .neutral1 : .neutral2)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+// MARK: Gradient
+
+struct GradientButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(.neutral1)
+            .background(
+                LinearGradient(
+                    gradient: configuration.isPressed
+                    ? Gradient(colors: [.gradient1B])
+                    : Constants.gradient1,
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// MARK: Noop
+
+struct NoopButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
+}
+
 #Preview {
     ZStack {
         Color.background1.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+
         VStack {
             Spacer()
+
             PrimaryButton("Enabled") {}
             PrimaryButton("Disabled", disabled: true) {}
+
             Spacer()
+
             SecondaryButton("Enabled") {}
             SecondaryButton("Disabled", disabled: true) {}
+
+            Spacer()
+
+            Button() {} label: {
+                Text("Enabled").padding(16)
+            }
+            .buttonStyle(GradientButtonStyle())
+
             Spacer()
         }.padding(16)
     }
