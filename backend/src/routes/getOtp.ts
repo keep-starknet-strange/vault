@@ -31,13 +31,13 @@ export function getOtp(fastify: FastifyInstance) {
         const { phone_number } = request.body as { phone_number: string };
 
         // validating if phone number exists in db
-        const record_phone_number = await fastify.db
+        const record_by_phone_number = await fastify.db
           .select()
           .from(registration)
           .where(eq(registration.phone_number, phone_number))
           .orderBy(desc(registration.created_at));
 
-        if (!record_phone_number.length) {
+        if (!record_by_phone_number.length) {
           return reply.code(400).send({ message: 'No record exists with current phone number' });
         }
 
@@ -49,6 +49,7 @@ export function getOtp(fastify: FastifyInstance) {
           .execute();
 
         if (record) {
+          //@ts-ignore
           const time_added = Date.parse(record.created_at) / 1000;
           const current_time = Math.floor(Date.now() / 1000);
 
