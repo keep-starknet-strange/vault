@@ -1,7 +1,7 @@
 #[starknet::contract(account)]
 mod Account {
-    use core::poseidon::{HashStateTrait, PoseidonTrait};
     use core::hash::{HashStateExTrait, Hash};
+    use core::poseidon::{HashStateTrait, PoseidonTrait};
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;

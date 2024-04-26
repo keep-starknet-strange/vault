@@ -59,10 +59,12 @@ pub mod TransactionApprovalComponent {
                 .unwrap_syscall();
             let begin_loop_value = transaction_hash.add(3);
             // If there is too much calldata it'll probably overwrite some storage vars here.
-            while let Option::Some(val) = transaction.calldata.pop_front() {
-                storage_write_syscall(0, begin_loop_value.add(i), *val).unwrap_syscall();
-                i += 1;
-            }
+            while let Option::Some(val) = transaction
+                .calldata
+                .pop_front() {
+                    storage_write_syscall(0, begin_loop_value.add(i), *val).unwrap_syscall();
+                    i += 1;
+                }
         }
 
         /// Returns the [Call] from a transaction hash if it exists.
