@@ -243,12 +243,16 @@ mod test {
         // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35
 
         // Deploy approver account with public key and weekly limit and approver is 0.
+        let mut constructor_calldata = array![];
+        constructor_calldata
+            .append_serde(0xa0cb79205a8355d9c8be3a361de8068cbb7d96c17a2fc7ae4ff17facdb827b4d_u256);
+        constructor_calldata
+            .append_serde(0x534fafc9e92ef2408553744e545b041fdf3e36b88c3ad825c86bd6d37d1211ca_u256);
+        constructor_calldata.append_serde(0);
+        constructor_calldata.append_serde(2);
+        constructor_calldata.append_serde(2);
         let (approver, _) = starknet::deploy_syscall(
-            Account::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa, 0, 2, 2]
-                .span(),
-            true
+            Account::TEST_CLASS_HASH.try_into().unwrap(), 0, constructor_calldata.span(), true
         )
             .unwrap_syscall();
         // Deploy approval mock contract with approver address.

@@ -1,7 +1,11 @@
 #[starknet::contract(account)]
 mod Account {
+    use core::box::BoxTrait;
     use core::hash::{HashStateExTrait, Hash};
+    use core::option::OptionTrait;
     use core::poseidon::{HashStateTrait, PoseidonTrait};
+    use core::result::ResultTrait;
+    use core::starknet::{get_tx_info, SyscallResultTrait};
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
@@ -11,6 +15,8 @@ mod Account {
     };
     use starknet::ContractAddress;
     use starknet::account::Call;
+    use starknet::secp256_trait::is_valid_signature;
+    use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
     use starknet::{get_caller_address, contract_address_const, get_contract_address};
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
@@ -65,6 +71,7 @@ mod Account {
         account: AccountComponent::Storage,
         claims: LegacyMap<felt252, bool>,
         usdc_address: ContractAddress,
+        public_key: (u256, u256),
         #[substorage(v0)]
         src5: SRC5Component::Storage,
         #[substorage(v0)]
@@ -96,9 +103,13 @@ mod Account {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, public_key: felt252, approver: ContractAddress, limit: u256,
+        ref self: ContractState,
+        pub_key_x: u256,
+        pub_key_y: u256,
+        approver: ContractAddress,
+        limit: u256,
     ) {
-        self.account.initializer(:public_key);
+        self.public_key.write((pub_key_x, pub_key_y));
         self.transaction_approval.initializer(:approver);
         self.weekly_limit.initializer(:limit);
         self
@@ -179,15 +190,62 @@ mod Account {
         }
 
         fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
-            // execute some checks here using `DailyLimitInternalImpl`
-            self.account.__validate__(:calls)
+            let tx_info = get_tx_info().unbox();
+            let signature = tx_info.signature;
+            let hash = tx_info.transaction_hash;
+
+            if signature.len() != 4 {
+                return 'INVALID';
+            }
+            let (x, y) = self.public_key.read();
+            let public_key = Secp256r1Impl::secp256_ec_new_syscall(x, y).unwrap().unwrap();
+            if is_valid_signature::<
+                Secp256r1Point
+            >(
+                hash.into(),
+                u256 {
+                    low: (*signature[0]).try_into().unwrap(),
+                    high: (*signature[1]).try_into().unwrap()
+                },
+                u256 {
+                    low: (*signature[2]).try_into().unwrap(),
+                    high: (*signature[3]).try_into().unwrap()
+                },
+                public_key
+            ) {
+                starknet::VALIDATED
+            } else {
+                'INVALID'
+            }
         // or here
         }
 
         fn is_valid_signature(
             self: @ContractState, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
-            self.account.is_valid_signature(:hash, :signature)
+            if signature.len() != 4 {
+                return 'INVALID';
+            }
+            let (x, y) = self.public_key.read();
+            let public_key = Secp256r1Impl::secp256_ec_new_syscall(x, y).unwrap().unwrap();
+            if is_valid_signature::<
+                Secp256r1Point
+            >(
+                hash.into(),
+                u256 {
+                    low: (*signature[0]).try_into().unwrap(),
+                    high: (*signature[1]).try_into().unwrap()
+                },
+                u256 {
+                    low: (*signature[2]).try_into().unwrap(),
+                    high: (*signature[3]).try_into().unwrap()
+                },
+                public_key
+            ) {
+                starknet::VALIDATED
+            } else {
+                'INVALID'
+            }
         }
     }
 
