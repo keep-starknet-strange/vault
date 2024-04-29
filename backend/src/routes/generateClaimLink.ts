@@ -23,7 +23,7 @@ export function getGenerateClaimLinkRoute(fastify: FastifyInstance): void {
             address: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
             signature: {
               type: 'array',
-              items: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
+              items: { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' },
             },
           },
         },

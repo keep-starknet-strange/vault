@@ -7,6 +7,10 @@ describe('POST /generate_claim_link route', () => {
   let container: StartedPostgreSqlContainer;
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
+  const testSig = [
+    '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af',
+    '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af',
+  ];
   const testAmount = '0x111222333';
   const claimUrlRegex =
     /^https:\/\/vlt\.finance\/claim\?token=([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})$/;
@@ -55,7 +59,7 @@ describe('POST /generate_claim_link route', () => {
         amount: testAmount,
         nonce: 0,
         address: testAddress,
-        signature: [testAddress, testAddress],
+        signature: testSig,
       },
     });
 
