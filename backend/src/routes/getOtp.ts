@@ -93,7 +93,7 @@ export function getOtp(fastify: FastifyInstance) {
           otp: otp_gen,
         });
 
-        return reply.code(200).send(true);
+        return reply.code(200).send({ ok: true });
       } catch (error) {
         fastify.log.error(error);
         console.log(error);
