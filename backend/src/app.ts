@@ -1,7 +1,9 @@
 import Fastify from 'fastify';
 
+import { readFileSync } from 'node:fs';
 import { fastifyDrizzle } from '@/db/plugin';
 import { declareRoutes } from '@/routes';
+import { Account, json } from 'starknet';
 
 export type AppConfiguration = {
   database: {
@@ -12,21 +14,39 @@ export type AppConfiguration = {
   };
 };
 
-export function buildApp(config: AppConfiguration) {
+export async function buildApp(config: AppConfiguration) {
   const app = Fastify();
 
   app.register(fastifyDrizzle, {
     connectionString: config.database.connectionString,
   });
 
+  if (!process.env.DEPLOYER_ADDRESS) {
+    throw new Error('Deployer address not set');
+  }
+  if (!process.env.NODE_URL) {
+    throw new Error('Starknet node url not set');
+  }
+  if (!process.env.DEPLOYER_PK) {
+    throw new Error('Deployer private key not set');
+  }
+  const account = new Account(
+    { nodeUrl: process.env.NODE_URL },
+    process.env.DEPLOYER_ADDRESS,
+    process.env.DEPLOYER_PK,
+  );
+  const { class_hash } = await account.declareIfNot({
+    contract: readFileSync('./src/assets/vault_account.sierra.json', 'utf-8'),
+    casm: json.parse(readFileSync('./src/assets/vault_account.casm.json', 'utf-8')),
+  });
   // Declare routes
-  declareRoutes(app);
+  declareRoutes(app, account, class_hash);
 
   return app;
 }
 
 export async function buildAndStartApp(config: AppConfiguration) {
-  const app = buildApp(config);
+  const app = await buildApp(config);
 
   try {
     await app.listen({ port: config.app.port });

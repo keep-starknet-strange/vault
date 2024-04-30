@@ -11,7 +11,7 @@ describe('GET /status route', () => {
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
 
-    app = buildApp({
+    app = await buildApp({
       database: {
         connectionString: container.getConnectionUri(),
       },

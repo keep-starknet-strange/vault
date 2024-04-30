@@ -62,7 +62,7 @@ describe('GET /transaction history route', () => {
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     const connectionUri = container.getConnectionUri();
-    app = buildApp({
+    app = await buildApp({
       database: {
         connectionString: connectionUri,
       },
