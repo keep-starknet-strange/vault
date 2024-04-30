@@ -99,7 +99,6 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
         });
       } catch (error) {
         fastify.log.error(error);
-        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },

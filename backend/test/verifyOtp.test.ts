@@ -97,7 +97,7 @@ describe('Verify OTP test', () => {
         },
       });
 
-      assert(addressRegex.test((await response.json()).contract_address));
+      assert(/^0x[0-9a-fA-F]{63}$/.test((await response.json()).contract_address));
       expect(response.statusCode).toBe(200);
     },
     120 * 1000,
