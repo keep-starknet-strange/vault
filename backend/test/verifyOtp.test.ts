@@ -11,8 +11,9 @@ describe('Verify OTP test', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
-  const testFirstName = 'Jean';
-  const testLastName = 'Dupont';
+  const testPublicKeyX = '0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133';
+  const testPublicKeyY = '0x4bdae6ef158afd49d946c36d8bf3c8efc359a50e1f2bc043368230ed9e6d610d';
+  const testNickname = 'Jean Dupont';
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
@@ -38,10 +39,8 @@ describe('Verify OTP test', () => {
 
     // adding a user
     await app.db.insert(schema.registration).values({
-      address: testAddress,
       phone_number: testPhoneNumber,
-      first_name: testFirstName,
-      last_name: testLastName,
+      nickname: testNickname,
     });
 
     // adding a mock otp
@@ -64,7 +63,8 @@ describe('Verify OTP test', () => {
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
-        public_key: testAddress,
+        public_key_x: testPublicKeyX,
+        public_key_y: testPublicKeyY,
       },
     });
 
@@ -91,7 +91,8 @@ describe('Verify OTP test', () => {
         body: {
           phone_number: testPhoneNumber,
           sent_otp: '666666',
-          public_key: testAddress,
+          public_key_x: testPublicKeyX,
+          public_key_y: testPublicKeyY,
         },
       });
 
@@ -113,7 +114,8 @@ describe('Verify OTP test', () => {
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
-        public_key: testAddress,
+        public_key_x: testPublicKeyX,
+        public_key_y: testPublicKeyY,
       },
     });
 
@@ -125,36 +127,73 @@ describe('Verify OTP test', () => {
     expect(response.statusCode).toBe(400);
   });
 
-  test('should not be able verify the otp no public key sent: /verify_otp', async () => {
+  test('should not be able verify the otp no public key x sent: /verify_otp', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/verify_otp',
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
+        public_key_y: testPublicKeyY,
       },
     });
 
     expect(response.json()).toHaveProperty(
       'message',
-      "body must have required property 'public_key'",
+      "body must have required property 'public_key_x'",
     );
     expect(response.statusCode).toBe(400);
   });
-  test('should not be able verify the otp invalid public key sent: /verify_otp', async () => {
+  test('should not be able verify the otp no public key y sent: /verify_otp', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/verify_otp',
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
-        public_key: '0x1',
+        public_key_x: testPublicKeyX,
       },
     });
 
     expect(response.json()).toHaveProperty(
       'message',
-      'body/public_key must match pattern "^0x0[0-9a-fA-F]{63}$"',
+      "body must have required property 'public_key_y'",
+    );
+    expect(response.statusCode).toBe(400);
+  });
+  test('should not be able verify the otp invalid public key x sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_x: '0x1',
+        public_key_y: testPublicKeyY,
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/public_key_x must match pattern "^0x[0-9a-fA-F]{64}$"',
+    );
+    expect(response.statusCode).toBe(400);
+  });
+  test('should not be able verify the otp invalid public key y sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_x: testPublicKeyX,
+        public_key_y: '0x1',
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/public_key_y must match pattern "^0x[0-9a-fA-F]{64}$"',
     );
     expect(response.statusCode).toBe(400);
   });

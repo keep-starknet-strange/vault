@@ -1,13 +1,14 @@
 import { otp, registration } from '@/db/schema';
-import { and, desc, sql } from 'drizzle-orm';
+import { and, desc } from 'drizzle-orm';
 import { eq } from 'drizzle-orm/pg-core/expressions';
 import type { FastifyInstance } from 'fastify';
-import type { Account } from 'starknet';
+import { type Account, uint256 } from 'starknet';
 
 interface VerifyOtpRequestBody {
   phone_number: string;
   sent_otp: string;
-  public_key: string;
+  public_key_x: string;
+  public_key_y: string;
 }
 
 export function verifyOtp(fastify: FastifyInstance, account: Account, classHash: string) {
@@ -19,18 +20,19 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
       schema: {
         body: {
           type: 'object',
-          required: ['phone_number', 'public_key', 'sent_otp'],
+          required: ['phone_number', 'public_key_x', 'public_key_y', 'sent_otp'],
           properties: {
             phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
             sent_otp: { type: 'string', pattern: '^[0-9]{6}$' },
-            public_key: { type: 'string', pattern: '^0x0[0-9a-fA-F]{63}$' },
+            public_key_x: { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' },
+            public_key_y: { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' },
           },
         },
       },
     },
     async (request, reply) => {
       try {
-        const { phone_number, sent_otp, public_key } = request.body;
+        const { phone_number, sent_otp, public_key_x, public_key_y } = request.body;
 
         // validating the otp
         // - if otp is old or otp is already used
@@ -60,7 +62,13 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
         // public key, approver, limit
         const { contract_address, transaction_hash } = await account.deployContract({
           classHash,
-          constructorCalldata: [public_key, 0, 1000000000, 0],
+          constructorCalldata: [
+            uint256.bnToUint256(public_key_x),
+            uint256.bnToUint256(public_key_y),
+            0,
+            1000000000,
+            0,
+          ],
         });
         fastify.log.info(
           'Deploying account: ',
@@ -91,6 +99,7 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
         });
       } catch (error) {
         fastify.log.error(error);
+        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },
