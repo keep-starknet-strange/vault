@@ -95,7 +95,7 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
           .where(eq(registration.phone_number, phone_number));
 
         return reply.code(200).send({
-          message: 'OTP verified successfully',
+          contract_address,
         });
       } catch (error) {
         fastify.log.error(error);

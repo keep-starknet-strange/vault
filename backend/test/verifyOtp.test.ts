@@ -1,8 +1,9 @@
 import { buildApp } from '@/app';
+import { addressRegex } from '@/routes';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import dotenv from 'dotenv';
 import type { FastifyInstance } from 'fastify';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { assert, afterAll, beforeAll, describe, expect, test } from 'vitest';
 import * as schema from '../src/db/schema';
 dotenv.config();
 
@@ -96,11 +97,7 @@ describe('Verify OTP test', () => {
         },
       });
 
-      const msg = {
-        message: 'OTP verified successfully',
-      };
-
-      expect(response.body).toBe(JSON.stringify(msg));
+      assert(addressRegex.test((await response.json()).contract_address));
       expect(response.statusCode).toBe(200);
     },
     120 * 1000,
