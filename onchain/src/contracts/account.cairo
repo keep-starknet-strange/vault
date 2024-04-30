@@ -167,7 +167,8 @@ mod Account {
             let hash = claim.get_message_hash(get_contract_address());
             assert!(!self.claims.read(hash), "Link already used");
             assert!(
-                self.is_valid_signature(hash, signature) == 'VALID', "Invalid signature for claim"
+                self.is_valid_signature(hash, signature) == starknet::VALIDATED,
+                "Invalid signature for claim"
             );
             self.claims.write(hash, true);
             IERC20Dispatcher { contract_address: self.usdc_address.read() }
