@@ -7,6 +7,8 @@ import * as schema from '../db/schema';
 
 interface GetOtpRequestBody {
   phone_number: string;
+  first_name: string;
+  last_name: string;
 }
 
 // OTP validity duration : 15 mins
@@ -19,16 +21,18 @@ export function getOtp(fastify: FastifyInstance) {
       schema: {
         body: {
           type: 'object',
-          required: ['phone_number'],
+          required: ['phone_number', 'first_name', 'last_name'],
           properties: {
             phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
+            first_name: { type: 'string', pattern: '^[A-Za-z]{1,20}$' },
+            last_name: { type: 'string', pattern: '^[A-Za-z]{1,20}$' },
           },
         },
       },
     },
     async (request, reply) => {
       try {
-        const { phone_number } = request.body as { phone_number: string };
+        const { phone_number, first_name, last_name } = request.body;
 
         // validating if phone number exists in db
         const record_by_phone_number = await fastify.db
@@ -38,7 +42,24 @@ export function getOtp(fastify: FastifyInstance) {
           .orderBy(desc(registration.created_at));
 
         if (!record_by_phone_number.length) {
-          return reply.code(400).send({ message: 'No record exists with current phone number' });
+          try {
+            await fastify.db.insert(schema.registration).values({
+              phone_number,
+              first_name,
+              last_name,
+            });
+
+            return reply.code(200).send(true);
+            // biome-ignore lint: has to be typed any or unknown otherwise typescript cries
+          } catch (error: any) {
+            fastify.log.error(error);
+            if (error.code === '23505') {
+              return reply.code(409).send({
+                message: 'A user with the given phone number already exists.',
+              });
+            }
+            return reply.code(500).send({ message: 'Internal server error' });
+          }
         }
 
         const record = await fastify.db.query.otp

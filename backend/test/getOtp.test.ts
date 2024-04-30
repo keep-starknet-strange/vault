@@ -57,27 +57,26 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
+        first_name: testFirstName,
+        last_name: testLastName,
       },
     });
 
     expect(response.statusCode).toBe(200);
   });
 
-  test('should not send the otp to invalid registered user : /get_otp', async () => {
+  test('should send the otp and register user : /get_otp', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/get_otp',
       body: {
         phone_number: nonRegisteredNumber,
+        first_name: testFirstName,
+        last_name: testLastName,
       },
     });
 
-    const msg = {
-      message: 'No record exists with current phone number',
-    };
-
-    expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(200);
   });
 
   test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp', async () => {
@@ -86,6 +85,8 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
+        first_name: testFirstName,
+        last_name: testLastName,
       },
     });
 
@@ -95,5 +96,57 @@ describe('Get OTP test', () => {
 
     expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(400);
+  });
+
+  test('should fail for invalid phone_number', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: '0',
+        first_name: testFirstName,
+        last_name: testLastName,
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/phone_number must match pattern "^\\+[1-9]\\d{1,14}$"',
+    );
+  });
+
+  test('should fail for invalid first_name', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        first_name: '',
+        last_name: testLastName,
+      },
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/first_name must match pattern "^[A-Za-z]{1,20}$"',
+    );
+  });
+  test('should fail for invalid last_name', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        first_name: testFirstName,
+        last_name: '23232',
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/last_name must match pattern "^[A-Za-z]{1,20}$"',
+    );
   });
 });

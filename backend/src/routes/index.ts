@@ -11,7 +11,6 @@ import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getLimitRoute } from './getLimit';
 import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
-import { getRegisterRoute } from './register';
 import { verifyOtp } from './verifyOtp';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
@@ -21,7 +20,6 @@ export function declareRoutes(fastify: FastifyInstance, account: Account, classH
   getBalanceRoute(fastify);
   getCurrentExpenseRoute(fastify);
   getTransactionHistory(fastify);
-  getRegisterRoute(fastify);
   getOtp(fastify);
   verifyOtp(fastify, account, classHash);
   getHistoricalBalanceRoute(fastify);
