@@ -15,7 +15,7 @@ describe('GET /get_limit route', () => {
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     const connectionUri = container.getConnectionUri();
-    app = buildApp({
+    app = await buildApp({
       database: {
         connectionString: connectionUri,
       },
