@@ -11,7 +11,7 @@ describe('Get OTP test', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
-  const testFirstName = 'Jean';
+  const testNickname = 'Jean';
   const testLastName = 'Dupont';
   const nonRegisteredNumber = '+919999999999';
 
@@ -39,10 +39,8 @@ describe('Get OTP test', () => {
 
     // adding a user
     await app.db.insert(schema.registration).values({
-      address: testAddress,
       phone_number: testPhoneNumber,
-      first_name: testFirstName,
-      last_name: testLastName,
+      nickname: testNickname,
     });
   });
 
@@ -57,8 +55,7 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
-        first_name: testFirstName,
-        last_name: testLastName,
+        nickname: testNickname,
       },
     });
 
@@ -71,8 +68,7 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: nonRegisteredNumber,
-        first_name: testFirstName,
-        last_name: testLastName,
+        nickname: testNickname,
       },
     });
 
@@ -85,8 +81,7 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
-        first_name: testFirstName,
-        last_name: testLastName,
+        nickname: testNickname,
       },
     });
 
@@ -104,8 +99,7 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: '0',
-        first_name: testFirstName,
-        last_name: testLastName,
+        nickname: testNickname,
       },
     });
 
@@ -116,37 +110,19 @@ describe('Get OTP test', () => {
     );
   });
 
-  test('should fail for invalid first_name', async () => {
+  test('should fail for invalid nickname', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
-        first_name: '',
-        last_name: testLastName,
+        nickname: '',
       },
     });
     expect(response.statusCode).toBe(400);
     expect(response.json()).toHaveProperty(
       'message',
-      'body/first_name must match pattern "^[A-Za-z]{1,20}$"',
-    );
-  });
-  test('should fail for invalid last_name', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/get_otp',
-      body: {
-        phone_number: testPhoneNumber,
-        first_name: testFirstName,
-        last_name: '23232',
-      },
-    });
-
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty(
-      'message',
-      'body/last_name must match pattern "^[A-Za-z]{1,20}$"',
+      'body/nickname must match pattern "^[A-Za-z]{1,20}$"',
     );
   });
 });

@@ -50,6 +50,13 @@
       "when": 1714064842098,
       "tag": "0006_light_rocket_raccoon",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1714482438641,
+      "tag": "0007_breezy_zarek",
+      "breakpoints": true
     }
   ]
 }

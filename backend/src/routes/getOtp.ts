@@ -7,8 +7,7 @@ import * as schema from '../db/schema';
 
 interface GetOtpRequestBody {
   phone_number: string;
-  first_name: string;
-  last_name: string;
+  nickname: string;
 }
 
 // OTP validity duration : 15 mins
@@ -21,18 +20,17 @@ export function getOtp(fastify: FastifyInstance) {
       schema: {
         body: {
           type: 'object',
-          required: ['phone_number', 'first_name', 'last_name'],
+          required: ['phone_number', 'nickname'],
           properties: {
             phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
-            first_name: { type: 'string', pattern: '^[A-Za-z]{1,20}$' },
-            last_name: { type: 'string', pattern: '^[A-Za-z]{1,20}$' },
+            nickname: { type: 'string', pattern: '^[A-Za-z]{1,20}$' },
           },
         },
       },
     },
     async (request, reply) => {
       try {
-        const { phone_number, first_name, last_name } = request.body;
+        const { phone_number, nickname } = request.body;
 
         // validating if phone number exists in db
         const record_by_phone_number = await fastify.db
@@ -45,8 +43,7 @@ export function getOtp(fastify: FastifyInstance) {
           try {
             await fastify.db.insert(schema.registration).values({
               phone_number,
-              first_name,
-              last_name,
+              nickname,
             });
 
             return reply.code(200).send(true);
