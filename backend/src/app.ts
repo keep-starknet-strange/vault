@@ -11,6 +11,7 @@ export type AppConfiguration = {
   };
   app: {
     port: number;
+    host: string;
   };
 };
 
@@ -49,7 +50,7 @@ export async function buildAndStartApp(config: AppConfiguration) {
   const app = await buildApp(config);
 
   try {
-    await app.listen({ port: config.app.port });
+    await app.listen({ port: config.app.port, host: config.app.host });
     console.log(`Server listening on port ${config.app.port}`);
   } catch (err) {
     console.error(err);
