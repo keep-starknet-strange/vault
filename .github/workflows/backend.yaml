@@ -39,6 +39,9 @@ jobs:
           echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env
           echo TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} >> .env
           echo TEST_PHONE_NUMBER=${{ secrets.TEST_PHONE_NUMBER }} >> .env
+          echo NODE_URL=${{ secrets.NODE_URL}} >> .env
+          echo DEPLOYER_PK=${{ secrets.DEPLOYER_PK}} >> .env
+          echo DEPLOYER_ADDRESS=${{ secrets.DEPLOYER_ADDRESS}} >> .env
         working-directory: ./pr-code/backend
 
       # Check format and lint in the PR code's backend directory
