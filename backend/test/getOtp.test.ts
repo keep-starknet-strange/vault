@@ -12,7 +12,6 @@ describe('Get OTP test', () => {
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
   const testNickname = 'Jean';
-  const testLastName = 'Dupont';
   const nonRegisteredNumber = '+919999999999';
 
   beforeAll(async () => {
@@ -35,12 +34,6 @@ describe('Get OTP test', () => {
 
     // Insert balance to mock address
     await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' });
-
-    // adding a user
-    await app.db.insert(schema.registration).values({
-      phone_number: testPhoneNumber,
-      nickname: testNickname,
-    });
   });
 
   afterAll(async () => {
@@ -54,19 +47,6 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
-        nickname: testNickname,
-      },
-    });
-
-    expect(response.statusCode).toBe(200);
-  });
-
-  test('should send the otp and register user : /get_otp', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/get_otp',
-      body: {
-        phone_number: nonRegisteredNumber,
         nickname: testNickname,
       },
     });

@@ -11,7 +11,7 @@ export type AppConfiguration = {
   };
   app: {
     port: number;
-    host: string;
+    host?: string;
   };
 };
 
