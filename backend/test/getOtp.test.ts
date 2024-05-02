@@ -11,7 +11,7 @@ describe('Get OTP test', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
-  const testFirstName = 'Jean';
+  const testNickname = 'Jean';
   const testLastName = 'Dupont';
   const nonRegisteredNumber = '+919999999999';
 
@@ -19,7 +19,7 @@ describe('Get OTP test', () => {
     container = await new PostgreSqlContainer().start();
     const connectionUri = container.getConnectionUri();
     // console.log(connectionUri);
-    app = buildApp({
+    app = await buildApp({
       database: {
         connectionString: connectionUri,
       },
@@ -39,10 +39,8 @@ describe('Get OTP test', () => {
 
     // adding a user
     await app.db.insert(schema.registration).values({
-      address: testAddress,
       phone_number: testPhoneNumber,
-      first_name: testFirstName,
-      last_name: testLastName,
+      nickname: testNickname,
     });
   });
 
@@ -57,27 +55,24 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
+        nickname: testNickname,
       },
     });
 
     expect(response.statusCode).toBe(200);
   });
 
-  test('should not send the otp to invalid registered user : /get_otp', async () => {
+  test('should send the otp and register user : /get_otp', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/get_otp',
       body: {
         phone_number: nonRegisteredNumber,
+        nickname: testNickname,
       },
     });
 
-    const msg = {
-      message: 'No record exists with current phone number',
-    };
-
-    expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(200);
   });
 
   test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp', async () => {
@@ -86,6 +81,7 @@ describe('Get OTP test', () => {
       url: '/get_otp',
       body: {
         phone_number: testPhoneNumber,
+        nickname: testNickname,
       },
     });
 
@@ -95,5 +91,38 @@ describe('Get OTP test', () => {
 
     expect(response.body).toBe(JSON.stringify(msg));
     expect(response.statusCode).toBe(400);
+  });
+
+  test('should fail for invalid phone_number', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: '0',
+        nickname: testNickname,
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/phone_number must match pattern "^\\+[1-9]\\d{1,14}$"',
+    );
+  });
+
+  test('should fail for invalid nickname', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/get_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        nickname: '',
+      },
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/nickname must match pattern "^[A-Za-z]{1,20}$"',
+    );
   });
 });

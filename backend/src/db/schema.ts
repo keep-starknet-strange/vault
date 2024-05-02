@@ -25,10 +25,9 @@ export const usdcBalance = pgTable('balance_usdc', {
 
 export const registration = pgTable('registration', {
   phone_number: text('phone_number').primaryKey(),
-  address: text('address'),
-  first_name: text('first_name'),
-  last_name: text('last_name'),
+  nickname: text('first_name'),
   created_at: timestamp('created_at').defaultNow(),
+  contract_address: text('contract_address').default(''),
   is_confirmed: boolean('is_confirmed').default(false),
 });
 

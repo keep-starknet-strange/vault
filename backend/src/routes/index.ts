@@ -2,6 +2,7 @@ import type { Database } from '@/db/drizzle';
 import { sql } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
+import type { Account } from 'starknet';
 import { getClaimRoute } from './claim';
 import { getGenerateClaimLinkRoute } from './generateClaimLink';
 import { getBalanceRoute } from './getBalance';
@@ -10,19 +11,17 @@ import { getHistoricalBalanceRoute } from './getHistoricalBalance';
 import { getLimitRoute } from './getLimit';
 import { getOtp } from './getOtp';
 import { getTransactionHistory } from './getTransactionHistory';
-import { getRegisterRoute } from './register';
 import { verifyOtp } from './verifyOtp';
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/;
 
-export function declareRoutes(fastify: FastifyInstance) {
+export function declareRoutes(fastify: FastifyInstance, account: Account, classHash: string) {
   getStatusRoute(fastify);
   getBalanceRoute(fastify);
   getCurrentExpenseRoute(fastify);
   getTransactionHistory(fastify);
-  getRegisterRoute(fastify);
   getOtp(fastify);
-  verifyOtp(fastify);
+  verifyOtp(fastify, account, classHash);
   getHistoricalBalanceRoute(fastify);
   getGenerateClaimLinkRoute(fastify);
   getClaimRoute(fastify);
