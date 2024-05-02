@@ -1,4 +1,14 @@
-import { bigint, boolean, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+  bigint,
+  boolean,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from 'drizzle-orm/pg-core';
 
 export const usdcTransfer = pgTable('transfer_usdc', {
   transferId: text('transfer_id').primaryKey(),
@@ -25,10 +35,9 @@ export const usdcBalance = pgTable('balance_usdc', {
 
 export const registration = pgTable('registration', {
   phone_number: text('phone_number').primaryKey(),
-  address: text('address'),
-  first_name: text('first_name'),
-  last_name: text('last_name'),
+  nickname: text('first_name'),
   created_at: timestamp('created_at').defaultNow(),
+  contract_address: text('contract_address').default(''),
   is_confirmed: boolean('is_confirmed').default(false),
 });
 
@@ -39,12 +48,19 @@ export const otp = pgTable('otp', {
   created_at: timestamp('created_at').defaultNow(),
 });
 
-export const claims = pgTable('claims', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  amount: text('amount'),
-  nonce: serial('nonce'),
-  signature: text('signature').array(),
-});
+export const claims = pgTable(
+  'claims',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    amount: text('amount'),
+    nonce: integer('nonce'),
+    address: text('address'),
+    signature: text('signature').array(),
+  },
+  (t) => ({
+    unq: unique().on(t.address, t.nonce),
+  }),
+);
 
 export const mockLimit = pgTable('mock_limit', {
   address: text('address').primaryKey(),

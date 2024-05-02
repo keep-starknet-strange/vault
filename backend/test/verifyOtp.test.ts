@@ -1,8 +1,9 @@
 import { buildApp } from '@/app';
+import { addressRegex } from '@/routes';
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import dotenv from 'dotenv';
 import type { FastifyInstance } from 'fastify';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { assert, afterAll, beforeAll, describe, expect, test } from 'vitest';
 import * as schema from '../src/db/schema';
 dotenv.config();
 
@@ -11,14 +12,14 @@ describe('Verify OTP test', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
-  const testFirstName = 'Jean';
-  const testLastName = 'Dupont';
+  const testPublicKeyX = '0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133';
+  const testPublicKeyY = '0x4bdae6ef158afd49d946c36d8bf3c8efc359a50e1f2bc043368230ed9e6d610d';
+  const testNickname = 'Jean Dupont';
 
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     const connectionUri = container.getConnectionUri();
-    // console.log(connectionUri);
-    app = buildApp({
+    app = await buildApp({
       database: {
         connectionString: connectionUri,
       },
@@ -38,10 +39,8 @@ describe('Verify OTP test', () => {
 
     // adding a user
     await app.db.insert(schema.registration).values({
-      address: testAddress,
       phone_number: testPhoneNumber,
-      first_name: testFirstName,
-      last_name: testLastName,
+      nickname: testNickname,
     });
 
     // adding a mock otp
@@ -64,6 +63,8 @@ describe('Verify OTP test', () => {
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
+        public_key_x: testPublicKeyX,
+        public_key_y: testPublicKeyY,
       },
     });
 
@@ -75,29 +76,32 @@ describe('Verify OTP test', () => {
     expect(response.statusCode).toBe(400);
   });
 
-  test('should verify the otp sent to the phone number : /verify_otp', async () => {
-    // adding the otp to db
-    await app.db.insert(schema.otp).values({
-      phone_number: testPhoneNumber,
-      otp: '666666',
-    });
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/verify_otp',
-      body: {
+  test(
+    'should verify the otp sent to the phone number : /verify_otp',
+    async () => {
+      // adding the otp to db
+      await app.db.insert(schema.otp).values({
         phone_number: testPhoneNumber,
-        sent_otp: '666666',
-      },
-    });
+        otp: '666666',
+      });
 
-    const msg = {
-      message: 'OTP verified successfully',
-    };
+      const response = await app.inject({
+        method: 'POST',
+        url: '/verify_otp',
+        body: {
+          phone_number: testPhoneNumber,
+          sent_otp: '666666',
+          public_key_x: testPublicKeyX,
+          public_key_y: testPublicKeyY,
+        },
+      });
 
-    expect(response.body).toBe(JSON.stringify(msg));
-    expect(response.statusCode).toBe(200);
-  });
+      assert(/^0x[0-9a-fA-F]{63}$/.test((await response.json()).contract_address));
+      expect(response.statusCode).toBe(200);
+    },
+    120 * 1000,
+    // 2 min test timeout
+  );
 
   test('should not be able verify the otp already sent to the phone number : /verify_otp', async () => {
     const response = await app.inject({
@@ -106,6 +110,8 @@ describe('Verify OTP test', () => {
       body: {
         phone_number: testPhoneNumber,
         sent_otp: '666666',
+        public_key_x: testPublicKeyX,
+        public_key_y: testPublicKeyY,
       },
     });
 
@@ -114,6 +120,77 @@ describe('Verify OTP test', () => {
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
+    expect(response.statusCode).toBe(400);
+  });
+
+  test('should not be able verify the otp no public key x sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_y: testPublicKeyY,
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      "body must have required property 'public_key_x'",
+    );
+    expect(response.statusCode).toBe(400);
+  });
+  test('should not be able verify the otp no public key y sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_x: testPublicKeyX,
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      "body must have required property 'public_key_y'",
+    );
+    expect(response.statusCode).toBe(400);
+  });
+  test('should not be able verify the otp invalid public key x sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_x: '0x1',
+        public_key_y: testPublicKeyY,
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/public_key_x must match pattern "^0x[0-9a-fA-F]{64}$"',
+    );
+    expect(response.statusCode).toBe(400);
+  });
+  test('should not be able verify the otp invalid public key y sent: /verify_otp', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/verify_otp',
+      body: {
+        phone_number: testPhoneNumber,
+        sent_otp: '666666',
+        public_key_x: testPublicKeyX,
+        public_key_y: '0x1',
+      },
+    });
+
+    expect(response.json()).toHaveProperty(
+      'message',
+      'body/public_key_y must match pattern "^0x[0-9a-fA-F]{64}$"',
+    );
     expect(response.statusCode).toBe(400);
   });
 });

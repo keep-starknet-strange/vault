@@ -13,15 +13,17 @@ export function getClaimRoute(fastify: FastifyInstance): void {
 
     // Generate the claim link
     try {
-      const call = await fastify.db
+      const calls = await fastify.db
         .select()
         .from(schema.claims)
         .where(eq(schema.claims.id, id || ''));
-      if (call.length === 0) {
+      if (!calls.length) {
         return reply.status(400).send({ message: 'Unknown uuid.' });
       }
 
-      return reply.send({ call: call[0] });
+      const { nonce, address, amount, signature } = calls[0];
+
+      return reply.send({ call: { address, amount, nonce, signature } });
       // biome-ignore lint: has to be typed any or unknown otherwise typescript cries
     } catch (error: any) {
       if (error.code === '22P02') {

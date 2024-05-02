@@ -1,0 +1,1 @@
+ALTER TABLE "registration" ADD COLUMN "contract_address" text DEFAULT '';

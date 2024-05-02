@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          path: 'pr-code'  # Check out to a separate path to avoid mixing code bases
+          path: "pr-code" # Check out to a separate path to avoid mixing code bases
 
       # Setting up the environment
       - uses: pnpm/action-setup@v3
