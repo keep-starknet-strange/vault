@@ -96,7 +96,6 @@ export function getOtp(fastify: FastifyInstance) {
         return reply.code(200).send({ ok: true });
       } catch (error) {
         fastify.log.error(error);
-        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },

@@ -18,7 +18,6 @@ describe('Get OTP test', () => {
   beforeAll(async () => {
     container = await new PostgreSqlContainer().start();
     const connectionUri = container.getConnectionUri();
-    // console.log(connectionUri);
     app = await buildApp({
       database: {
         connectionString: connectionUri,
