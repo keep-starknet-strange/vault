@@ -45,8 +45,6 @@ export function getOtp(fastify: FastifyInstance) {
               phone_number,
               nickname,
             });
-
-            return reply.code(200).send(true);
             // biome-ignore lint: has to be typed any or unknown otherwise typescript cries
           } catch (error: any) {
             fastify.log.error(error);
@@ -96,6 +94,7 @@ export function getOtp(fastify: FastifyInstance) {
         return reply.code(200).send({ ok: true });
       } catch (error) {
         fastify.log.error(error);
+        console.log(error);
         return reply.code(500).send({ message: 'Internal Server Error' });
       }
     },
