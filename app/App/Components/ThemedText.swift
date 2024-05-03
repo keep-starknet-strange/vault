@@ -10,6 +10,7 @@ import SwiftUI
 enum TextTheme {
     case body
     case headline
+    case hero
 }
 
 struct ThemedText: View {
@@ -34,6 +35,13 @@ struct ThemedText: View {
             Text(text)
                 .font(.system(size: 32))
                 .fontWeight(.medium)
+                .foregroundStyle(.neutral1)
+                .tracking(1.2)
+
+        case .hero:
+            Text(text)
+                .font(.system(size: 48))
+                .fontWeight(.semibold)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
         }

@@ -38,7 +38,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        if !settingsModel.isOnboarded {
+        if settingsModel.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
@@ -63,6 +63,7 @@ struct ContentView: View {
 
                 CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
         } else {
             NavigationStack {
                 OnboardingView()
