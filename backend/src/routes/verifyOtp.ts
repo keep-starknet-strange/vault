@@ -39,15 +39,26 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
         const otp_record = await fastify.db
           .select()
           .from(otp)
-          .where(
-            and(eq(otp.phone_number, phone_number), eq(otp.otp, sent_otp), eq(otp.used, false)),
-          )
+          .where(eq(otp.phone_number, phone_number))
           .orderBy(desc(otp.created_at))
           .limit(1);
 
         if (!otp_record.length) {
           return reply.code(400).send({
-            message: 'You need to request the otp first | Invalid OTP provided',
+            message: 'You need to request the otp first.',
+          });
+        }
+        const record = otp_record[0];
+
+        if (record.used) {
+          return reply.code(400).send({
+            message: 'otp already used.',
+          });
+        }
+
+        if (record.otp !== sent_otp) {
+          return reply.code(400).send({
+            message: 'Wrong otp.',
           });
         }
 

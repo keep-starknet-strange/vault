@@ -86,10 +86,16 @@ export function getOtp(fastify: FastifyInstance) {
             message: 'We are facing some issues. Please try again later',
           });
         }
-        await fastify.db.insert(schema.otp).values({
-          phone_number: phone_number,
-          otp: otp_gen,
-        });
+        await fastify.db
+          .insert(schema.otp)
+          .values({
+            phone_number: phone_number,
+            otp: otp_gen,
+          })
+          .onConflictDoUpdate({
+            target: schema.otp.phone_number,
+            set: { created_at: new Date(), otp: otp_gen },
+          });
 
         return reply.code(200).send({ ok: true });
       } catch (error) {

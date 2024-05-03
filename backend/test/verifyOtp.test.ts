@@ -12,6 +12,7 @@ describe('Verify OTP test', () => {
   let app: FastifyInstance;
   const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string;
+  const otherPhoneNumber = process.env.TWILIO_PHONE_NUMBER as string;
   const testPublicKeyX = '0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133';
   const testPublicKeyY = '0x4bdae6ef158afd49d946c36d8bf3c8efc359a50e1f2bc043368230ed9e6d610d';
   const testNickname = 'Jean Dupont';
@@ -61,7 +62,7 @@ describe('Verify OTP test', () => {
       method: 'POST',
       url: '/verify_otp',
       body: {
-        phone_number: testPhoneNumber,
+        phone_number: otherPhoneNumber,
         sent_otp: '666666',
         public_key_x: testPublicKeyX,
         public_key_y: testPublicKeyY,
@@ -69,7 +70,7 @@ describe('Verify OTP test', () => {
     });
 
     const msg = {
-      message: 'You need to request the otp first | Invalid OTP provided',
+      message: 'You need to request the otp first.',
     };
 
     expect(response.body).toBe(JSON.stringify(msg));
@@ -81,7 +82,7 @@ describe('Verify OTP test', () => {
     async () => {
       // adding the otp to db
       await app.db.insert(schema.otp).values({
-        phone_number: testPhoneNumber,
+        phone_number: otherPhoneNumber,
         otp: '666666',
       });
 
@@ -89,7 +90,7 @@ describe('Verify OTP test', () => {
         method: 'POST',
         url: '/verify_otp',
         body: {
-          phone_number: testPhoneNumber,
+          phone_number: otherPhoneNumber,
           sent_otp: '666666',
           public_key_x: testPublicKeyX,
           public_key_y: testPublicKeyY,
@@ -103,7 +104,7 @@ describe('Verify OTP test', () => {
     // 2 min test timeout
   );
 
-  test('should not be able verify the otp already sent to the phone number : /verify_otp', async () => {
+  test('should not be able verify the otp already verified: /verify_otp', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/verify_otp',
@@ -116,7 +117,7 @@ describe('Verify OTP test', () => {
     });
 
     const msg = {
-      message: 'You need to request the otp first | Invalid OTP provided',
+      message: 'otp already used.',
     };
 
     expect(response.body).toBe(JSON.stringify(msg));

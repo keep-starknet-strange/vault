@@ -49,11 +49,6 @@ jobs:
         run: pnpm check
         working-directory: ./pr-code/backend
 
-      # Run tests in the PR code's backend directory
-      - name: "Test"
-        run: pnpm vitest --pool=forks --watch=false
-        working-directory: ./pr-code/backend
-
       # Generate coverage report in the PR code's backend directory
       - name: "Coverage"
         run: pnpm vitest --pool=forks --coverage.enabled true
