@@ -8,29 +8,31 @@
 import Foundation
 
 enum Endpoint {
-    case getOTP(String)
-    case verifyOTP(String, String, String)
+    case getOTP(String, String)
+    case verifyOTP(String, String, PublicKey)
 }
 
 class VaultService {
 
-    private func query(endpoint: Endpoint, completion: @escaping @Sendable ([String: Any]?) -> Void) {
+    private func query(endpoint: Endpoint, completion: @escaping @Sendable (Result<[String: Any], Error>) -> Void) {
         var url = Constants.vaultBaseURL
         var body: [String: String] = [:]
 
         switch endpoint {
-        case let .getOTP(phoneNumber):
+        case let .getOTP(phoneNumber, nickname):
             url.append(path: "/get_otp")
 
             body["phone_number"] = phoneNumber
+            body["nickname"] = nickname
             break
 
         case let .verifyOTP(phoneNumber, otp, publicKey):
             url.append(path: "/verify_otp")
 
             body["phone_number"] = phoneNumber
-            body["otp"] = otp
-            body["public_key"] = publicKey
+            body["sent_otp"] = otp
+            body["public_key_x"] = publicKey.x.toHex()
+            body["public_key_y"] = publicKey.y.toHex()
         }
 
         // Convert the dictionary into JSON data
@@ -48,10 +50,14 @@ class VaultService {
 
         // fetch request
         URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                // TODO: Handle errors
-                print(error ?? "Unknown error")
-                completion(nil)
+            guard 
+                let data = data,
+                let httpResponse = response as? HTTPURLResponse,
+                error == nil
+            else {
+                DispatchQueue.main.async {
+                    completion(.failure(error ?? "Unknown error"))
+                }
                 return
             }
 
@@ -63,33 +69,51 @@ class VaultService {
                 // make sure this JSON is in the format we expect
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     DispatchQueue.main.async {
-                        completion(json)
+                        if httpResponse.isSuccessful {
+                            completion(.success(json))
+                        } else {
+                            completion(.failure(json["message"] as? String ?? "Unkown error"))
+                        }
                     }
                 }
             } catch let error as NSError {
-                // TODO: Handle errors
-                print("Failed to load: \(error.localizedDescription)")
-                completion(nil)
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
         }.resume()
     }
 
-    func getOTP(phoneNumber: String, completion: @escaping (Bool) -> Void) {
-        self.query(endpoint: .getOTP(phoneNumber)) { json in
-            if let ok = json?["ok"] as? Bool {
-                completion(ok)
-            } else {
-                completion(false)
+    func getOTP(phoneNumber: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        self.query(endpoint: .getOTP(phoneNumber, "chqrles")) { result in
+            switch result {
+            case .success(let json):
+                guard let _ = json["ok"] as? Bool else {
+                    completion(.failure("Unkown Error"))
+                    return
+                }
+
+                completion(.success(Void()))
+
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
 
-    func verifyOTP(phoneNumber: String, otp: String, publicKey: String, completion: @escaping (String?) -> Void) {
-        self.query(endpoint: .verifyOTP(phoneNumber, otp, publicKey)) { json in
-            if let address = json?["address"] as? String {
-                completion(address)
-            } else {
-                completion(nil)
+    func verifyOTP(phoneNumber: String, otp: String, publicKey: PublicKey, completion: @escaping (Result<String, Error>) -> Void) {
+        self.query(endpoint: .verifyOTP(phoneNumber, otp, publicKey)) { result in
+            switch result {
+            case .success(let json):
+                guard let address = json["contract_address"] as? String else {
+                    completion(.failure("Unkown Error"))
+                    return
+                }
+
+                completion(.success(address))
+
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }

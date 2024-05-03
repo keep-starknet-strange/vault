@@ -42,13 +42,13 @@ struct ContentView: View {
             ZStack(alignment: .bottom) {
                 TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
-                        Home().edgesIgnoringSafeArea(.bottom)
+                        HomeView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.accounts)
                     .toolbarBackground(.hidden, for: .tabBar)
 
                     NavigationStack {
-                        Text("Send")
+                        TransferView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.transfer)
 

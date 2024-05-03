@@ -10,21 +10,34 @@ import PhoneNumberKit
 
 class RegistrationModel: ObservableObject {
 
+    @Published var isLoading = false
+
     private var vaultService: VaultService
 
     init(vaultService: VaultService) {
         self.vaultService = vaultService
     }
 
-    func startRegistration(phoneNumber: PhoneNumber) {
-        vaultService.getOTP(phoneNumber: phoneNumber.rawString()) { success in
-            print(success)
+    func startRegistration(phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
+        self.isLoading = true
+
+        vaultService.getOTP(phoneNumber: phoneNumber.rawString()) { result in
+            self.isLoading = false
+            completion(result)
         }
     }
 
-    func confirmRegistration(phoneNumber: PhoneNumber, otp: String, publicKey: String) {
-        vaultService.verifyOTP(phoneNumber: phoneNumber.rawString(), otp: otp, publicKey: publicKey) { address in
-            print(address ?? "0xdead")
+    func confirmRegistration(
+        phoneNumber: PhoneNumber,
+        otp: String,
+        publicKey: PublicKey,
+        completion: @escaping (Result<String, Error>
+    ) -> Void) {
+        self.isLoading = true
+
+        vaultService.verifyOTP(phoneNumber: phoneNumber.rawString(), otp: otp, publicKey: publicKey) { result in
+            self.isLoading = false
+            completion(result)
         }
     }
 }

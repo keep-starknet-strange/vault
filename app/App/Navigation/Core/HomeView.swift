@@ -49,7 +49,7 @@ class History {
     }
 }
 
-struct Home: View {
+struct HomeView: View {
     let users: [String: User] = [
         "me": User(
             address: "0xdead",
@@ -207,6 +207,6 @@ struct Home: View {
 #Preview {
     ZStack {
         Color.background1.edgesIgnoringSafeArea(.all)
-        Home()
+        HomeView()
     }
 }

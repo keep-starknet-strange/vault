@@ -77,7 +77,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "VAULT_API_BASE_URL"
-            value = "http://localhost:8080"
+            value = "https://vault-production-1bb9.up.railway.app"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

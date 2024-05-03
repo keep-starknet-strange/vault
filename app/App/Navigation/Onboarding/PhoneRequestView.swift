@@ -17,7 +17,7 @@ struct PhoneRequestView: View {
     @State private var parsedPhoneNumber: PhoneNumber?
     
     var body: some View {
-        OnboardingPage {
+        OnboardingPage(isLoading: $registrationModel.isLoading) {
             VStack(alignment: .leading, spacing: 24) {
                 ThemedText("Let's get started !", theme: .headline)
                 
@@ -31,8 +31,16 @@ struct PhoneRequestView: View {
             VStack(alignment: .center, spacing: 16) {
                 // TODO: implement login
                 PrimaryButton("Sign up", disabled: self.parsedPhoneNumber == nil) {
-                    //                    presentingNextView = true
-                    registrationModel.startRegistration(phoneNumber: self.parsedPhoneNumber!)
+                    registrationModel.startRegistration(phoneNumber: self.parsedPhoneNumber!) { result in
+                        switch result {
+                        case .success():
+                            presentingNextView = true
+                            
+                        case .failure(let error):
+                            print(error)
+                            // TODO: handle error
+                        }
+                    }
                 }
             }
         }

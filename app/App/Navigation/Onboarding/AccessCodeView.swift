@@ -29,7 +29,7 @@ struct AccessCodeView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            PhoneRequestView()
+            AskSurnameView()
         }
     }
 }

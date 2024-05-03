@@ -9,6 +9,9 @@ import SwiftUI
 import PhoneNumberKit
 
 struct PhoneValidationView: View {
+
+    @EnvironmentObject private var registrationModel: RegistrationModel
+
     @State private var presentingNextView = false
     @State private var otp = "" {
         didSet {
@@ -19,7 +22,7 @@ struct PhoneValidationView: View {
     let phoneNumber: PhoneNumber!
 
     var body: some View {
-        OnboardingPage {
+        OnboardingPage(isLoading: $registrationModel.isLoading) {
             VStack(alignment: .leading, spacing: 24) {
                 ThemedText("6-digits code", theme: .headline)
 
@@ -28,8 +31,25 @@ struct PhoneValidationView: View {
                 OTPInput(otp: $otp, numberOfFields: Constants.registrationCodeDigitsCount)
                     .onChange(of: otp, initial: false) { (_, newValue) in
                         if newValue.count == Constants.registrationCodeDigitsCount {
-                            // TODO: Validate OTP
-                            presentingNextView = true
+                            do {
+                                guard let publicKey = try SecureEnclaveManager.shared.generateKeyPair() else {
+                                    throw "Failed to generate public key"
+                                }
+
+                                registrationModel.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue, publicKey: publicKey) { result in
+                                    switch result {
+                                    case .success(let address):
+                                        print(address)
+                                        presentingNextView = true
+
+                                    case .failure(let error):
+                                        print(error)
+                                        // TODO: handle error
+                                    }
+                                }
+                            } catch {
+                                // TODO: Handle errors
+                            }
                         }
                     }
 
@@ -41,23 +61,31 @@ struct PhoneValidationView: View {
             Spacer()
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            AskSurnameView()
+            FaceIDView()
         }
     }
 }
 
-#Preview {
-    let phoneNumberKit = PhoneNumberKit()
+#if DEBUG
+struct PhoneValidationViewPreviews : PreviewProvider {
 
-    var phoneNumber: PhoneNumber? {
+    @StateObject static var registrationModel = RegistrationModel(vaultService: VaultService())
+
+    static let phoneNumberKit = PhoneNumberKit()
+
+    static var phoneNumber: PhoneNumber? {
         do {
-            return try phoneNumberKit.parse("612345678", withRegion: "FR")
+            return try self.phoneNumberKit.parse("612345678", withRegion: "FR")
         } catch {
             return nil
         }
     }
 
-    return NavigationStack {
-        PhoneValidationView(phoneNumber: phoneNumber)
+    static var previews: some View {
+        NavigationStack {
+            PhoneValidationView(phoneNumber: self.phoneNumber)
+                .environmentObject(self.registrationModel)
+        }
     }
 }
+#endif

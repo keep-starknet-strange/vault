@@ -58,7 +58,7 @@ struct CustomTabbar: View {
 #Preview {
     ZStack(alignment: .bottom) {
         TabView(selection: .constant(Tab.accounts)) {
-            Home()
+            HomeView()
                 .edgesIgnoringSafeArea(.bottom)
                 .toolbarBackground(.hidden, for: .tabBar)
                 .tag(0)
