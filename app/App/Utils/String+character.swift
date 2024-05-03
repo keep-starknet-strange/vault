@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension String {
+
     func character(at index: Int) -> String? {
         guard index >= 0 && index < self.count else {
             return nil

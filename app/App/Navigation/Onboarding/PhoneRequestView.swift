@@ -9,28 +9,38 @@ import SwiftUI
 import PhoneNumberKit
 
 struct PhoneRequestView: View {
+    
+    @EnvironmentObject private var registrationModel: RegistrationModel
+    
     @State private var presentingNextView = false
     @State private var phoneNumber = ""
     @State private var parsedPhoneNumber: PhoneNumber?
-
+    
     var body: some View {
-        OnboardingPage {
+        OnboardingPage(isLoading: $registrationModel.isLoading) {
             VStack(alignment: .leading, spacing: 24) {
                 ThemedText("Let's get started !", theme: .headline)
-
+                
                 ThemedText("Enter your phone number. We will send you a confirmation code.", theme: .body)
-
+                
                 PhoneInput(phoneNumber: $phoneNumber, parsedPhoneNumber: $parsedPhoneNumber)
             }
-
+            
             Spacer()
-
+            
             VStack(alignment: .center, spacing: 16) {
-//                SecondaryButton("Already have an account? Log in") {
-//                    presentingNextView = true
-//                }
+                // TODO: implement login
                 PrimaryButton("Sign up", disabled: self.parsedPhoneNumber == nil) {
-                    presentingNextView = true
+                    registrationModel.startRegistration(phoneNumber: self.parsedPhoneNumber!) { result in
+                        switch result {
+                        case .success():
+                            presentingNextView = true
+                            
+                        case .failure(let error):
+                            print(error)
+                            // TODO: handle error
+                        }
+                    }
                 }
             }
         }
@@ -40,8 +50,16 @@ struct PhoneRequestView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        PhoneRequestView()
+#if DEBUG
+struct PhoneRequestViewPreviews : PreviewProvider {
+
+    @StateObject static var registrationModel = RegistrationModel(vaultService: VaultService())
+
+    static var previews: some View {
+        NavigationStack {
+            PhoneRequestView()
+                .environmentObject(self.registrationModel)
+        }
     }
 }
+#endif

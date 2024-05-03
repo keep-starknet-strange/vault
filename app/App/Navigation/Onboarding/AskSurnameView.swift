@@ -29,7 +29,7 @@ struct AskSurnameView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            FaceIDView()
+            PhoneRequestView()
         }
     }
 }

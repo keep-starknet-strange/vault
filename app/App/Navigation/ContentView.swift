@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @StateObject private var registrationModel: RegistrationModel
     @StateObject private var settingsModel = SettingsModel()
     @StateObject private var navigationModel = NavigationModel()
 
@@ -27,20 +29,26 @@ struct ContentView: View {
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.accentColor)]
 
         UITabBar.appearance().standardAppearance = tabBarAppearance
+
+        // init vault API models
+
+        let vaultService = VaultService()
+
+        self._registrationModel = StateObject(wrappedValue: RegistrationModel(vaultService: vaultService))
     }
 
     var body: some View {
-        if !settingsModel.isOnboarded {
+        if settingsModel.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
-                        Home().edgesIgnoringSafeArea(.bottom)
+                        HomeView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.accounts)
                     .toolbarBackground(.hidden, for: .tabBar)
 
                     NavigationStack {
-                        Text("Send")
+                        TransferView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.transfer)
 
@@ -55,11 +63,13 @@ struct ContentView: View {
 
                 CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
         } else {
             NavigationStack {
                 OnboardingView()
             }
             .environmentObject(settingsModel)
+            .environmentObject(registrationModel)
             .preferredColorScheme(.dark)
         }
     }
