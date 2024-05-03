@@ -35,14 +35,14 @@ export const usdcBalance = pgTable('balance_usdc', {
 
 export const registration = pgTable('registration', {
   phone_number: text('phone_number').primaryKey(),
-  nickname: text('first_name'),
+  nickname: text('nickname'),
   created_at: timestamp('created_at').defaultNow(),
   contract_address: text('contract_address').default(''),
   is_confirmed: boolean('is_confirmed').default(false),
 });
 
 export const otp = pgTable('otp', {
-  phone_number: text('phone_number'),
+  phone_number: text('phone_number').primaryKey(),
   otp: text('otp'),
   used: boolean('used').default(false),
   created_at: timestamp('created_at').defaultNow(),
