@@ -14,9 +14,9 @@ struct FaceIDView: View {
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Better experience with Face ID", theme: .headline)
+                Text("Better experience with Face ID").textTheme(.headlineLarge)
 
-                ThemedText("Enable Face ID to make your transactions smooth and secure.", theme: .body)
+                Text("Enable Face ID to make your transactions smooth and secure.").textTheme(.bodyPrimary)
             }
 
             Spacer()

@@ -14,9 +14,9 @@ struct AccessCodeView: View {
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Early User Access", theme: .headline)
+                Text("Early User Access").textTheme(.headlineLarge)
 
-                ThemedText("To join our exclusive early users, please enter your access code.", theme: .body)
+                Text("To join our exclusive early users, please enter your access code.").textTheme(.bodyPrimary)
 
                 TextInput("Access Code", text: $accessCode)
             }

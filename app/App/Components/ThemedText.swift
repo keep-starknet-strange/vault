@@ -8,43 +8,89 @@
 import SwiftUI
 
 enum TextTheme {
-    case body
-    case headline
     case hero
+    case headlineLarge
+    case headlineMedium
+    case headlineSmall
+    case button
+    case buttonSmall
+    case bodyPrimary
+    case bodySecondary
+    case subtitle
 }
 
-struct ThemedText: View {
-    let text: String
-    let theme: TextTheme
+struct ThemedTextModifier: ViewModifier {
+    var theme: TextTheme
 
-    init(_ text: String, theme: TextTheme) {
-        self.text = text
-        self.theme = theme
-    }
-
-    var body: some View {
+    func body(content: Content) -> some View {
         switch (theme) {
-        case .body:
-            Text(text)
-                .font(.custom("Montserrat", size: 17))
-                .foregroundStyle(.neutral1)
+        case .hero:
+            content
+                .font(.custom("Sofia Pro", size: 46))
                 .fontWeight(.medium)
-                .tracking(-0.3)
+                .foregroundStyle(.neutral1)
+                .tracking(1.2)
 
-        case .headline:
-            Text(text)
+        case .headlineLarge:
+            content
                 .font(.system(size: 32))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
 
-        case .hero:
-            Text(text)
-                .font(.system(size: 48))
-                .fontWeight(.semibold)
+        case .headlineMedium:
+            content
+                .font(.system(size: 20))
+                .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
+
+        case .headlineSmall:
+            content
+                .font(.system(size: 18))
+                .fontWeight(.medium)
+                .foregroundStyle(.neutral1)
+                .tracking(1.2)
+
+        case .button:
+            content
+                .font(.custom("Sofia Pro", size: 18))
+                .foregroundStyle(.neutral1)
+                .fontWeight(.medium)
+
+        case .buttonSmall:
+            content
+                .font(.system(size: 17))
+                .foregroundStyle(.accent)
+                .fontWeight(.regular)
+
+        case .bodyPrimary:
+            content
+                .font(.custom("Sofia Pro", size: 17))
+                .foregroundStyle(.neutral1)
+                .fontWeight(.regular)
+                .tracking(-0.3)
+
+        case .bodySecondary:
+            content
+                .font(.system(size: 15))
+                .foregroundStyle(.neutral1)
+                .fontWeight(.regular)
+                .tracking(-0.3)
+
+        case .subtitle:
+            content
+                .font(.system(size: 13))
+                .foregroundStyle(.neutral2)
+                .fontWeight(.regular)
+                .tracking(-0.3)
         }
+    }
+}
+
+extension View {
+    func textTheme(_ theme: TextTheme) -> some View {
+        self.modifier(ThemedTextModifier(theme: theme))
     }
 }
 
@@ -52,8 +98,15 @@ struct ThemedText: View {
     ZStack {
         Color.background1.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
         VStack(alignment: .leading, spacing: 16) {
-            ThemedText("Lorem ipsum dolor", theme: .headline)
-            ThemedText("Lorem ipsum dolor", theme: .body)
+            Text("Hero").textTheme(.hero)
+            Text("Hedaline Large").textTheme(.headlineLarge)
+            Text("Hedaline Medium").textTheme(.headlineMedium)
+            Text("Hedaline Small").textTheme(.headlineSmall)
+            Text("Button").textTheme(.button)
+            Text("Button Small").textTheme(.buttonSmall)
+            Text("Body Primary").textTheme(.bodyPrimary)
+            Text("Body Secondary").textTheme(.bodySecondary)
+            Text("Subtitle").textTheme(.subtitle)
         }
     }
 }

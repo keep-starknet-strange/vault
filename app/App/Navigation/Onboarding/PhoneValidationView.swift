@@ -24,9 +24,9 @@ struct PhoneValidationView: View {
     var body: some View {
         OnboardingPage(isLoading: $registrationModel.isLoading) {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("6-digits code", theme: .headline)
+                Text("6-digits code").textTheme(.headlineLarge)
 
-                ThemedText("A code has been sent to +\(phoneNumber.countryCode)\(phoneNumber.numberString)", theme: .body)
+                Text("A code has been sent to +\(phoneNumber.countryCode)\(phoneNumber.numberString)").textTheme(.bodyPrimary)
 
                 OTPInput(otp: $otp, numberOfFields: Constants.registrationCodeDigitsCount)
                     .onChange(of: otp, initial: false) { (_, newValue) in

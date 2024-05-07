@@ -13,14 +13,14 @@ struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(.accent)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
 struct PrimaryButton: View {
-    let height: CGFloat = 52
+    let height: CGFloat = 60
 
     let text: String
     let disabled: Bool
@@ -35,10 +35,8 @@ struct PrimaryButton: View {
     var body: some View {
         Button(action: action) { /// call the closure here
             Text(text)
-                .font(.custom("Montserrat", size: 17))
-                .fontWeight(.semibold)
+                .textTheme(.button)
                 .frame(maxWidth: .infinity, minHeight: height)
-                .foregroundColor(.background1)
         }
         .buttonStyle(PrimaryButtonStyle())
         .opacity(disabled ? 0.5 : 1)
@@ -73,8 +71,7 @@ struct SecondaryButton: View {
     var body: some View {
         Button(action: action) { /// call the closure here
             Text(text)
-                .font(.custom("Montserrat", size: 17))
-                .fontWeight(.semibold)
+                .textTheme(.button)
                 .frame(minHeight: height)
                 .foregroundColor(.accent)
         }
@@ -142,7 +139,9 @@ struct NoopButtonStyle: ButtonStyle {
             Spacer()
 
             Button() {} label: {
-                Text("Enabled").padding(16)
+                Text("Enabled")
+                    .textTheme(.button)
+                    .padding(16)
             }
             .buttonStyle(GradientButtonStyle())
 

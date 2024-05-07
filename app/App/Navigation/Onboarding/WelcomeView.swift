@@ -16,16 +16,16 @@ struct WelcomeView: View {
 
             Spacer()
 
-            VStack {
+            VStack(spacing: 8) {
                 Image(.textLogo)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200)
+
                 Text("Empower Your Assets\nRedefine Control")
+                    .foregroundStyle(.neutral2)
+                    .textTheme(.bodyPrimary)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.neutral2)
-                    .font(.custom("Montserrat", size: 17))
-                    .fontWeight(.medium)
             }
 
             Spacer()

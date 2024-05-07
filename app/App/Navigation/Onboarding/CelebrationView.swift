@@ -17,9 +17,9 @@ struct CelebrationView: View {
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("That’s it ! You are all set", theme: .headline)
+                Text("That’s it ! You are all set").textTheme(.headlineLarge)
 
-                ThemedText("You're now part of a 100% mobile, flexible banking revolution. Enjoy the instant transactions, sub-accounts for easier saving, and much more.", theme: .body)
+                Text("You're now part of a 100% mobile, flexible banking revolution. Enjoy the instant transactions, sub-accounts for easier saving, and much more.").textTheme(.bodyPrimary)
             }
 
             Spacer()

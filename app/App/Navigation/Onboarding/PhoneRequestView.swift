@@ -19,9 +19,9 @@ struct PhoneRequestView: View {
     var body: some View {
         OnboardingPage(isLoading: $registrationModel.isLoading) {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Let's get started !", theme: .headline)
+                Text("Let's get started !").textTheme(.headlineLarge)
                 
-                ThemedText("Enter your phone number. We will send you a confirmation code.", theme: .body)
+                Text("Enter your phone number. We will send you a confirmation code.").textTheme(.bodyPrimary)
                 
                 PhoneInput(phoneNumber: $phoneNumber, parsedPhoneNumber: $parsedPhoneNumber)
             }

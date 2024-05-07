@@ -14,9 +14,9 @@ struct NotificationView: View {
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Stay Updated Instantly", theme: .headline)
+                Text("Stay Updated Instantly").textTheme(.headlineLarge)
 
-                ThemedText("Notifications to keep track of your account activity effortlessly.", theme: .body)
+                Text("Notifications to keep track of your account activity effortlessly.").textTheme(.bodyPrimary)
             }
 
             Spacer()

@@ -105,37 +105,18 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 40) {
+        VStack(alignment: .center, spacing: 40) {
 
             // MARK: BALANCE
 
-            VStack(alignment: .leading, spacing: 4) {
+            Group {
+                Text("$12,578")
 
-                Text("Total balance")
-                    .font(.custom("Montserrat", size: 13))
-                    .fontWeight(.medium)
-                    .foregroundStyle(.neutral2)
+                +
 
-                Group {
-                    Text("$")
-                        .font(.custom("Montserrat", size: 46))
-                        .foregroundStyle(.neutral1)
-
-                    +
-
-                    Text("12,578.")
-                        .font(.custom("Montserrat", size: 42))
-                        .foregroundStyle(.neutral1)
-
-                    +
-
-                    Text("00")
-                        .font(.custom("Montserrat", size: 28))
-                        .foregroundStyle(.neutral2)
-                }
-                .kerning(0.6)
-                .fontWeight(.semibold)
+                Text(".00").foregroundStyle(.neutral2)
             }
+            .textTheme(.hero)
 
             // MARK: HISTORY
 
@@ -169,9 +150,7 @@ struct HomeView: View {
                         }
                     } header: {
                         Text(formatSectionHeader(for: day).uppercased())
-                            .font(.system(size: 18))
-                            .fontWeight(.medium)
-                            .foregroundStyle(.neutral1)
+                            .textTheme(.headlineSmall)
                             .listRowInsets(EdgeInsets(top: 16, leading: 8, bottom: 8, trailing: 0))
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

@@ -15,9 +15,9 @@ struct AskSurnameView: View {
     var body: some View {
         OnboardingPage {
             VStack(alignment: .leading, spacing: 24) {
-                ThemedText("A Personalized Touch", theme: .headline)
+                Text("A Personalized Touch").textTheme(.headlineLarge)
 
-                ThemedText("Introduce yourself with your surname. Change it anytime.", theme: .body)
+                Text("Introduce yourself with your surname. Change it anytime.").textTheme(.bodyPrimary)
 
                 TextInput("Surname", text: $settingsModel.surname)
             }

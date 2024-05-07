@@ -39,7 +39,7 @@ struct AmountInput: View {
                 }
             }
 
-        ThemedText("$\(self.amount.isEmpty ? "0" : self.amount)", theme: .hero)
+        Text("$\(self.amount.isEmpty ? "0" : self.amount)").textTheme(.hero)
     }
 
     private func formattedAmount(_ amount: String) -> String? {

@@ -29,7 +29,7 @@ struct TextInput: View {
             .padding(16)
             .foregroundColor(.neutral1)
             .background(.background3.opacity(isFocused ? 1.5 : 1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
