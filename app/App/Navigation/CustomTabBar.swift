@@ -18,35 +18,22 @@ struct CustomTabbar: View {
                 Button {
                     selectedTab = tab
                 } label: {
-                    if tab.isLarge {
-                        ZStack(alignment: .center) {
-                            Capsule()
-                                .fill(.accent)
-                                .strokeBorder(.accentBorder1, lineWidth: 3)
-                                .frame(width: 64, height: 64)
-
-                            Image(icon)
-                                .renderingMode(.template)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 32,height: 32)
-                                .foregroundColor(.neutral1)
-                        }.padding(
-                            EdgeInsets(top: -20, leading: 0, bottom: 0, trailing: 0)
-                        )
-                    } else {
+                    VStack(spacing: 4) {
                         Image(icon)
                             .renderingMode(.template)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25,height: 25)
                             .frame(maxWidth: .infinity)
+                            .padding(.top, 6)
+
+                        Text(tab.displayName).textTheme(.tabButton(selectedTab == tab))
                     }
                 }
                 .buttonStyle(TabItemButtonStyle(selected: selectedTab == tab))
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 46)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 48, maxHeight: 48)
         .background(.black.opacity(0.3))
         .background(.ultraThinMaterial)
         .padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
@@ -57,7 +44,7 @@ struct CustomTabbar: View {
 
 #Preview {
     ZStack(alignment: .bottom) {
-        TabView(selection: .constant(Tab.accounts)) {
+        TabView(selection: .constant(Tab.payments)) {
             HomeView()
                 .edgesIgnoringSafeArea(.bottom)
                 .toolbarBackground(.hidden, for: .tabBar)
@@ -72,6 +59,6 @@ struct CustomTabbar: View {
         .toolbarBackground(.hidden, for: .navigationBar)
         .preferredColorScheme(.dark)
 
-        CustomTabbar(selectedTab: .constant(.accounts))
+        CustomTabbar(selectedTab: .constant(.payments))
     }
 }

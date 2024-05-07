@@ -17,6 +17,7 @@ enum TextTheme {
     case bodyPrimary
     case bodySecondary
     case subtitle
+    case tabButton(Bool)
 }
 
 struct ThemedTextModifier: ViewModifier {
@@ -69,21 +70,25 @@ struct ThemedTextModifier: ViewModifier {
                 .font(.custom("Sofia Pro", size: 17))
                 .foregroundStyle(.neutral1)
                 .fontWeight(.regular)
-                .tracking(-0.3)
 
         case .bodySecondary:
             content
                 .font(.system(size: 15))
                 .foregroundStyle(.neutral1)
                 .fontWeight(.regular)
-                .tracking(-0.3)
 
         case .subtitle:
             content
                 .font(.system(size: 13))
                 .foregroundStyle(.neutral2)
                 .fontWeight(.regular)
-                .tracking(-0.3)
+                .tracking(-0.1)
+
+        case .tabButton(let active):
+            content
+                .font(.system(size: 10))
+                .foregroundStyle(active ? .neutral1 : .neutral2)
+                .fontWeight(.medium)
         }
     }
 }
@@ -107,6 +112,8 @@ extension View {
             Text("Body Primary").textTheme(.bodyPrimary)
             Text("Body Secondary").textTheme(.bodySecondary)
             Text("Subtitle").textTheme(.subtitle)
+            Text("Tab button (active)").textTheme(.tabButton(true))
+            Text("Tab button (inactive)").textTheme(.tabButton(false))
         }
     }
 }

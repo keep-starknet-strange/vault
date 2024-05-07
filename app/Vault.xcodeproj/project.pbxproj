@@ -29,6 +29,7 @@
 		9CD390ED2BE3CF5D00238FE9 /* TransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390EC2BE3CF5D00238FE9 /* TransferView.swift */; };
 		9CD390EF2BE5284000238FE9 /* AmountInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390EE2BE5284000238FE9 /* AmountInput.swift */; };
 		9CD390F52BE93A2400238FE9 /* Sofia Pro Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */; };
+		9CD390F72BEA3D2A00238FE9 /* EarnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390F62BEA3D2A00238FE9 /* EarnView.swift */; };
 		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
@@ -110,6 +111,7 @@
 		9CD390EC2BE3CF5D00238FE9 /* TransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferView.swift; sourceTree = "<group>"; };
 		9CD390EE2BE5284000238FE9 /* AmountInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountInput.swift; sourceTree = "<group>"; };
 		9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sofia Pro Medium.otf"; sourceTree = "<group>"; };
+		9CD390F62BEA3D2A00238FE9 /* EarnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnView.swift; sourceTree = "<group>"; };
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				9CD778AA2BBAF8BE00BA4677 /* HomeView.swift */,
 				9CD778C32BC1B63800BA4677 /* BudgetView.swift */,
 				9CD390EC2BE3CF5D00238FE9 /* TransferView.swift */,
+				9CD390F62BEA3D2A00238FE9 /* EarnView.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */,
 				9CD778CB2BC3113A00BA4677 /* PhoneRequestView.swift in Sources */,
 				9CDFD42F2BAB7641000466B9 /* OnboardingView.swift in Sources */,
+				9CD390F72BEA3D2A00238FE9 /* EarnView.swift in Sources */,
 				9CD778CD2BC3115E00BA4677 /* PhoneValidationView.swift in Sources */,
 				9C4F451B2BDE999000D44CBE /* String+Error.swift in Sources */,
 				9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */,
@@ -679,6 +683,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Vault-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Vault;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -866,6 +872,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Vault-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Vault;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -896,6 +904,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Vault-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Vault;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

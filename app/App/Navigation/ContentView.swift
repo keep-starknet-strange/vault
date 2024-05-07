@@ -44,18 +44,18 @@ struct ContentView: View {
                     NavigationStack {
                         HomeView().edgesIgnoringSafeArea(.bottom)
                     }
-                    .tag(Tab.accounts)
+                    .tag(Tab.payments)
                     .toolbarBackground(.hidden, for: .tabBar)
-
-                    NavigationStack {
-                        TransferView().edgesIgnoringSafeArea(.bottom)
-                    }
-                    .tag(Tab.transfer)
 
                     NavigationStack {
                         BudgetView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.budget)
+
+                    NavigationStack {
+                        EarnView().edgesIgnoringSafeArea(.bottom)
+                    }
+                    .tag(Tab.earn)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .environmentObject(settingsModel)
