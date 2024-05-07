@@ -19,6 +19,9 @@ struct PhoneInput: View {
     }
     @Binding var parsedPhoneNumber: PhoneNumber?
 
+    @State private var showingPicker = false
+    @State private var textInputHeight: CGFloat?
+
     private let phoneNumberKit = PhoneNumberKit()
 
     var body: some View {
@@ -74,10 +77,6 @@ struct PhoneInput: View {
             self.phoneNumber = ""
         }
     }
-
-
-    @State private var showingPicker = false
-    @State private var textInputHeight: CGFloat?
 }
 
 #if DEBUG

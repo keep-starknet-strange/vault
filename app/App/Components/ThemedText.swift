@@ -14,6 +14,7 @@ enum TextTheme {
     case headlineSmall
     case button
     case buttonSmall
+    case buttonIcon
     case bodyPrimary
     case bodySecondary
     case subtitle
@@ -65,6 +66,13 @@ struct ThemedTextModifier: ViewModifier {
                 .foregroundStyle(.accent)
                 .fontWeight(.regular)
 
+        case .buttonIcon:
+            content
+                .font(.custom("Sofia Pro", size: 15))
+                .foregroundStyle(.neutral1)
+                .fontWeight(.medium)
+                .tracking(-0.3)
+
         case .bodyPrimary:
             content
                 .font(.custom("Sofia Pro", size: 17))
@@ -103,17 +111,37 @@ extension View {
     ZStack {
         Color.background1.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
         VStack(alignment: .leading, spacing: 16) {
+            Spacer()
+
             Text("Hero").textTheme(.hero)
+
+            Spacer()
+
             Text("Hedaline Large").textTheme(.headlineLarge)
             Text("Hedaline Medium").textTheme(.headlineMedium)
             Text("Hedaline Small").textTheme(.headlineSmall)
+
+            Spacer()
+
             Text("Button").textTheme(.button)
             Text("Button Small").textTheme(.buttonSmall)
+            Text("Button Icon").textTheme(.buttonIcon)
+
+            Spacer()
+
             Text("Body Primary").textTheme(.bodyPrimary)
             Text("Body Secondary").textTheme(.bodySecondary)
+
+            Spacer()
+
             Text("Subtitle").textTheme(.subtitle)
+
+            Spacer()
+
             Text("Tab button (active)").textTheme(.tabButton(true))
             Text("Tab button (inactive)").textTheme(.tabButton(false))
+
+            Spacer()
         }
     }
 }

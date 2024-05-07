@@ -25,10 +25,10 @@ struct CustomTabbar: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25,height: 25)
                             .frame(maxWidth: .infinity)
-                            .padding(.top, 6)
 
                         Text(tab.displayName).textTheme(.tabButton(selectedTab == tab))
                     }
+                    .padding(.top, 6)
                 }
                 .buttonStyle(TabItemButtonStyle(selected: selectedTab == tab))
             }

@@ -67,7 +67,6 @@ struct TransferRow: View {
             Text("\(isSpending ? "-" : "")$\(transfer.amount.toFixed())")
                 .if(!isSpending) { view in
                     view
-                        .foregroundStyle(.background1)
                         .fontWeight(.semibold)
                 }
                 .textTheme(.bodySecondary)

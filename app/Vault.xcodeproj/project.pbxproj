@@ -30,6 +30,7 @@
 		9CD390EF2BE5284000238FE9 /* AmountInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390EE2BE5284000238FE9 /* AmountInput.swift */; };
 		9CD390F52BE93A2400238FE9 /* Sofia Pro Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */; };
 		9CD390F72BEA3D2A00238FE9 /* EarnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390F62BEA3D2A00238FE9 /* EarnView.swift */; };
+		9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390FA2BEAB6C600238FE9 /* WebView.swift */; };
 		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
@@ -112,6 +113,7 @@
 		9CD390EE2BE5284000238FE9 /* AmountInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountInput.swift; sourceTree = "<group>"; };
 		9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sofia Pro Medium.otf"; sourceTree = "<group>"; };
 		9CD390F62BEA3D2A00238FE9 /* EarnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnView.swift; sourceTree = "<group>"; };
+		9CD390FA2BEAB6C600238FE9 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778A72BB2CE7D00BA4677 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 				9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */,
 				9CE7A75C2BE15C21008509FE /* SpinnerView.swift */,
 				9CD390EE2BE5284000238FE9 /* AmountInput.swift */,
+				9CD390FA2BEAB6C600238FE9 /* WebView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
 				9C5CFDA82BC73DB0001776E1 /* SearchBar.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
+				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
 				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9CDFD4432BADA297000466B9 /* BiometricAuthManager.swift in Sources */,

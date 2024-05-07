@@ -56,7 +56,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 }
 
 struct SecondaryButton: View {
-    let height: CGFloat = 52
+    let height: CGFloat = 42
 
     let text: String
     let disabled: Bool
@@ -71,6 +71,7 @@ struct SecondaryButton: View {
     var body: some View {
         Button(action: action) { /// call the closure here
             Text(text)
+                .foregroundStyle(.accent)
                 .textTheme(.button)
                 .frame(minHeight: height)
                 .foregroundColor(.accent)
@@ -78,6 +79,52 @@ struct SecondaryButton: View {
         .buttonStyle(SecondaryButtonStyle())
         .opacity(disabled ? 0.5 : 1)
         .disabled(disabled)
+    }
+}
+
+// MARK: Capsule button
+
+struct IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(.accent)
+            .clipShape(Capsule())
+            .opacity(configuration.isPressed ? 0.7 : 1)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+struct IconButton: View {
+    let size: CGFloat = 52
+    let iconSize: CGFloat = 22
+
+    let text: String
+    let icon: ImageResource
+    let action: (() -> Void) /// use closure for callback
+
+    init(_ text: String, iconName: String, action: @escaping () -> Void) {
+        self.text = text
+        self.icon = ImageResource(name: iconName, bundle: Bundle.main)
+        self.action = action
+    }
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Button(action: action) { /// call the closure here
+                HStack {
+                    Image(self.icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: self.iconSize, height: self.iconSize)
+                        .foregroundStyle(.neutral1)
+                }
+                .frame(width: self.size, height: self.size)
+            }
+            .buttonStyle(IconButtonStyle())
+
+            Text(self.text).textTheme(.buttonIcon)
+        }
     }
 }
 
@@ -146,6 +193,11 @@ struct NoopButtonStyle: ButtonStyle {
             .buttonStyle(GradientButtonStyle())
 
             Spacer()
+
+            HStack {
+                IconButton("Send", iconName: "ArrowUp") {}
+                IconButton("Add", iconName: "Plus") {}
+            }
         }.padding(16)
     }
 }
