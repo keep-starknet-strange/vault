@@ -13,6 +13,7 @@ struct EarnView: View {
             Text("Start Earning yield !").textTheme(.headlineLarge)
             Text("Coming soon").textTheme(.subtitle)
         }
+        .defaultBackground()
     }
 }
 

@@ -34,11 +34,7 @@ struct CustomTabbar: View {
             }
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 48, maxHeight: 48)
-        .background(.black.opacity(0.3))
-        .background(.ultraThinMaterial)
-        .padding(EdgeInsets(top: 1, leading: 0, bottom: 0, trailing: 0))
-        .background(EdgeBorder(width: 1, edges: [.top]).foregroundStyle(.border1))
-        .padding(EdgeInsets(top: -1, leading: 0, bottom: 0, trailing: 0))
+        .background(.background1)
     }
 }
 

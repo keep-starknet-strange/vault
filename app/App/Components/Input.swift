@@ -14,9 +14,12 @@ struct TextInput: View {
 
     let placeholder: String
 
-    init(_ placeholder: String = "", text: Binding<String>) {
-        self._text = text
+    private let shouldFocusOnAppear: Bool
+
+    init(_ placeholder: String = "", text: Binding<String>, shouldFocusOnAppear: Bool = false) {
         self.placeholder = placeholder
+        self._text = text
+        self.shouldFocusOnAppear = shouldFocusOnAppear
     }
 
     var body: some View {
@@ -30,6 +33,13 @@ struct TextInput: View {
             .foregroundColor(.neutral1)
             .background(.background3.opacity(isFocused ? 1.5 : 1))
             .clipShape(RoundedRectangle(cornerRadius: 10))
+            .onAppear {
+                if (self.shouldFocusOnAppear) {
+                    DispatchQueue.main.async {
+                        self.isFocused = true
+                    }
+                }
+            }
     }
 }
 

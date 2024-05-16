@@ -49,7 +49,9 @@ struct BudgetView: View {
             .buttonStyle(GradientButtonStyle())
 
             Spacer()
-        }.padding(16)
+        }
+        .padding(16)
+        .defaultBackground()
     }
 }
 

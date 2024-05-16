@@ -12,6 +12,7 @@ enum TextTheme {
     case headlineLarge
     case headlineMedium
     case headlineSmall
+    case headlineSubtitle
     case button
     case buttonSmall
     case buttonIcon
@@ -35,24 +36,32 @@ struct ThemedTextModifier: ViewModifier {
 
         case .headlineLarge:
             content
-                .font(.system(size: 32))
+                .font(.custom("Sofia Pro", size: 32))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
 
         case .headlineMedium:
             content
-                .font(.system(size: 20))
+                .font(.custom("Sofia Pro", size: 20))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
 
         case .headlineSmall:
             content
-                .font(.system(size: 18))
+                .font(.custom("Sofia Pro", size: 18))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
                 .tracking(1.2)
+
+        case .headlineSubtitle:
+            content
+                .font(.system(size: 18))
+                .fontWeight(.medium)
+                .foregroundStyle(.neutral2)
+                .tracking(1.2)
+                .lineSpacing(2)
 
         case .button:
             content
@@ -75,7 +84,7 @@ struct ThemedTextModifier: ViewModifier {
 
         case .bodyPrimary:
             content
-                .font(.custom("Sofia Pro", size: 17))
+                .font(.system(size: 17))
                 .foregroundStyle(.neutral1)
                 .fontWeight(.regular)
 
@@ -120,6 +129,10 @@ extension View {
             Text("Hedaline Large").textTheme(.headlineLarge)
             Text("Hedaline Medium").textTheme(.headlineMedium)
             Text("Hedaline Small").textTheme(.headlineSmall)
+
+            Spacer()
+
+            Text("Hedaline Subtitle").textTheme(.headlineSubtitle)
 
             Spacer()
 

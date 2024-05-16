@@ -127,64 +127,52 @@ struct HomeView: View {
                     }
             }
 
-            // MARK: Balance
-
-            VStack(spacing: 12) {
-                Text("Account Balance")
-                    .foregroundStyle(.neutral2)
-                    .textTheme(.bodyPrimary)
-
-                HStack(spacing: 4) {
-                    Text("$")
-                        .font(.custom("Sofia Pro", size: 32))
-                        .textTheme(.bodyPrimary)
-
-                    HStack(alignment: .bottom, spacing: 0) {
-                        Text("456.")
-                            .font(.custom("Sofia Pro", size: 64))
-                            .textTheme(.hero)
-
-                        Text("18")
-                            .font(.custom("Sofia Pro", size: 36))
-                            .foregroundStyle(.neutral2)
-                            .textTheme(.hero)
-                            .padding(.bottom, 6)
-                    }
-                }
-            }
-            .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
-
             List {
 
-                // MARK: Transfers
+                VStack {
 
-                HStack {
-                    Spacer(minLength: 16)
+                    // MARK: Balance
 
-                    IconButton("Send", iconName: "ArrowUp") {
-                        // TODO: Handle sending
+                    VStack(spacing: 12) {
+                        Text("Account Balance")
+                            .foregroundStyle(.neutral2)
+                            .textTheme(.bodyPrimary)
+
+                        BalanceView()
                     }
-                    .frame(maxWidth: .infinity)
+                    .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
 
-                    Spacer(minLength: 8)
+                    // MARK: Transfers
 
-                    IconButton("Request", iconName: "ArrowDown") {
-                        // TODO: Handle sending
+                    HStack {
+                        Spacer(minLength: 16)
+
+                        IconButton("Send", iconName: "ArrowUp") {
+                            // TODO: Handle sending
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Spacer(minLength: 8)
+
+                        IconButton("Request", iconName: "ArrowDown") {
+                            // TODO: Handle sending
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Spacer(minLength: 8)
+
+                        IconButton("Add funds", iconName: "Plus") {
+                            self.showingAddFundsWebView = true
+                        }
+                        .frame(maxWidth: .infinity)
+                        .fullScreenCover(isPresented: $showingAddFundsWebView) {
+                            WebView(url: URL(string: "https://app.fun.xyz")!)
+                        }
+
+                        Spacer(minLength: 16)
                     }
-                    .frame(maxWidth: .infinity)
-
-                    Spacer(minLength: 8)
-
-                    IconButton("Add funds", iconName: "Plus") {
-                        self.showingAddFundsWebView = true
-                    }
-                    .frame(maxWidth: .infinity)
-                    .sheet(isPresented: $showingAddFundsWebView) {
-                        WebView(url: URL(string: "https://app.fun.xyz")!)
-                    }
-
-                    Spacer(minLength: 16)
                 }
+                .padding(.bottom, 24)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowBackground(EmptyView())
                 .listRowSeparator(.hidden)
@@ -239,6 +227,7 @@ struct HomeView: View {
         .scrollContentBackground(.hidden)
         .listStyle(.grouped)
         .scrollIndicators(.hidden)
+        .defaultBackground()
     }
 
     func formatSectionHeader(for date: Date) -> String {
@@ -257,8 +246,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    ZStack {
-        Color.background1.edgesIgnoringSafeArea(.all)
-        HomeView()
-    }
+    HomeView()
 }

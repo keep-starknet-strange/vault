@@ -20,7 +20,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 }
 
 struct PrimaryButton: View {
-    let height: CGFloat = 60
+    let height: CGFloat = 54
 
     let text: String
     let disabled: Bool
@@ -87,7 +87,7 @@ struct SecondaryButton: View {
 struct IconButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .background(.accent)
+            .background(.background2)
             .clipShape(Capsule())
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
@@ -96,7 +96,7 @@ struct IconButtonStyle: ButtonStyle {
 
 struct IconButton: View {
     let size: CGFloat = 52
-    let iconSize: CGFloat = 22
+    let iconSize: CGFloat = 16
 
     let text: String
     let icon: ImageResource

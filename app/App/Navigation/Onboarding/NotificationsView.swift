@@ -13,24 +13,32 @@ struct NotificationView: View {
 
     var body: some View {
         OnboardingPage {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("Stay Updated Instantly").textTheme(.headlineLarge)
-
-                Text("Notifications to keep track of your account activity effortlessly.").textTheme(.bodyPrimary)
-            }
-
             Spacer()
 
             Notification(text: "Vitalik sent you $32.49")
+                .padding(.bottom, 32)
 
             Spacer()
 
-            VStack(alignment: .center, spacing: 16) {
-                SecondaryButton("Skip for now") {
-                    presentingNextView = true
+            VStack(spacing: 64) {
+                VStack(spacing: 16) {
+                    Text("Stay Updated Instantly")
+                        .textTheme(.headlineLarge)
+                        .multilineTextAlignment(.center)
+
+                    Text("Notifications to keep track of your account activity effortlessly.")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
                 }
-                PrimaryButton("Enable notifications") {
-                    NotificationsManager.shared.registerFromRemoteNotifications { _, _ in
+
+                VStack(alignment: .center, spacing: 16) {
+                    PrimaryButton("Enable notifications") {
+                        NotificationsManager.shared.registerFromRemoteNotifications { _, _ in
+                            presentingNextView = true
+                        }
+                    }
+
+                    SecondaryButton("Skip for now") {
                         presentingNextView = true
                     }
                 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C22BF39635004FFFD1 /* BalanceView.swift */; };
+		9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C42BF3CB86004FFFD1 /* Background.swift */; };
 		9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */; };
 		9C4F451B2BDE999000D44CBE /* String+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F451A2BDE999000D44CBE /* String+Error.swift */; };
 		9C4F451D2BDEEF0E00D44CBE /* Data+from.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F451C2BDEEF0E00D44CBE /* Data+from.swift */; };
@@ -60,7 +62,6 @@
 		9CDFD41C2BAB3429000466B9 /* VaultUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD41B2BAB3429000466B9 /* VaultUITestsLaunchTests.swift */; };
 		9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD42C2BAB4D1D000466B9 /* WelcomeView.swift */; };
 		9CDFD42F2BAB7641000466B9 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD42E2BAB7641000466B9 /* OnboardingView.swift */; };
-		9CDFD4322BAB7FA9000466B9 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CDFD4312BAB7FA9000466B9 /* Montserrat.ttf */; };
 		9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4372BAB8934000466B9 /* Buttons.swift */; };
 		9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4392BAC4561000466B9 /* AskSurnameView.swift */; };
 		9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD43B2BAC8BE6000466B9 /* FaceIDView.swift */; };
@@ -90,6 +91,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9C2E73C22BF39635004FFFD1 /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
+		9C2E73C42BF3CB86004FFFD1 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureEnclaveManager.swift; sourceTree = "<group>"; };
 		9C4F451A2BDE999000D44CBE /* String+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Error.swift"; sourceTree = "<group>"; };
 		9C4F451C2BDEEF0E00D44CBE /* Data+from.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+from.swift"; sourceTree = "<group>"; };
@@ -144,7 +147,6 @@
 		9CDFD41B2BAB3429000466B9 /* VaultUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9CDFD42C2BAB4D1D000466B9 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		9CDFD42E2BAB7641000466B9 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		9CDFD4312BAB7FA9000466B9 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
 		9CDFD4352BAB80D5000466B9 /* Vault-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Vault-Info.plist"; sourceTree = "<group>"; };
 		9CDFD4372BAB8934000466B9 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		9CDFD4392BAC4561000466B9 /* AskSurnameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSurnameView.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 			children = (
 				9CD778B22BBC38F400BA4677 /* HistoricalGraph.swift */,
 				9CD778B92BBCB89C00BA4677 /* TransferRow.swift */,
+				9C2E73C22BF39635004FFFD1 /* BalanceView.swift */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
@@ -347,7 +350,6 @@
 			isa = PBXGroup;
 			children = (
 				9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */,
-				9CDFD4312BAB7FA9000466B9 /* Montserrat.ttf */,
 			);
 			path = fonts;
 			sourceTree = "<group>";
@@ -367,6 +369,7 @@
 				9CE7A75C2BE15C21008509FE /* SpinnerView.swift */,
 				9CD390EE2BE5284000238FE9 /* AmountInput.swift */,
 				9CD390FA2BEAB6C600238FE9 /* WebView.swift */,
+				9C2E73C42BF3CB86004FFFD1 /* Background.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -496,7 +499,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CDFD4322BAB7FA9000466B9 /* Montserrat.ttf in Resources */,
 				9CDFD4032BAB3429000466B9 /* Assets.xcassets in Resources */,
 				9CD390F52BE93A2400238FE9 /* Sofia Pro Medium.otf in Resources */,
 			);
@@ -566,9 +568,11 @@
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,
 				9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */,
 				9CD390EF2BE5284000238FE9 /* AmountInput.swift in Sources */,
+				9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */,
 				9C5CFDB22BC82C57001776E1 /* Array+indexed.swift in Sources */,
 				9CD778D42BC4426D00BA4677 /* View+placeholder.swift in Sources */,
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
+				9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */,
 				9CD390ED2BE3CF5D00238FE9 /* TransferView.swift in Sources */,
 				9CD778BA2BBCB89C00BA4677 /* TransferRow.swift in Sources */,
 				9C5CFDAE2BC828C9001776E1 /* PhoneNumberModel.swift in Sources */,
@@ -693,8 +697,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -882,8 +887,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -914,8 +920,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
