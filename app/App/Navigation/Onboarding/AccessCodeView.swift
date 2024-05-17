@@ -13,20 +13,26 @@ struct AccessCodeView: View {
 
     var body: some View {
         OnboardingPage {
-            VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Early User Access", theme: .headline)
+            VStack(alignment: .center, spacing: 64) {
+                VStack(alignment: .center, spacing: 24) {
+                    Text("Early User Access").textTheme(.headlineLarge)
 
-                ThemedText("To join our exclusive early users, please enter your access code.", theme: .body)
+                    Text("To join our exclusive early users, please enter your access code.")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
+                }
+                
+                VStack(alignment: .center, spacing: 32) {
+                    TextInput("Access Code", text: $accessCode, shouldFocusOnAppear: true)
 
-                TextInput("Access Code", text: $accessCode)
+                    PrimaryButton("Start", disabled: accessCode.isEmpty) {
+                        // TODO: Verify access code
+                        presentingNextView = true
+                    }
+                }
             }
 
             Spacer()
-
-            PrimaryButton("Start", disabled: accessCode.isEmpty) {
-                // TODO: Verify access code
-                presentingNextView = true
-            }
         }
         .navigationDestination(isPresented: $presentingNextView) {
             AskSurnameView()

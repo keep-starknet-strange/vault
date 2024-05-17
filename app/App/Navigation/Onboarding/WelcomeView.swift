@@ -12,26 +12,31 @@ struct WelcomeView: View {
 
     var body: some View {
         OnboardingPage {
-            Image(.welcome)
-
             Spacer()
 
-            VStack {
-                Image(.textLogo)
+            VStack(spacing: 128) {
+                Image(.logo)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200)
-                Text("Empower Your Assets\nRedefine Control")
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.neutral2)
-                    .font(.custom("Montserrat", size: 17))
-                    .fontWeight(.medium)
+                    .foregroundStyle(.neutral1)
             }
+            .padding(.bottom, 32)
 
             Spacer()
 
-            PrimaryButton("Get Started") {
-                presentingNextView = true
+            VStack(spacing: 64) {
+                VStack(spacing: 16) {
+                    Text("Welcome on Vault")
+                        .textTheme(.headlineLarge)
+
+                    Text("Empower Your Assets\nRedefine Control")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
+                }
+                PrimaryButton("Get Started") {
+                    presentingNextView = true
+                }
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {

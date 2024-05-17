@@ -13,14 +13,14 @@ struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(.accent)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
 struct PrimaryButton: View {
-    let height: CGFloat = 52
+    let height: CGFloat = 54
 
     let text: String
     let disabled: Bool
@@ -35,10 +35,8 @@ struct PrimaryButton: View {
     var body: some View {
         Button(action: action) { /// call the closure here
             Text(text)
-                .font(.custom("Montserrat", size: 17))
-                .fontWeight(.semibold)
+                .textTheme(.button)
                 .frame(maxWidth: .infinity, minHeight: height)
-                .foregroundColor(.background1)
         }
         .buttonStyle(PrimaryButtonStyle())
         .opacity(disabled ? 0.5 : 1)
@@ -58,7 +56,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 }
 
 struct SecondaryButton: View {
-    let height: CGFloat = 52
+    let height: CGFloat = 42
 
     let text: String
     let disabled: Bool
@@ -73,14 +71,60 @@ struct SecondaryButton: View {
     var body: some View {
         Button(action: action) { /// call the closure here
             Text(text)
-                .font(.custom("Montserrat", size: 17))
-                .fontWeight(.semibold)
+                .foregroundStyle(.accent)
+                .textTheme(.button)
                 .frame(minHeight: height)
                 .foregroundColor(.accent)
         }
         .buttonStyle(SecondaryButtonStyle())
         .opacity(disabled ? 0.5 : 1)
         .disabled(disabled)
+    }
+}
+
+// MARK: Capsule button
+
+struct IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(.background2)
+            .clipShape(Capsule())
+            .opacity(configuration.isPressed ? 0.7 : 1)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+struct IconButton: View {
+    let size: CGFloat = 52
+    let iconSize: CGFloat = 16
+
+    let text: String
+    let icon: ImageResource
+    let action: (() -> Void) /// use closure for callback
+
+    init(_ text: String, iconName: String, action: @escaping () -> Void) {
+        self.text = text
+        self.icon = ImageResource(name: iconName, bundle: Bundle.main)
+        self.action = action
+    }
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Button(action: action) { /// call the closure here
+                HStack {
+                    Image(self.icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: self.iconSize, height: self.iconSize)
+                        .foregroundStyle(.neutral1)
+                }
+                .frame(width: self.size, height: self.size)
+            }
+            .buttonStyle(IconButtonStyle())
+
+            Text(self.text).textTheme(.buttonIcon)
+        }
     }
 }
 
@@ -142,11 +186,18 @@ struct NoopButtonStyle: ButtonStyle {
             Spacer()
 
             Button() {} label: {
-                Text("Enabled").padding(16)
+                Text("Enabled")
+                    .textTheme(.button)
+                    .padding(16)
             }
             .buttonStyle(GradientButtonStyle())
 
             Spacer()
+
+            HStack {
+                IconButton("Send", iconName: "ArrowUp") {}
+                IconButton("Add", iconName: "Plus") {}
+            }
         }.padding(16)
     }
 }

@@ -14,19 +14,25 @@ struct AskSurnameView: View {
 
     var body: some View {
         OnboardingPage {
-            VStack(alignment: .leading, spacing: 24) {
-                ThemedText("A Personalized Touch", theme: .headline)
+            VStack(alignment: .center, spacing: 64) {
+                VStack(alignment: .center, spacing: 24) {
+                    Text("Let's get started !").textTheme(.headlineLarge)
 
-                ThemedText("Introduce yourself with your surname. Change it anytime.", theme: .body)
+                    Text("Introduce yourself with your surname. Change it anytime.")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
+                }
 
-                TextInput("Surname", text: $settingsModel.surname)
+                VStack(alignment: .center, spacing: 32) {
+                    TextInput("Surname", text: $settingsModel.surname, shouldFocusOnAppear: true)
+
+                    PrimaryButton("Next", disabled: settingsModel.surname.isEmpty) {
+                        presentingNextView = true
+                    }
+                }
             }
 
             Spacer()
-
-            PrimaryButton("Next", disabled: settingsModel.surname.isEmpty) {
-                presentingNextView = true
-            }
         }
         .navigationDestination(isPresented: $presentingNextView) {
             PhoneRequestView()

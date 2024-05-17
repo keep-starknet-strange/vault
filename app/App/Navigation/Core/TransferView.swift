@@ -33,6 +33,7 @@ struct TransferView: View {
             }
         }
         .padding(16)
+        .defaultBackground()
     }
 }
 

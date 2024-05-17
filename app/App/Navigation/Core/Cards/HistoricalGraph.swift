@@ -98,9 +98,7 @@ struct HistoricalGraph: View {
             HStack {
                 ForEach(21...28, id: \.self) { day in
                     Text("\(day)")
-                        .font(.system(size: 13))
-                        .fontWeight(.medium)
-                        .foregroundStyle(.neutral2)
+                        .textTheme(.subtitle)
                         .frame(maxWidth: .infinity)
                 }
             }.padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5))

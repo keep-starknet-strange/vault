@@ -12,25 +12,9 @@ struct BudgetView: View {
         VStack(alignment: .center, spacing: 32) {
             VStack(spacing: 16) {
                 VStack(spacing: 4) {
+                    Text("$1267").textTheme(.hero)
 
-                    Group {
-                        Text("$")
-                            .font(.custom("Montserrat", size: 46))
-                            .kerning(5)
-
-                        +
-
-                        Text("1267")
-                            .font(.custom("Montserrat", size: 42))
-                            .kerning(0.6)
-                    }
-                    .foregroundStyle(.neutral1)
-                    .fontWeight(.semibold)
-
-                    Text("spent this month")
-                        .font(.custom("Montserrat", size: 13))
-                        .fontWeight(.medium)
-                        .foregroundStyle(.neutral2)
+                    Text("spent this month").textTheme(.subtitle)
                 }
 
                 HistoricalGraph().padding(EdgeInsets(top: 0, leading: -16, bottom: 0, trailing: -16))
@@ -53,12 +37,8 @@ struct BudgetView: View {
                         .shadow(radius: 10)
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Set up your budget")
-                            .font(.system(size: 20))
-                            .fontWeight(.medium)
-
-                        Text("Gain peace of mind by organizing your spending.")
-                            .font(.system(size: 15))
+                        Text("Set up your budget").textTheme(.headlineMedium)
+                        Text("Gain peace of mind by organizing your spending.").textTheme(.bodySecondary)
                     }
 
                     Spacer(minLength: 0)
@@ -69,7 +49,9 @@ struct BudgetView: View {
             .buttonStyle(GradientButtonStyle())
 
             Spacer()
-        }.padding(16)
+        }
+        .padding(16)
+        .defaultBackground()
     }
 }
 

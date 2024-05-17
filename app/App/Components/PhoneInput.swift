@@ -19,7 +19,18 @@ struct PhoneInput: View {
     }
     @Binding var parsedPhoneNumber: PhoneNumber?
 
+    @State private var showingPicker = false
+    @State private var textInputHeight: CGFloat?
+
     private let phoneNumberKit = PhoneNumberKit()
+
+    private let shouldFocusOnAppear: Bool
+
+    init(phoneNumber: Binding<String>, parsedPhoneNumber: Binding<PhoneNumber?> = .constant(nil), shouldFocusOnAppear: Bool = false) {
+        self._phoneNumber = phoneNumber
+        self._parsedPhoneNumber = parsedPhoneNumber
+        self.shouldFocusOnAppear = shouldFocusOnAppear
+    }
 
     var body: some View {
         HStack(spacing: 8) {
@@ -57,7 +68,7 @@ struct PhoneInput: View {
                     }
             }
 
-            TextInput("Phone number", text: $phoneNumber)
+            TextInput("Phone number", text: $phoneNumber, shouldFocusOnAppear: self.shouldFocusOnAppear)
                 .background(GeometryReader { geometry in
                     Color.clear
                         .onAppear {
@@ -74,10 +85,6 @@ struct PhoneInput: View {
             self.phoneNumber = ""
         }
     }
-
-
-    @State private var showingPicker = false
-    @State private var textInputHeight: CGFloat?
 }
 
 #if DEBUG

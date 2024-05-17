@@ -23,7 +23,7 @@ struct CountryPickerView: View {
                         Button {
                             self.presentationMode.wrappedValue.dismiss()
                         } label: {
-                            Text("Cancel").foregroundStyle(.accent)
+                            Text("Cancel").textTheme(.buttonSmall)
                         }
                     }
                     .padding(16)

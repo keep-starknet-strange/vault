@@ -16,12 +16,6 @@ struct CelebrationView: View {
 
     var body: some View {
         OnboardingPage {
-            VStack(alignment: .leading, spacing: 24) {
-                ThemedText("That’s it ! You are all set", theme: .headline)
-
-                ThemedText("You're now part of a 100% mobile, flexible banking revolution. Enjoy the instant transactions, sub-accounts for easier saving, and much more.", theme: .body)
-            }
-
             Spacer()
 
             Image(.creditCard)
@@ -32,10 +26,21 @@ struct CelebrationView: View {
                 .onAppear() {
                     self.confetti += 1
                 }
+                .padding(.bottom, 32)
 
             Spacer()
 
-            VStack(alignment: .center, spacing: 16) {
+            VStack(spacing: 64) {
+                VStack(spacing: 16) {
+                    Text("That’s it ! You are all set")
+                        .textTheme(.headlineLarge)
+                        .multilineTextAlignment(.center)
+
+                    Text("You're now part of a 100% mobile, flexible banking revolution. Enjoy the instant transactions, sub-accounts for easier saving, and much more.")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
+                }
+
                 PrimaryButton("Start exploring") {
                     settingsModel.isOnboarded = true
                 }

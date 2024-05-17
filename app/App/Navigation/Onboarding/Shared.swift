@@ -29,8 +29,8 @@ struct OnboardingPage<Content>: View where Content : View {
                 content()
             }
             .toolbar(.hidden)
-            .padding(EdgeInsets(top: 32, leading: 16, bottom: 32, trailing: 16))
-            .background(.background1)
+            .padding(EdgeInsets(top: 64, leading: 16, bottom: 32, trailing: 16))
+            .defaultBackground()
 
             if loading {
                 ZStack {

@@ -22,8 +22,8 @@ struct ContentView: View {
 
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithTransparentBackground()
-        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
-        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .neutral1
+        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: Color.neutral1]
 
         tabBarAppearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color.accentColor)
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.accentColor)]
@@ -44,18 +44,18 @@ struct ContentView: View {
                     NavigationStack {
                         HomeView().edgesIgnoringSafeArea(.bottom)
                     }
-                    .tag(Tab.accounts)
+                    .tag(Tab.payments)
                     .toolbarBackground(.hidden, for: .tabBar)
-
-                    NavigationStack {
-                        TransferView().edgesIgnoringSafeArea(.bottom)
-                    }
-                    .tag(Tab.transfer)
 
                     NavigationStack {
                         BudgetView().edgesIgnoringSafeArea(.bottom)
                     }
                     .tag(Tab.budget)
+
+                    NavigationStack {
+                        EarnView().edgesIgnoringSafeArea(.bottom)
+                    }
+                    .tag(Tab.earn)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .environmentObject(settingsModel)

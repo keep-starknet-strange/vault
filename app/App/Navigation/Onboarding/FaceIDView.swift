@@ -13,19 +13,25 @@ struct FaceIDView: View {
 
     var body: some View {
         OnboardingPage {
-            VStack(alignment: .leading, spacing: 24) {
-                ThemedText("Better experience with Face ID", theme: .headline)
+            Spacer()
 
-                ThemedText("Enable Face ID to make your transactions smooth and secure.", theme: .body)
-            }
+            Image(.faceID)
+                .foregroundStyle(.accent)
+                .padding(.bottom, 32)
 
             Spacer()
 
-            Image(.faceID).foregroundStyle(.accent)
+            VStack(spacing: 64) {
+                VStack(spacing: 16) {
+                    Text("Better experience with Face ID")
+                        .textTheme(.headlineLarge)
+                        .multilineTextAlignment(.center)
 
-            Spacer()
+                    Text("Enable Face ID to make your transactions smooth and secure.")
+                        .textTheme(.headlineSubtitle)
+                        .multilineTextAlignment(.center)
+                }
 
-            VStack(alignment: .center, spacing: 16) {
                 PrimaryButton("Set up Face ID") {
                     BiometricAuthManager.shared.authenticateWithBiometrics { success, error in
                         if !success {

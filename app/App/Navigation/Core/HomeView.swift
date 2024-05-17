@@ -49,43 +49,46 @@ class History {
     }
 }
 
+let users: [String: User] = [
+    "me": User(
+        address: "0xdead",
+        username: "Bobby"
+    ),
+    "sbf": User(
+        address: "0x1",
+        username: "SBF",
+        avatarUrl: "https://fortune.com/img-assets/wp-content/uploads/2022/11/SBF-1.jpg"
+    ),
+    "apple": User(
+        address: "0x2",
+        username: "Apple",
+        avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIHoznvT47BiebsgSlaiey1FKjGR8xZru6gROHvntwI3QSA2I7T08Ys7g1by9_iBw-ekI&usqp=CAU"
+    ),
+    "vitalik": User(
+        address: "0x3",
+        username: "Vitalik",
+        avatarUrl: "https://images.moneycontrol.com/static-mcnews/2021/05/vitalik-Buterin-ethereum.jpg?impolicy=website&width=1600&height=900"
+    ),
+    "satoshi": User(address: "0x4", username: "Satoshi N"),
+    "alex": User(
+        address: "0x5",
+        username: "Alex",
+        avatarUrl: "https://www.cryptotimes.io/wp-content/uploads/2024/02/Matter_Labs_co-founder_and_CEO_Alex_Gluchowski_proposed_an_Ethereum_court_system.jpg.webp"
+    ),
+    "abdel": User(
+        address: "0x6",
+        username: "Abdel.stark",
+        avatarUrl: "https://miro.medium.com/v2/resize:fit:1400/1*BTiOG6PF5d9ToTAZqlIjuw.jpeg"
+    ),
+]
+
 struct HomeView: View {
-    let users: [String: User] = [
-        "me": User(
-            address: "0xdead",
-            username: "Bobby"
-        ),
-        "sbf": User(
-            address: "0x1",
-            username: "SBF",
-            avatarUrl: "https://fortune.com/img-assets/wp-content/uploads/2022/11/SBF-1.jpg"
-        ),
-        "apple": User(
-            address: "0x2",
-            username: "Apple",
-            avatarUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIHoznvT47BiebsgSlaiey1FKjGR8xZru6gROHvntwI3QSA2I7T08Ys7g1by9_iBw-ekI&usqp=CAU"
-        ),
-        "vitalik": User(
-            address: "0x3",
-            username: "Vitalik",
-            avatarUrl: "https://images.moneycontrol.com/static-mcnews/2021/05/vitalik-Buterin-ethereum.jpg?impolicy=website&width=1600&height=900"
-        ),
-        "satoshi": User(address: "0x4", username: "Satoshi N"),
-        "alex": User(
-            address: "0x5",
-            username: "Alex",
-            avatarUrl: "https://www.cryptotimes.io/wp-content/uploads/2024/02/Matter_Labs_co-founder_and_CEO_Alex_Gluchowski_proposed_an_Ethereum_court_system.jpg.webp"
-        ),
-        "abdel": User(
-            address: "0x6",
-            username: "Abdel.stark",
-            avatarUrl: "https://miro.medium.com/v2/resize:fit:1400/1*BTiOG6PF5d9ToTAZqlIjuw.jpeg"
-        ),
-    ]
+
+    @State private var showingAddFundsWebView = false
 
     private var me: User {
         get {
-            return self.users["me"]!
+            return users["me"]!
         }
     }
 
@@ -105,41 +108,76 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 40) {
+        VStack(alignment: .center) {
 
-            // MARK: BALANCE
+            // MARK: Header
 
-            VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Spacer()
 
-                Text("Total balance")
-                    .font(.custom("Montserrat", size: 13))
-                    .fontWeight(.medium)
-                    .foregroundStyle(.neutral2)
-
-                Group {
-                    Text("$")
-                        .font(.custom("Montserrat", size: 46))
-                        .foregroundStyle(.neutral1)
-
-                    +
-
-                    Text("12,578.")
-                        .font(.custom("Montserrat", size: 42))
-                        .foregroundStyle(.neutral1)
-
-                    +
-
-                    Text("00")
-                        .font(.custom("Montserrat", size: 28))
-                        .foregroundStyle(.neutral2)
-                }
-                .kerning(0.6)
-                .fontWeight(.semibold)
+                Capsule()
+                    .fill(.accent.opacity(0.5))
+                    .strokeBorder(.accent, lineWidth: 1)
+                    .frame(width: 42, height: 42)
+                    .overlay() {
+                        Text("C")
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.accent)
+                    }
             }
 
-            // MARK: HISTORY
-
             List {
+
+                VStack {
+
+                    // MARK: Balance
+
+                    VStack(spacing: 12) {
+                        Text("Account Balance")
+                            .foregroundStyle(.neutral2)
+                            .textTheme(.bodyPrimary)
+
+                        BalanceView()
+                    }
+                    .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
+
+                    // MARK: Transfers
+
+                    HStack {
+                        Spacer(minLength: 16)
+
+                        IconButton("Send", iconName: "ArrowUp") {
+                            // TODO: Handle sending
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Spacer(minLength: 8)
+
+                        IconButton("Request", iconName: "ArrowDown") {
+                            // TODO: Handle sending
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Spacer(minLength: 8)
+
+                        IconButton("Add funds", iconName: "Plus") {
+                            self.showingAddFundsWebView = true
+                        }
+                        .frame(maxWidth: .infinity)
+                        .fullScreenCover(isPresented: $showingAddFundsWebView) {
+                            WebView(url: URL(string: "https://app.fun.xyz")!)
+                        }
+
+                        Spacer(minLength: 16)
+                    }
+                }
+                .padding(.bottom, 24)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(EmptyView())
+                .listRowSeparator(.hidden)
+
+                // MARK: History
 
                 ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
                     Section {
@@ -169,9 +207,7 @@ struct HomeView: View {
                         }
                     } header: {
                         Text(formatSectionHeader(for: day).uppercased())
-                            .font(.system(size: 18))
-                            .fontWeight(.medium)
-                            .foregroundStyle(.neutral1)
+                            .textTheme(.headlineSmall)
                             .listRowInsets(EdgeInsets(top: 16, leading: 8, bottom: 8, trailing: 0))
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -179,14 +215,19 @@ struct HomeView: View {
                     .listRowBackground(EmptyView())
                 }
             }
+            .onAppear {
+                // dirty hack to remove the top padding of the list
+                UICollectionView.appearance().contentInset.top = -30
+            }
         }
         .safeAreaInset(edge: .bottom) {
             EmptyView().frame(height: 90)
         }
-        .padding(EdgeInsets(top: 32, leading: 16, bottom: 0, trailing: 16))
+        .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
         .scrollContentBackground(.hidden)
         .listStyle(.grouped)
         .scrollIndicators(.hidden)
+        .defaultBackground()
     }
 
     func formatSectionHeader(for date: Date) -> String {
@@ -205,8 +246,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    ZStack {
-        Color.background1.edgesIgnoringSafeArea(.all)
-        HomeView()
-    }
+    HomeView()
 }

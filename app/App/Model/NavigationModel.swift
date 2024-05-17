@@ -9,33 +9,35 @@ import Foundation
 import NotificationCenter
 
 enum Tab: Int, CaseIterable{
-    case accounts = 0
-    case transfer
+    case payments = 0
     case budget
+    case earn
 
     var iconName: String {
         switch self {
-        case .accounts:
-            return "Accounts"
-        case .transfer:
-            return "Transfer"
+        case .payments:
+            return "Payments"
         case .budget:
             return "Wallet"
+        case .earn:
+            return "Earning"
         }
     }
 
-    var isLarge: Bool {
+    var displayName: String {
         switch self {
-        case .transfer:
-            return true
-        default:
-            return false
+        case .payments:
+            return "Transfer"
+        case .budget:
+            return "Budget"
+        case .earn:
+            return "Earn"
         }
     }
 }
 
 class NavigationModel: ObservableObject {
-    @Published var selectedTab: Tab = Tab.accounts
+    @Published var selectedTab: Tab = Tab.payments
 
     func openTab(_ tab: Tab) {
         self.selectedTab = tab
