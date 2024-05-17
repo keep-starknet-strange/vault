@@ -1,14 +1,4 @@
-import {
-  bigint,
-  boolean,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  unique,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { bigint, boolean, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
 
 export const usdcTransfer = pgTable('transfer_usdc', {
   transferId: text('transfer_id').primaryKey(),
@@ -22,7 +12,7 @@ export const usdcTransfer = pgTable('transfer_usdc', {
   amount: text('amount'),
   createdAt: timestamp('created_at', { withTimezone: false }),
   cursor: bigint('_cursor', { mode: 'number' }),
-});
+})
 
 export const usdcBalance = pgTable('balance_usdc', {
   network: text('network'),
@@ -31,7 +21,7 @@ export const usdcBalance = pgTable('balance_usdc', {
   address: text('address'),
   balance: text('balance'),
   cursor: bigint('_cursor', { mode: 'number' }),
-});
+})
 
 export const registration = pgTable('registration', {
   phone_number: text('phone_number').primaryKey(),
@@ -39,14 +29,14 @@ export const registration = pgTable('registration', {
   created_at: timestamp('created_at').defaultNow(),
   contract_address: text('contract_address').default(''),
   is_confirmed: boolean('is_confirmed').default(false),
-});
+})
 
 export const otp = pgTable('otp', {
   phone_number: text('phone_number').primaryKey(),
   otp: text('otp'),
   used: boolean('used').default(false),
   created_at: timestamp('created_at').defaultNow(),
-});
+})
 
 export const claims = pgTable(
   'claims',
@@ -60,10 +50,10 @@ export const claims = pgTable(
   (t) => ({
     unq: unique().on(t.address, t.nonce),
   }),
-);
+)
 
 export const mockLimit = pgTable('mock_limit', {
   address: text('address').primaryKey(),
   limit: text('limit'),
   blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
-});
+})

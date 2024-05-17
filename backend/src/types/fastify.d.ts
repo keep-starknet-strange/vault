@@ -1,7 +1,7 @@
-import type { Database } from '../db/drizzle';
+import type { Database } from '../db/drizzle'
 
 declare module 'fastify' {
   interface FastifyInstance {
-    db: Database;
+    db: Database
   }
 }
