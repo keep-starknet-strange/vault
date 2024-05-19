@@ -31,4 +31,20 @@ struct Constants {
         }
         return url
     }()
+
+    // MARK: ICONS
+
+    struct Icons {
+        static let arrowUp = Self.renderIcon("ArrowUp")
+        static let arrowDown = Self.renderIcon("ArrowDown")
+        static let plus = Self.renderIcon("Plus")
+
+        static private func renderIcon(_ name: String) -> any View {
+            return Image(name)
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
+    }
 }
+

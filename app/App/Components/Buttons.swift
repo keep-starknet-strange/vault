@@ -24,7 +24,7 @@ struct PrimaryButton: View {
 
     let text: String
     let disabled: Bool
-    let action: (() -> Void) /// use closure for callback
+    let action: () -> Void
 
     init(_ text: String, disabled: Bool = false, action: @escaping () -> Void) {
         self.text = text
@@ -33,7 +33,7 @@ struct PrimaryButton: View {
     }
 
     var body: some View {
-        Button(action: action) { /// call the closure here
+        Button(action: action) {
             Text(text)
                 .textTheme(.button)
                 .frame(maxWidth: .infinity, minHeight: height)
@@ -60,7 +60,7 @@ struct SecondaryButton: View {
 
     let text: String
     let disabled: Bool
-    let action: (() -> Void) /// use closure for callback
+    let action: () -> Void
 
     init(_ text: String, disabled: Bool = false, action: @escaping () -> Void) {
         self.text = text
@@ -69,7 +69,7 @@ struct SecondaryButton: View {
     }
 
     var body: some View {
-        Button(action: action) { /// call the closure here
+        Button(action: action) {
             Text(text)
                 .foregroundStyle(.accent)
                 .textTheme(.button)
@@ -82,7 +82,32 @@ struct SecondaryButton: View {
     }
 }
 
-// MARK: Capsule button
+// MARK: Icon button
+
+enum IconButtonSize {
+    case medium
+    case large
+
+    var buttonSize: CGFloat {
+        switch self {
+        case .medium:
+            return 36
+
+        case .large:
+            return 52
+        }
+    }
+
+    var iconSize: CGFloat {
+        switch self {
+        case .medium:
+            return 12
+
+        case .large:
+            return 16
+        }
+    }
+}
 
 struct IconButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -94,34 +119,48 @@ struct IconButtonStyle: ButtonStyle {
     }
 }
 
-struct IconButton: View {
-    let size: CGFloat = 52
-    let iconSize: CGFloat = 16
+struct IconButton<Icon>: View where Icon : View {
+    let size: IconButtonSize
+    let icon: Icon
+    let action: () -> Void
 
-    let text: String
-    let icon: ImageResource
-    let action: (() -> Void) /// use closure for callback
-
-    init(_ text: String, iconName: String, action: @escaping () -> Void) {
-        self.text = text
-        self.icon = ImageResource(name: iconName, bundle: Bundle.main)
+    init(size: IconButtonSize = .medium, action: @escaping () -> Void, @ViewBuilder icon: () -> Icon) {
+        self.icon = icon()
+        self.size = size
         self.action = action
     }
 
     var body: some View {
         VStack(spacing: 10) {
-            Button(action: action) { /// call the closure here
+            Button(action: action) {
                 HStack {
-                    Image(self.icon)
-                        .renderingMode(.template)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: self.iconSize, height: self.iconSize)
+                    self.icon
+                        .frame(width: self.size.iconSize, height: self.size.iconSize)
                         .foregroundStyle(.neutral1)
                 }
-                .frame(width: self.size, height: self.size)
+                .frame(width: self.size.buttonSize, height: self.size.buttonSize)
             }
             .buttonStyle(IconButtonStyle())
+        }
+    }
+}
+
+struct IconButtonWithText<Icon>: View where Icon : View {
+    let text: String
+    let icon: Icon
+    let action: () -> Void
+
+    init(_ text: String, action: @escaping () -> Void, @ViewBuilder icon: () -> Icon) {
+        self.text = text
+        self.icon = icon()
+        self.action = action
+    }
+
+    var body: some View {
+        VStack(spacing: 10) {
+            IconButton(size: .large, action: self.action) {
+                self.icon
+            }
 
             Text(self.text).textTheme(.buttonIcon)
         }
@@ -195,8 +234,28 @@ struct NoopButtonStyle: ButtonStyle {
             Spacer()
 
             HStack {
-                IconButton("Send", iconName: "ArrowUp") {}
-                IconButton("Add", iconName: "Plus") {}
+                IconButtonWithText("Send") {} icon: {
+                    Image("ArrowUp")
+                }
+                IconButtonWithText("Add") {} icon: {
+                    Image("Plus")
+                }
+            }
+
+            Spacer()
+
+            HStack {
+                IconButton {} icon: {
+                    Image(systemName: "xmark")
+                        .iconify()
+                        .fontWeight(.bold)
+                }
+                IconButton {} icon: {
+                    Image(systemName: "chevron.down")
+                        .iconify()
+                        .fontWeight(.bold)
+                        .padding(.top, 4)
+                }
             }
         }.padding(16)
     }
