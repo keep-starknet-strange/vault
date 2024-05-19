@@ -85,6 +85,7 @@ let users: [String: User] = [
 struct HomeView: View {
 
     @State private var showingAddFundsWebView = false
+    @State private var showingSendingView = false
 
     private var me: User {
         get {
@@ -147,32 +148,41 @@ struct HomeView: View {
                     HStack {
                         Spacer(minLength: 16)
 
-                        IconButton("Send", iconName: "ArrowUp") {
+                        IconButtonWithText("Send") {
+                            self.showingSendingView = true
+                        } icon: {
+                            Image("ArrowUp")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .fullScreenCover(isPresented: $showingSendingView) {
+                            SendingView()
+                        }
+
+                        Spacer(minLength: 8)
+
+                        IconButtonWithText("Request") {
                             // TODO: Handle sending
+                        } icon: {
+                            Image("ArrowDown")
                         }
                         .frame(maxWidth: .infinity)
 
                         Spacer(minLength: 8)
 
-                        IconButton("Request", iconName: "ArrowDown") {
-                            // TODO: Handle sending
-                        }
-                        .frame(maxWidth: .infinity)
-
-                        Spacer(minLength: 8)
-
-                        IconButton("Add funds", iconName: "Plus") {
+                        IconButtonWithText("Add funds") {
                             self.showingAddFundsWebView = true
+                        } icon: {
+                            Image("Plus")
                         }
                         .frame(maxWidth: .infinity)
-                        .fullScreenCover(isPresented: $showingAddFundsWebView) {
+                        .sheet(isPresented: $showingAddFundsWebView) {
                             WebView(url: URL(string: "https://app.fun.xyz")!)
                         }
 
                         Spacer(minLength: 16)
                     }
                 }
-                .padding(.bottom, 24)
+                .padding(.bottom, 16)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowBackground(EmptyView())
                 .listRowSeparator(.hidden)
@@ -208,7 +218,7 @@ struct HomeView: View {
                     } header: {
                         Text(formatSectionHeader(for: day).uppercased())
                             .textTheme(.headlineSmall)
-                            .listRowInsets(EdgeInsets(top: 16, leading: 8, bottom: 8, trailing: 0))
+                            .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .listRowSeparator(.hidden)

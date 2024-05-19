@@ -59,7 +59,7 @@ struct ContentView: View {
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .environmentObject(settingsModel)
-                .preferredColorScheme(.dark)
+//                .preferredColorScheme(.dark)
 
                 CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }
@@ -70,7 +70,7 @@ struct ContentView: View {
             }
             .environmentObject(settingsModel)
             .environmentObject(registrationModel)
-            .preferredColorScheme(.dark)
+//            .preferredColorScheme(.dark)
         }
     }
 }

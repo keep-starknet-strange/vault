@@ -32,7 +32,7 @@ struct ThemedTextModifier: ViewModifier {
                 .font(.custom("Sofia Pro", size: 46))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
-                .tracking(1.2)
+                .tracking(2)
 
         case .headlineLarge:
             content
