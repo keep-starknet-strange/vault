@@ -88,7 +88,7 @@ struct OTPInputPreviews : PreviewProvider {
                     OTPInput(otp: $otp, numberOfFields: 6)
                 }
             }
-        }.preferredColorScheme(.dark)
+        }
     }
 }
 #endif

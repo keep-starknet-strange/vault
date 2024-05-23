@@ -46,14 +46,14 @@ struct ThemedTextModifier: ViewModifier {
                 .font(.custom("Sofia Pro", size: 20))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
-                .tracking(1.2)
+                .tracking(1)
 
         case .headlineSmall:
             content
                 .font(.custom("Sofia Pro", size: 18))
                 .fontWeight(.medium)
                 .foregroundStyle(.neutral1)
-                .tracking(1.2)
+                .tracking(0.8)
 
         case .headlineSubtitle:
             content
@@ -126,13 +126,13 @@ extension View {
 
             Spacer()
 
-            Text("Hedaline Large").textTheme(.headlineLarge)
-            Text("Hedaline Medium").textTheme(.headlineMedium)
-            Text("Hedaline Small").textTheme(.headlineSmall)
+            Text("Headline Large").textTheme(.headlineLarge)
+            Text("Headline Medium").textTheme(.headlineMedium)
+            Text("Headline Small").textTheme(.headlineSmall)
 
             Spacer()
 
-            Text("Hedaline Subtitle").textTheme(.headlineSubtitle)
+            Text("Headline Subtitle").textTheme(.headlineSubtitle)
 
             Spacer()
 

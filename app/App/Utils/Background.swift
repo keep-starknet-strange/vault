@@ -9,7 +9,9 @@ import SwiftUI
 
 struct DefaultBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
-        content.background(.background1)
+        content
+            .preferredColorScheme(.dark)
+            .background(.background1)
     }
 }
 

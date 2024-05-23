@@ -11,22 +11,22 @@ struct OnboardingPage<Content>: View where Content : View {
 
     @Binding var loading: Bool
 
-    let content: () -> Content
+    let content: Content
 
-    init(isLoading: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
-        self.content = content
+    init(isLoading: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self.content = content()
         self._loading = isLoading
     }
 
-    init(@ViewBuilder content: @escaping () -> Content) {
-        self.content = content
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
         self._loading = .constant(false)
     }
 
     var body: some View {
         ZStack {
             VStack {
-                content()
+                content
             }
             .toolbar(.hidden)
             .padding(EdgeInsets(top: 64, leading: 16, bottom: 32, trailing: 16))
