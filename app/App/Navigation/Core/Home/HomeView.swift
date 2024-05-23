@@ -109,135 +109,121 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(alignment: .center) {
+        List {
 
-            // MARK: Header
+            VStack {
 
-            HStack {
-                Spacer()
+                // MARK: Balance
 
-                Capsule()
-                    .fill(.accent.opacity(0.5))
-                    .strokeBorder(.accent, lineWidth: 1)
-                    .frame(width: 42, height: 42)
-                    .overlay() {
-                        Text("C")
-                            .font(.system(size: 18))
+                VStack(spacing: 12) {
+                    Text("Account Balance")
+                        .foregroundStyle(.neutral2)
+                        .textTheme(.bodyPrimary)
+
+                    BalanceView()
+                }
+                .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
+
+                // MARK: Transfers
+
+                HStack {
+                    Spacer(minLength: 16)
+
+                    IconButtonWithText("Send") {
+                        self.showingSendingView = true
+                    } icon: {
+                        Image(systemName: "arrow.up")
+                            .iconify()
                             .fontWeight(.semibold)
-                            .foregroundStyle(.accent)
                     }
-            }
-
-            List {
-
-                VStack {
-
-                    // MARK: Balance
-
-                    VStack(spacing: 12) {
-                        Text("Account Balance")
-                            .foregroundStyle(.neutral2)
-                            .textTheme(.bodyPrimary)
-
-                        BalanceView()
+                    .frame(maxWidth: .infinity)
+                    .fullScreenCover(isPresented: self.$showingSendingView) {
+                        SendingView()
                     }
-                    .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
 
-                    // MARK: Transfers
+                    Spacer(minLength: 8)
 
-                    HStack {
-                        Spacer(minLength: 16)
-
-                        IconButtonWithText("Send") {
-                            self.showingSendingView = true
-                        } icon: {
-                            Image("ArrowUp")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .fullScreenCover(isPresented: $showingSendingView) {
-                            SendingView()
-                        }
-
-                        Spacer(minLength: 8)
-
-                        IconButtonWithText("Request") {
-                            // TODO: Handle sending
-                        } icon: {
-                            Image("ArrowDown")
-                        }
-                        .frame(maxWidth: .infinity)
-
-                        Spacer(minLength: 8)
-
-                        IconButtonWithText("Add funds") {
-                            self.showingAddFundsWebView = true
-                        } icon: {
-                            Image("Plus")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .sheet(isPresented: $showingAddFundsWebView) {
-                            WebView(url: URL(string: "https://app.fun.xyz")!)
-                        }
-
-                        Spacer(minLength: 16)
+                    IconButtonWithText("Request") {
+                        // TODO: Handle sending
+                    } icon: {
+                        Image(systemName: "arrow.down")
+                            .iconify()
+                            .fontWeight(.semibold)
                     }
+                    .frame(maxWidth: .infinity)
+
+                    Spacer(minLength: 8)
+
+                    IconButtonWithText("Add funds") {
+                        self.showingAddFundsWebView = true
+                    } icon: {
+                        Image(systemName: "plus")
+                            .iconify()
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .sheet(isPresented: $showingAddFundsWebView) {
+                        WebView(url: URL(string: "https://app.fun.xyz")!)
+                    }
+
+                    Spacer(minLength: 16)
                 }
-                .padding(.bottom, 16)
+            }
+            .padding(.bottom, 16)
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(EmptyView())
+            .listRowSeparator(.hidden)
+
+            // MARK: History
+
+            ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
+                Section {
+                    ForEach(0..<self.history.groupedTransfers[day]!.count, id: \.self) { index in
+                        let transfer = self.history.groupedTransfers[day]![index]
+                        let isFirst = index == 0;
+                        let isLast = index == self.history.groupedTransfers[day]!.count - 1
+
+                        TransferRow(transfer: transfer, me: self.me)
+                            .padding(16)
+                            .background(.background2)
+                            .clipShape(
+                                .rect(
+                                    topLeadingRadius: isFirst ? 16 : 0,
+                                    bottomLeadingRadius: isLast ? 16 : 0,
+                                    bottomTrailingRadius: isLast ? 16 : 0,
+                                    topTrailingRadius: isFirst ? 16 : 0
+                                )
+                            )
+                    }
+                } header: {
+                    Text(formatSectionHeader(for: day).uppercased())
+                        .textTheme(.headlineSmall)
+                        .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
+                }
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(EmptyView())
                 .listRowSeparator(.hidden)
-
-                // MARK: History
-
-                ForEach(self.history.groupedTransfers.keys.sorted(by: >), id: \.self) { day in
-                    Section {
-                        ForEach(0..<self.history.groupedTransfers[day]!.count, id: \.self) { index in
-                            let transfer = self.history.groupedTransfers[day]![index]
-                            let isFirst = index == 0;
-                            let isLast = index == self.history.groupedTransfers[day]!.count - 1
-
-                            TransferRow(transfer: transfer, me: self.me)
-                                .padding(
-                                    EdgeInsets(
-                                        top: isFirst ? 16 : 8,
-                                        leading: 16,
-                                        bottom: isLast ? 16 : 8,
-                                        trailing: 16
-                                    )
-                                )
-                                .background(.background2)
-                                .clipShape(
-                                    .rect(
-                                        topLeadingRadius: isFirst ? 16 : 0,
-                                        bottomLeadingRadius: isLast ? 16 : 0,
-                                        bottomTrailingRadius: isLast ? 16 : 0,
-                                        topTrailingRadius: isFirst ? 16 : 0
-                                    )
-                                )
-                        }
-                    } header: {
-                        Text(formatSectionHeader(for: day).uppercased())
-                            .textTheme(.headlineSmall)
-                            .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
-                    }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(EmptyView())
-                }
+                .listRowBackground(EmptyView())
             }
-            .onAppear {
-                // dirty hack to remove the top padding of the list
-                UICollectionView.appearance().contentInset.top = -30
-            }
+        }
+        .onAppear {
+            // dirty hack to remove the top padding of the list
+            UICollectionView.appearance().contentInset.top = -30
         }
         .safeAreaInset(edge: .bottom) {
             EmptyView().frame(height: 90)
         }
-        .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
+        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         .scrollContentBackground(.hidden)
         .listStyle(.grouped)
         .scrollIndicators(.hidden)
         .defaultBackground()
+        .navigationBarItems(
+            trailing: IconButton(size: .custom(IconButtonSize.medium.buttonSize, 20)) {} icon: {
+                Image("Gear")
+                    .iconify()
+            }
+        )
+        .removeNavigationBarBorder()
     }
 
     func formatSectionHeader(for date: Date) -> String {
@@ -256,5 +242,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    NavigationStack {
+        HomeView()
+    }
 }

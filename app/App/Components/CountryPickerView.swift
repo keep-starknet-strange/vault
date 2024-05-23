@@ -10,8 +10,8 @@ import PhoneNumberKit
 
 struct CountryPickerView: View {
 
-    @Environment(\.presentationMode) var presentationMode
-    
+    @Environment(\.dismiss) var dismiss
+
     @EnvironmentObject private var phoneNumberModel: PhoneNumberModel
 
     var body: some View {
@@ -21,7 +21,7 @@ struct CountryPickerView: View {
                     HStack(spacing: 8) {
                         SearchBar(search: $phoneNumberModel.searchedCountry)
                         Button {
-                            self.presentationMode.wrappedValue.dismiss()
+                            self.dismiss()
                         } label: {
                             Text("Cancel").textTheme(.buttonSmall)
                         }
@@ -36,7 +36,7 @@ struct CountryPickerView: View {
 
                         Button {
                             self.phoneNumberModel.selectedRegionCode = countryData.regionCode
-                            self.presentationMode.wrappedValue.dismiss()
+                            self.dismiss()
                         } label: {
                             HStack(spacing: 16) {
                                 Image(flagRessource)
@@ -101,12 +101,10 @@ struct CountryPickerViewPreviews : PreviewProvider {
                 }
                 .sheet(isPresented: $isPresented) {
                     CountryPickerView()
-                        .preferredColorScheme(.dark)
                         .environmentObject(self.phoneNumberModel)
                 }
             }
-        }.preferredColorScheme(.dark)
+        }
     }
-
 }
 #endif

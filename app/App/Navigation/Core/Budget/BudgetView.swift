@@ -43,10 +43,8 @@ struct BudgetView: View {
 
                     Spacer(minLength: 0)
                 }
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .padding(16)
             }
-            .buttonStyle(GradientButtonStyle())
+            .buttonStyle(ComplexButtonStyle(mode: .gradient))
 
             Spacer()
         }

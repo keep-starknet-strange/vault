@@ -14,13 +14,26 @@ struct NavigationBarModifier: UIViewControllerRepresentable {
 
         DispatchQueue.main.async {
             if let navigationController = viewController.navigationController {
-                let appearance = UINavigationBarAppearance()
+                let topAppearance = UINavigationBarAppearance()
+                let scrolledAppearance = UINavigationBarAppearance()
 
-                appearance.configureWithOpaqueBackground()
-                appearance.backgroundColor = .clear
-                appearance.shadowColor = .clear
-                navigationController.navigationBar.standardAppearance = appearance
-                navigationController.navigationBar.scrollEdgeAppearance = appearance
+                topAppearance.configureWithOpaqueBackground()
+                topAppearance.backgroundColor = .background1
+                topAppearance.shadowColor = .clear
+
+                scrolledAppearance.configureWithOpaqueBackground()
+                scrolledAppearance.backgroundColor = .background1
+                scrolledAppearance.shadowColor = .background2
+//                scrolledAppearance.shadowImage = UIImage.gradientImageWithBounds(
+//                    bounds: CGRect( x: 0, y: 0, width: UIScreen.main.scale, height: 16),
+//                    colors: [
+//                        UIColor.background2.withAlphaComponent(0.5).cgColor,
+//                        UIColor.background2.withAlphaComponent(0).cgColor,
+//                    ]
+//                )
+
+                navigationController.navigationBar.standardAppearance = scrolledAppearance
+                navigationController.navigationBar.scrollEdgeAppearance = topAppearance
             }
         }
 

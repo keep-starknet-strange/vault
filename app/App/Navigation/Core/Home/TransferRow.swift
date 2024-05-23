@@ -33,24 +33,16 @@ struct TransferRow: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 42, height: 42).scaledToFit()
+                            .frame(width: 54, height: 54)
+                            .scaledToFit()
                     },
                     placeholder: {
                         ProgressView()
                     }
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 99))
+                .clipShape(Circle())
             } else {
-                Capsule()
-                    .fill(.accent.opacity(0.5))
-                    .strokeBorder(.accent, lineWidth: 1)
-                    .frame(width: 42, height: 42)
-                    .overlay() {
-                        Text(displayedUser.username.first?.description.uppercased() ?? "")
-                            .font(.system(size: 18))
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.accent)
-                    }
+                NoAvatar(name: displayedUser.username)
             }
 
             VStack(alignment: .leading) {
@@ -60,7 +52,7 @@ struct TransferRow: View {
 
                 Text("\(formattedDate)").textTheme(.subtitle)
             }
-            .padding(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+            .padding(.vertical, 6)
 
             Spacer()
 

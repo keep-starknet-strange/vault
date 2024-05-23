@@ -62,7 +62,6 @@ struct PhoneInput: View {
             .sheet(isPresented: $showingPicker) {
                 CountryPickerView()
                     .environmentObject(self.phoneNumberModel)
-                    .preferredColorScheme(.dark)
                     .onAppear {
                         self.phoneNumberModel.searchedCountry = ""
                     }
@@ -101,7 +100,7 @@ struct PhoneInputPreviews : PreviewProvider {
                     PhoneInput(phoneNumber: $text, parsedPhoneNumber: $phoneNumber)
                 }
             }
-        }.preferredColorScheme(.dark)
+        }
     }
 }
 #endif

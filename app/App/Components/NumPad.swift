@@ -29,7 +29,7 @@ enum PadTouch: Hashable, Identifiable {
                     .foregroundStyle(.neutral1)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 64)
+        .frame(maxWidth: .infinity, maxHeight: 60)
     }
 }
 

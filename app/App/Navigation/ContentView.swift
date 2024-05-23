@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
 
+    @AppStorage("isOnboarded") var isOnboarded: Bool = false
+
     @StateObject private var registrationModel: RegistrationModel
-    @StateObject private var settingsModel = SettingsModel()
     @StateObject private var navigationModel = NavigationModel()
 
     init() {
@@ -38,7 +39,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        if settingsModel.isOnboarded {
+        if !self.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
@@ -58,8 +59,6 @@ struct ContentView: View {
                     .tag(Tab.earn)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
-                .environmentObject(settingsModel)
-//                .preferredColorScheme(.dark)
 
                 CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }
@@ -68,9 +67,7 @@ struct ContentView: View {
             NavigationStack {
                 OnboardingView()
             }
-            .environmentObject(settingsModel)
             .environmentObject(registrationModel)
-//            .preferredColorScheme(.dark)
         }
     }
 }
