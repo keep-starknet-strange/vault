@@ -19,7 +19,7 @@ struct ContactRow: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 54, height: 54)
+                    .frame(width: 42, height: 42)
                     .scaledToFit()
                     .clipShape(Circle())
             } else {

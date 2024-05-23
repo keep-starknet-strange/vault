@@ -187,69 +187,6 @@ struct TabItemButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: Complex
-
-enum ComplexButtonStyleMode {
-    case gradient
-    case plain
-}
-
-struct ComplexButtonStyle: ButtonStyle {
-    let mode: ComplexButtonStyleMode
-
-    // TODO: remove duplicated code
-
-    func makeBody(configuration: Configuration) -> some View {
-        switch self.mode {
-        case .gradient:
-            configuration.label
-                .foregroundStyle(.neutral1)
-                .frame(maxWidth: .infinity)
-                .padding(16)
-                .background(
-                    LinearGradient(
-                        gradient: configuration.isPressed
-                        ? Gradient(colors: [.gradient1B])
-                        : Constants.gradient1,
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                    .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .opacity(configuration.isPressed ? 0.7 : 1)
-                .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
-
-        case .plain:
-            configuration.label
-                .foregroundStyle(.neutral1)
-                .frame(maxWidth: .infinity)
-                .padding(16)
-                .background(.background3)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .opacity(configuration.isPressed ? 0.7 : 1)
-                .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
-        }
-    }
-}
-
-struct ComplexButton<Label>: View where Label : View {
-    let label: Label
-    let action: () -> Void
-    let mode: ComplexButtonStyleMode
-
-    init(_ mode: ComplexButtonStyleMode, action: @escaping () -> Void, @ViewBuilder label: () -> Label) {
-        self.mode = mode
-        self.label = label()
-        self.action = action
-    }
-
-    var body: some View {
-        Button(action: self.action, label: { self.label })
-            .buttonStyle(ComplexButtonStyle(mode: self.mode))
-    }
-}
-
 // MARK: Noop
 
 struct NoopButtonStyle: ButtonStyle {
@@ -272,20 +209,6 @@ struct NoopButtonStyle: ButtonStyle {
 
             SecondaryButton("Enabled") {}
             SecondaryButton("Disabled", disabled: true) {}
-
-            Spacer()
-
-            Button() {} label: {
-                Text("Gradient")
-                    .textTheme(.button)
-            }
-            .buttonStyle(ComplexButtonStyle(mode: .gradient))
-
-            Button() {} label: {
-                Text("Plain")
-                    .textTheme(.button)
-            }
-            .buttonStyle(ComplexButtonStyle(mode: .plain))
 
             Spacer()
 

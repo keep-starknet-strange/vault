@@ -71,7 +71,7 @@ class ContactsModel: ObservableObject {
                         self?.fetchContacts()
                     } else {
                         self?.authorizationStatus = .denied
-                        // Handle the case where permission is denied
+                        // TODO: Handle the case where permission is denied
                         print("Permission denied")
                     }
                 }
@@ -125,7 +125,36 @@ class ContactsModel: ObservableObject {
         }
     }
 
-    func addContact(name: String, phone: String) {
-        // Functionality to add a contact to the user's phone contacts can be implemented here
+    func addContact(name: String, phone: String, completionHandler: @escaping (Contact) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let newContact = CNMutableContact()
+            let nameComponents = name.split(separator: " ")
+
+            if let firstName = nameComponents.first {
+                newContact.givenName = String(firstName)
+            }
+
+            if nameComponents.count > 1 {
+                newContact.familyName = nameComponents.dropFirst().joined(separator: " ")
+            }
+
+            let phoneValue = CNLabeledValue(label: CNLabelPhoneNumberMain, value: CNPhoneNumber(stringValue: phone))
+            newContact.phoneNumbers = [phoneValue]
+
+            let saveRequest = CNSaveRequest()
+            saveRequest.add(newContact, toContainerWithIdentifier: nil)
+
+            do {
+                try self?.contactStore.execute(saveRequest)
+
+                DispatchQueue.main.async {
+                    self?.fetchContacts() // Refresh the contacts list
+                    completionHandler(Contact(name: name, phone: phone))
+                }
+            } catch {
+                print("Failed to save contact: \(error)")
+                // TODO: Handle this case
+            }
+        }
     }
 }
