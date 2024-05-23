@@ -37,14 +37,28 @@ struct BudgetView: View {
                         .shadow(radius: 10)
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Set up your budget").textTheme(.headlineMedium)
-                        Text("Gain peace of mind by organizing your spending.").textTheme(.bodySecondary)
+                        Text("Set up your budget")
+                            .textTheme(.headlineMedium)
+
+                        Text("Gain peace of mind by organizing your spending.")
+                            .textTheme(.bodySecondary)
+                            .multilineTextAlignment(.leading)
                     }
 
                     Spacer(minLength: 0)
                 }
+                .foregroundStyle(.neutral1)
+                .padding(16)
+                .background(
+                    LinearGradient(
+                        gradient: Constants.gradient1,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
-            .buttonStyle(ComplexButtonStyle(mode: .gradient))
+            .buttonStyle(PlainButtonStyle())
 
             Spacer()
         }

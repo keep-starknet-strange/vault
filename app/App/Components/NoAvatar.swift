@@ -14,7 +14,7 @@ struct NoAvatar: View {
         Capsule()
             .fill(.accent.opacity(0.5))
             .strokeBorder(.accent, lineWidth: 1)
-            .frame(width: 54, height: 54)
+            .frame(width: 42, height: 42)
             .overlay() {
                 Text(name.initials.uppercased())
                     .font(.system(size: 18))

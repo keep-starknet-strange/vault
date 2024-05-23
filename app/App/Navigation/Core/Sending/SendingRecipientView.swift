@@ -21,7 +21,7 @@ struct SendingRecipientView: View {
         List() {
 
             switch self.contactsModel.authorizationStatus {
-            case .denied, .notDetermined:
+            case .notDetermined, .denied:
                 Section {
                     Button {
                         contactsModel.requestAccess()
@@ -63,36 +63,75 @@ struct SendingRecipientView: View {
                 .listRowSeparator(.hidden)
 
             default:
-                EmptyView()
+                Section {
+                    Button {
+                        self.presentingNewRecipientView = true
+                    } label: {
+                        HStack(spacing: 16) {
+                            Image(.logo)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32)
+                                .foregroundStyle(.accent)
+
+                            Text("Vault Recipient")
+                                .textTheme(.button)
+                                .padding(.top, 2)
+
+                            Spacer()
+                        }
+                    }
+                    .padding(16)
+                    .background(.background2)
+                    .buttonStyle(PlainButtonStyle())
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                    } header: {
+                        Text("Add new")
+                            .textTheme(.headlineMedium)
+                            .listRowInsets(EdgeInsets(top: 32, leading: 24, bottom: 12, trailing: 0))
+                    }
+                    .textCase(nil)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    .listRowBackground(EmptyView())
+                    .listRowSeparator(.hidden)
             }
 
-            ForEach(
-                Array(self.contactsModel.contacts.enumerated()),
-                id: \.offset
-            ) { index, contact in
-                let isFirst = index == 0
-                let isLast = index == self.contactsModel.contacts.count - 1
+            if !self.contactsModel.contacts.isEmpty {
+                Section {
+                    ForEach(
+                        Array(self.contactsModel.contacts.enumerated()),
+                        id: \.offset
+                    ) { index, contact in
+                        let isFirst = index == 0
+                        let isLast = index == self.contactsModel.contacts.count - 1
 
-                Button {
-                    self.selectedContact = contact
-                    self.presentingSendingAmountView = true
-                } label: {
-                    ContactRow(contact: contact)
-                        .padding(16)
-                        .background(.background2)
-                        .clipShape(
-                            .rect(
-                                topLeadingRadius: isFirst ? 16 : 0,
-                                bottomLeadingRadius: isLast ? 16 : 0,
-                                bottomTrailingRadius: isLast ? 16 : 0,
-                                topTrailingRadius: isFirst ? 16 : 0
-                            )
-                        )
+                        Button {
+                            self.selectedContact = contact
+                            self.presentingSendingAmountView = true
+                        } label: {
+                            ContactRow(contact: contact)
+                                .padding(16)
+                                .background(.background2)
+                                .clipShape(
+                                    .rect(
+                                        topLeadingRadius: isFirst ? 16 : 0,
+                                        bottomLeadingRadius: isLast ? 16 : 0,
+                                        bottomTrailingRadius: isLast ? 16 : 0,
+                                        topTrailingRadius: isFirst ? 16 : 0
+                                    )
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(EmptyView())
+                    }
+                } header: {
+                    Text("Contacts").textTheme(.headlineMedium)
+                        .listRowInsets(EdgeInsets(top: 16, leading: 24, bottom: 12, trailing: 0))
                 }
-                .buttonStyle(PlainButtonStyle())
-                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                .listRowSeparator(.hidden)
-                .listRowBackground(EmptyView())
+                .textCase(nil)
             }
         }
 
@@ -133,29 +172,11 @@ struct SendingRecipientView: View {
 
         .navigationDestination(isPresented: self.$presentingNewRecipientView) {
             NewRecipientView()
+                .environmentObject(self.contactsModel)
         }
         .navigationDestination(isPresented: self.$presentingSendingAmountView) {
             SendingAmountView()
         }
-
-//            Button {
-//                self.presentingNewRecipientView = true
-//            } label: {
-//                HStack {
-//                    Image(systemName: "plus")
-//                        .foregroundStyle(.accent)
-//                        .fontWeight(.semibold)
-//
-//                    Text("Add a recipient")
-//                        .foregroundStyle(.accent)
-//                        .textTheme(.buttonSmall)
-//                }
-//                .foregroundStyle(.neutral1)
-//                .frame(maxWidth: .infinity, minHeight: 54)
-//                .padding(.horizontal, 16)
-//                .background(.accent.opacity(0.3))
-//                .clipShape(RoundedRectangle(cornerRadius: 10))
-//            }
     }
 }
 

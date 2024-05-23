@@ -10,11 +10,17 @@ import PhoneNumberKit
 
 struct NewRecipientView: View {
 
+    @EnvironmentObject private var contactsModel: ContactsModel
+
     @Environment(\.dismiss) var dismiss
 
     @State private var name = ""
     @State private var phoneNumber = ""
     @State private var parsedPhoneNumber: PhoneNumber?
+
+    private var parsedName: String {
+        self.name.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 
     var body: some View {
         VStack(alignment: .center, spacing: 32) {
@@ -26,8 +32,19 @@ struct NewRecipientView: View {
 
             Spacer()
 
-            PrimaryButton("Add", disabled: self.parsedPhoneNumber == nil) {
-                // TODO: add recipient
+            PrimaryButton("Add", disabled: self.parsedPhoneNumber == nil || self.parsedName.isEmpty) {
+                guard let parsedPhoneNumber = self.parsedPhoneNumber else {
+                    fatalError("Should be disabled")
+                }
+
+                self.contactsModel.addContact(
+                    name: self.parsedName,
+                    phone: parsedPhoneNumber.rawString()
+                ) { contact in
+                    // TODO: handle this new contact
+                    print(contact)
+                    self.dismiss()
+                }
             }
         }
         .padding(EdgeInsets(top: 32, leading: 16, bottom: 16, trailing: 16))
