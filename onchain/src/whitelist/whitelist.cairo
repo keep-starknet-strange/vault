@@ -284,6 +284,10 @@ pub mod WhitelistComponent {
     }
 }
 
+//
+// TESTS
+//
+
 #[cfg(test)]
 mod test {
     use starknet::{ContractAddress, contract_address_const, ClassHash, class_hash_const};

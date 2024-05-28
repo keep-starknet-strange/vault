@@ -1,9 +1,8 @@
 #[starknet::contract(account)]
 mod Account {
     use core::box::BoxTrait;
-    use core::hash::{HashStateExTrait, Hash};
+    use core::hash::Hash;
     use core::option::OptionTrait;
-    use core::poseidon::{HashStateTrait, PoseidonTrait};
     use core::result::ResultTrait;
     use core::starknet::{get_tx_info, SyscallResultTrait};
     use openzeppelin::account::AccountComponent;
@@ -18,11 +17,11 @@ mod Account {
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
     use starknet::{get_caller_address, contract_address_const, get_contract_address};
+    use vault::misc::claim::{Claim, ClaimLinkTrait};
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
     use vault::tx_approval::tx_approval::TransactionApprovalComponent;
     use vault::whitelist::whitelist::WhitelistComponent;
-
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
@@ -119,60 +118,36 @@ mod Account {
                     0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080
                 >()
             );
-    }
-    #[derive(Drop, Serde, Clone, Copy, Hash)]
-    struct Claim {
-        amount: u256,
-        nonce: felt252,
-    }
-    const U256_TYPE_HASH: felt252 = selector!("\"u256\"(\"low\":\"u128\",\"high\":\"u128\")");
-    const CLAIM_TYPE_HASH: felt252 =
-        selector!(
-            "\"Claim\"(\"amount\":\"u256\",\"nonce\":\"felt\")\"u256\"(\"low\":\"u128\",\"high\":\"u128\")"
-        );
 
-    impl StructHashImpl of StructHash<Claim> {
-        fn hash_struct(self: @Claim) -> felt252 {
-            let hash_state = PoseidonTrait::new();
-            hash_state
-                .update_with(CLAIM_TYPE_HASH)
-                .update_with(
-                    PoseidonTrait::new()
-                        .update_with(U256_TYPE_HASH)
-                        .update_with(*self.amount)
-                        .finalize()
-                )
-                .update_with(*self.nonce)
-                .finalize()
-        }
-    }
-    #[starknet::interface]
-    pub trait ClaimLinkTrait<T> {
-        fn claim(ref self: T, claim: Claim, signature: Array<felt252>);
-        #[cfg(test)]
-        fn set_usdc_address(ref self: T, usdc_address: ContractAddress);
+        // Verify public key validity
+        let _ = Secp256r1Impl::secp256_ec_new_syscall(pub_key_x, pub_key_y).unwrap().unwrap();
     }
 
     impl SNIP12MetadataImpl of SNIP12Metadata {
         fn name() -> felt252 {
             'Vault'
         }
+
         fn version() -> felt252 {
             0
         }
     }
+
     #[abi(embed_v0)]
     impl ClaimLink of ClaimLinkTrait<ContractState> {
         fn claim(ref self: ContractState, claim: Claim, signature: Array<felt252>) {
             let hash = claim.get_message_hash(get_contract_address());
+
             assert!(!self.claims.read(hash), "Link already used");
             assert!(
                 self.is_valid_signature(hash, signature) == starknet::VALIDATED,
                 "Invalid signature for claim"
             );
+
             self.claims.write(hash, true);
-            IERC20Dispatcher { contract_address: self.usdc_address.read() }
-                .transfer(get_caller_address(), claim.amount);
+
+            let usdc = IERC20Dispatcher { contract_address: self.usdc_address.read() };
+            usdc.transfer(get_caller_address(), claim.amount);
         }
 
         #[cfg(test)]
@@ -180,6 +155,7 @@ mod Account {
             self.usdc_address.write(usdc_address);
         }
     }
+
     //
     // SRC6 override
     //
@@ -192,33 +168,10 @@ mod Account {
 
         fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
             let tx_info = get_tx_info().unbox();
-            let signature = tx_info.signature;
+            let signature = tx_info.signature.snapshot.clone();
             let hash = tx_info.transaction_hash;
 
-            if signature.len() != 4 {
-                return 'INVALID';
-            }
-            let (x, y) = self.public_key.read();
-            let public_key = Secp256r1Impl::secp256_ec_new_syscall(x, y).unwrap().unwrap();
-            if is_valid_signature::<
-                Secp256r1Point
-            >(
-                hash.into(),
-                u256 {
-                    low: (*signature[0]).try_into().unwrap(),
-                    high: (*signature[1]).try_into().unwrap()
-                },
-                u256 {
-                    low: (*signature[2]).try_into().unwrap(),
-                    high: (*signature[3]).try_into().unwrap()
-                },
-                public_key
-            ) {
-                starknet::VALIDATED
-            } else {
-                'INVALID'
-            }
-        // or here
+            self.is_valid_signature(:hash, :signature)
         }
 
         fn is_valid_signature(
@@ -227,8 +180,10 @@ mod Account {
             if signature.len() != 4 {
                 return 'INVALID';
             }
+
             let (x, y) = self.public_key.read();
             let public_key = Secp256r1Impl::secp256_ec_new_syscall(x, y).unwrap().unwrap();
+
             if is_valid_signature::<
                 Secp256r1Point
             >(

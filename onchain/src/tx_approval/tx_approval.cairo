@@ -144,9 +144,14 @@ pub mod TransactionApprovalComponent {
     }
 }
 
+//
+// TESTS
+//
+
 #[cfg(test)]
 mod test {
     use core::starknet::SyscallResultTrait;
+    use openzeppelin::presets::ERC20Upgradeable;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
     use starknet::{ContractAddress, contract_address_const, account::Call};
@@ -238,10 +243,7 @@ mod test {
         calldata.append_serde(recipient);
 
         let (address, _) = starknet::deploy_syscall(
-            openzeppelin::presets::ERC20Upgradeable::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            calldata.span(),
-            false
+            ERC20Upgradeable::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
             .unwrap_syscall();
         IERC20Dispatcher { contract_address: address }
