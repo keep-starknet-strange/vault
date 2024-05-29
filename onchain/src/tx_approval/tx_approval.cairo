@@ -156,7 +156,7 @@ mod test {
     use openzeppelin::utils::serde::SerializedAppend;
     use starknet::{ContractAddress, contract_address_const, account::Call};
     use traits::{Into, TryInto};
-    use vault::contracts::account::Account;
+    use vault::contracts::account::{Account, IVaultAccountDispatcher, IVaultAccountDispatcherTrait};
     use vault::tx_approval::tx_approval::TransactionApprovalComponent::InternalTrait;
 
     #[starknet::interface]
@@ -257,18 +257,19 @@ mod test {
         // s: 0x76b4669998eb933f44a59eace12b41328ab975ceafddf92602b21eb23e22e35
 
         // Deploy approver account with public key and weekly limit and approver is 0.
-        let mut constructor_calldata = array![];
-        constructor_calldata
-            .append_serde(0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133_u256);
-        constructor_calldata
-            .append_serde(0x4bdae6ef158afd49d946c36d8bf3c8efc359a50e1f2bc043368230ed9e6d610d_u256);
-        constructor_calldata.append_serde(0);
-        constructor_calldata.append_serde(2);
-        constructor_calldata.append_serde(2);
         let (approver, _) = starknet::deploy_syscall(
-            Account::TEST_CLASS_HASH.try_into().unwrap(), 0, constructor_calldata.span(), true
+            Account::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), true
         )
             .unwrap_syscall();
+
+        IVaultAccountDispatcher { contract_address: approver }
+            .initialize(
+                pub_key_x: 0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133_u256,
+                pub_key_y: 0x4bdae6ef158afd49d946c36d8bf3c8efc359a50e1f2bc043368230ed9e6d610d_u256,
+                approver: starknet::contract_address_const::<0>(),
+                limit: u256 { low: 2, high: 2 }
+            );
+
         // Deploy approval mock contract with approver address.
         let (approval_contract, _) = starknet::deploy_syscall(
             mock_contract::TEST_CLASS_HASH.try_into().unwrap(),

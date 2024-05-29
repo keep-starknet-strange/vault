@@ -1,3 +1,12 @@
+use starknet::ContractAddress;
+
+#[starknet::interface]
+trait IVaultAccount<TState> {
+    fn initialize(
+        ref self: TState, pub_key_x: u256, pub_key_y: u256, approver: ContractAddress, limit: u256
+    );
+}
+
 #[starknet::contract(account)]
 mod Account {
     use core::box::BoxTrait;
@@ -9,15 +18,15 @@ mod Account {
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use openzeppelin::utils::cryptography::snip12::{
-        OffchainMessageHashImpl, StructHash, SNIP12Metadata
-    };
+    use openzeppelin::utils::cryptography::snip12::{OffchainMessageHashImpl, StructHash};
     use starknet::ContractAddress;
     use starknet::account::Call;
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
     use starknet::{get_caller_address, contract_address_const, get_contract_address};
+    use super::IVaultAccount;
     use vault::misc::claim::{Claim, ClaimLinkTrait};
+    use vault::misc::snip12::SNIP12MetadataImpl;
     use vault::spending_limit::weekly_limit::WeeklyLimitComponent;
     use vault::spending_limit::weekly_limit::interface::IWeeklyLimit;
     use vault::tx_approval::tx_approval::TransactionApprovalComponent;
@@ -64,6 +73,10 @@ mod Account {
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
 
+    //
+    // Storage
+    //
+
     #[storage]
     struct Storage {
         #[substorage(v0)]
@@ -81,6 +94,10 @@ mod Account {
         whitelist: WhitelistComponent::Storage,
     }
 
+    //
+    // Event
+    //
+
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
@@ -97,41 +114,37 @@ mod Account {
     }
 
     //
-    // Constructor
+    // Vault Account
     //
 
-    #[constructor]
-    fn constructor(
-        ref self: ContractState,
-        pub_key_x: u256,
-        pub_key_y: u256,
-        approver: ContractAddress,
-        limit: u256,
-    ) {
-        self.public_key.write((pub_key_x, pub_key_y));
-        self.transaction_approval.initializer(:approver);
-        self.weekly_limit.initializer(:limit);
-        self
-            .usdc_address
-            .write(
-                contract_address_const::<
-                    0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080
-                >()
-            );
+    #[abi(embed_v0)]
+    impl VaultAccount of IVaultAccount<ContractState> {
+        fn initialize(
+            ref self: ContractState,
+            pub_key_x: u256,
+            pub_key_y: u256,
+            approver: ContractAddress,
+            limit: u256,
+        ) {
+            self.public_key.write((pub_key_x, pub_key_y));
+            self.transaction_approval.initializer(:approver);
+            self.weekly_limit.initializer(:limit);
+            self
+                .usdc_address
+                .write(
+                    contract_address_const::<
+                        0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080
+                    >()
+                );
 
-        // Verify public key validity
-        let _ = Secp256r1Impl::secp256_ec_new_syscall(pub_key_x, pub_key_y).unwrap().unwrap();
-    }
-
-    impl SNIP12MetadataImpl of SNIP12Metadata {
-        fn name() -> felt252 {
-            'Vault'
-        }
-
-        fn version() -> felt252 {
-            0
+            // Verify public key validity
+            let _ = Secp256r1Impl::secp256_ec_new_syscall(pub_key_x, pub_key_y).unwrap().unwrap();
         }
     }
+
+    //
+    // ClaimLink impl
+    //
 
     #[abi(embed_v0)]
     impl ClaimLink of ClaimLinkTrait<ContractState> {
@@ -157,7 +170,7 @@ mod Account {
     }
 
     //
-    // SRC6 override
+    // SRC6 impl
     //
 
     #[abi(embed_v0)]
@@ -206,7 +219,7 @@ mod Account {
     }
 
     //
-    // Daily Limit
+    // Weekly Limit impl
     //
 
     #[abi(embed_v0)]

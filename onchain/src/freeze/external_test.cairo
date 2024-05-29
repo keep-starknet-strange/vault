@@ -2,6 +2,7 @@ mod external_test {
     pub use AdminComponent::InternalAdminTrait;
     pub use super::super::freeze::AdminComponent;
     use AdminComponent::AdminTraitDispatcherTrait;
+    use core::option::OptionTrait;
     use core::starknet::SyscallResultTrait;
     use openzeppelin::account::interface::{ISRC6Dispatcher, ISRC6DispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -11,7 +12,7 @@ mod external_test {
         testing::{set_caller_address, set_version, set_contract_address},
     };
     use traits::{Into, TryInto};
-    use vault::contracts::account::Account;
+    use vault::contracts::account::{Account, IVaultAccountDispatcher, IVaultAccountDispatcherTrait};
 
     #[starknet::contract]
     mod mock_contract {
@@ -73,18 +74,19 @@ mod external_test {
         AdminComponent::AdminTraitDispatcher, IERC20Dispatcher, ContractAddress
     ) {
         // Deploy admin account with public key and weekly limit and approver is 0.
-        let mut constructor_calldata = array![];
-        constructor_calldata
-            .append_serde(0xa0cb79205a8355d9c8be3a361de8068cbb7d96c17a2fc7ae4ff17facdb827b4d_u256);
-        constructor_calldata
-            .append_serde(0x534fafc9e92ef2408553744e545b041fdf3e36b88c3ad825c86bd6d37d1211ca_u256);
-        constructor_calldata.append_serde(0);
-        constructor_calldata.append_serde(2);
-        constructor_calldata.append_serde(2);
         let (admin, _) = starknet::deploy_syscall(
-            Account::TEST_CLASS_HASH.try_into().unwrap(), 0, constructor_calldata.span(), true
+            Account::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), true
         )
             .unwrap_syscall();
+
+        IVaultAccountDispatcher { contract_address: admin }
+            .initialize(
+                pub_key_x: 0xa0cb79205a8355d9c8be3a361de8068cbb7d96c17a2fc7ae4ff17facdb827b4d_u256,
+                pub_key_y: 0x534fafc9e92ef2408553744e545b041fdf3e36b88c3ad825c86bd6d37d1211ca_u256,
+                approver: starknet::contract_address_const::<0>(),
+                limit: u256 { low: 2, high: 2 }
+            );
+
         let erc20 = deploy_erc20(admin, 1000);
         // Deploy approval mock contract with approver address.
         let (admin_contract, _) = starknet::deploy_syscall(
