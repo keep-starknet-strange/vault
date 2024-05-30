@@ -16,14 +16,6 @@ pub struct Claim {
     nonce: felt252,
 }
 
-#[starknet::interface]
-pub trait ClaimLinkTrait<T> {
-    fn claim(ref self: T, claim: Claim, signature: Array<felt252>);
-
-    #[cfg(test)]
-    fn set_usdc_address(ref self: T, usdc_address: ContractAddress);
-}
-
 impl StructHashImpl of StructHash<Claim> {
     fn hash_struct(self: @Claim) -> felt252 {
         let hash_state = PoseidonTrait::new();
