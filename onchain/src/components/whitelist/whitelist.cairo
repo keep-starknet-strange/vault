@@ -284,10 +284,14 @@ pub mod WhitelistComponent {
     }
 }
 
+//
+// TESTS
+//
+
 #[cfg(test)]
 mod test {
     use starknet::{ContractAddress, contract_address_const, ClassHash, class_hash_const};
-    use vault::whitelist::whitelist::WhitelistComponent::{
+    use vault::components::WhitelistComponent::{
         WhitelistContractsTrait, WhitelistClassHashesTrait, WhitelistEntrypointsTrait,
         WhitelistContractEntrypointTrait, WhitelistClassHashEntrypointTrait
     };

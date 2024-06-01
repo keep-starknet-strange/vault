@@ -23,24 +23,26 @@ pub mod AdminComponent {
     impl AdminExternal<
         TContractState, +Drop<TContractState>, +HasComponent<TContractState>
     > of AdminTrait<ComponentState<TContractState>> {
-        /// Freezes the contract. Can be unfrozen with `unfreeze` 
+        /// Freezes the contract. Can be unfrozen with `unfreeze`
         fn freeze(ref self: ComponentState<TContractState>) {
             self.freeze_internal()
         }
+
         /// Unfreezes the contract.
         fn unfreeze(ref self: ComponentState<TContractState>) {
             self.unfreeze_internal()
         }
+
         /// Returns if the contract is frozen or not.
         fn is_frozen(self: @ComponentState<TContractState>) -> bool {
             self.is_frozen_internal()
         }
+
         /// Withdraw all the tokens of an erc20 previously set to a predefined address.
         fn emergency_withdraw(self: @ComponentState<TContractState>) {
             self.emergency_withdraw_internal()
         }
     }
-
 
     #[generate_trait]
     impl InternalAdmin<
@@ -57,7 +59,7 @@ pub mod AdminComponent {
             self.withdraw_address.write(withdraw_address);
         }
 
-        /// Freezes the contract. Can be unfrozen with `unfreeze` 
+        /// Freezes the contract. Can be unfrozen with `unfreeze`
         #[inline(always)]
         fn freeze_internal(ref self: ComponentState<TContractState>) {
             self.assert_only_admin();
