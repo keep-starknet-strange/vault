@@ -1,18 +1,19 @@
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import type { FastifyInstance } from 'fastify';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql'
+import type { FastifyInstance } from 'fastify'
+import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { buildApp } from '@/app';
+import { buildApp } from '@/app'
 
-import * as schema from '../src/db/schema';
+import * as schema from '../src/db/schema'
+
 describe('GET /get_balance route', () => {
-  let container: StartedPostgreSqlContainer;
-  let app: FastifyInstance;
-  const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af';
+  let container: StartedPostgreSqlContainer
+  let app: FastifyInstance
+  const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af'
 
   beforeAll(async () => {
-    container = await new PostgreSqlContainer().start();
-    const connectionUri = container.getConnectionUri();
+    container = await new PostgreSqlContainer().start()
+    const connectionUri = container.getConnectionUri()
     app = await buildApp({
       database: {
         connectionString: connectionUri,
@@ -20,57 +21,57 @@ describe('GET /get_balance route', () => {
       app: {
         port: 8080,
       },
-    });
+    })
 
-    await app.ready();
+    await app.ready()
     // Insert balance to mock address
-    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' });
-  });
+    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' })
+  })
 
   afterAll(async () => {
-    await app.close();
-    await container.stop();
-  });
+    await app.close()
+    await container.stop()
+  })
 
   test('should return the balance for a valid address', async () => {
     const response = await app.inject({
       method: 'GET',
       url: `/get_balance?address=${testAddress}`,
-    });
+    })
 
-    expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('balance', '1000');
-  });
+    expect(response.statusCode).toBe(200)
+    expect(response.json()).toHaveProperty('balance', '1000')
+  })
 
   test('should return error, invalid address format', async () => {
-    const invalidAddress = '0x0';
+    const invalidAddress = '0x0'
     const response = await app.inject({
       method: 'GET',
       url: `/get_balance?address=${invalidAddress}`,
-    });
+    })
 
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty('message', 'Invalid address format.');
-  });
+    expect(response.statusCode).toBe(400)
+    expect(response.json()).toHaveProperty('message', 'Invalid address format.')
+  })
 
   test('should return error, no address provided', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/get_balance',
-    });
+    })
 
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toHaveProperty('message', 'Address is required.');
-  });
+    expect(response.statusCode).toBe(400)
+    expect(response.json()).toHaveProperty('message', 'Address is required.')
+  })
 
   test('should return 0, unknown address', async () => {
-    const unknownAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07ae';
+    const unknownAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07ae'
     const response = await app.inject({
       method: 'GET',
       url: `/get_balance?address=${unknownAddress}`,
-    });
+    })
 
-    expect(response.statusCode).toBe(200);
-    expect(response.json()).toHaveProperty('balance', '0');
-  });
-});
+    expect(response.statusCode).toBe(200)
+    expect(response.json()).toHaveProperty('balance', '0')
+  })
+})

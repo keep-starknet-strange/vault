@@ -1,44 +1,40 @@
-import type { FastifyPluginCallback } from 'fastify';
-import { fastifyPlugin } from 'fastify-plugin';
-import postgres from 'postgres';
+import type { FastifyPluginCallback } from 'fastify'
+import { fastifyPlugin } from 'fastify-plugin'
+import postgres from 'postgres'
 
-import { drizzle, migrate } from './drizzle';
+import { drizzle, migrate } from './drizzle'
 
-export type FastifyDrizzleOptions = {
-  connectionString: string;
-};
+type FastifyDrizzleOptions = {
+  connectionString: string
+}
 
-const plugin: FastifyPluginCallback<FastifyDrizzleOptions> = (
-  fastify,
-  opts: FastifyDrizzleOptions,
-  next,
-) => {
+const plugin: FastifyPluginCallback<FastifyDrizzleOptions> = (fastify, opts: FastifyDrizzleOptions, next) => {
   if (!opts.connectionString) {
-    return next(new Error('connectionString is required'));
+    return next(new Error('connectionString is required'))
   }
 
   // Hook postgres notices to the Fastify logger.
   const onnotice = (msg: postgres.Notice) => {
-    fastify.log.info(msg);
-  };
+    fastify.log.info(msg)
+  }
 
   const pool = postgres(opts.connectionString, {
     onnotice,
-  });
+  })
 
-  const db = drizzle(pool);
+  const db = drizzle(pool)
 
   fastify.decorate('db', db).addHook('onReady', async () => {
-    fastify.log.info('Database migration started');
+    fastify.log.info('Database migration started')
 
     // Migration requires a single connection to work.
-    const client = postgres(opts.connectionString, { max: 1, onnotice });
-    await migrate(client);
+    const client = postgres(opts.connectionString, { max: 1, onnotice })
+    await migrate(client)
 
-    fastify.log.info('Database migration finished');
-  });
+    fastify.log.info('Database migration finished')
+  })
 
-  next();
-};
+  next()
+}
 
-export const fastifyDrizzle = fastifyPlugin(plugin);
+export const fastifyDrizzle = fastifyPlugin(plugin)

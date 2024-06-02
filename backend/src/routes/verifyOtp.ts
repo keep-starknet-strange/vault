@@ -1,21 +1,26 @@
-import { otp, registration } from '@/db/schema';
-import { and, desc } from 'drizzle-orm';
-import { eq } from 'drizzle-orm/pg-core/expressions';
-import type { FastifyInstance } from 'fastify';
-import { type Account, uint256 } from 'starknet';
+import { desc } from 'drizzle-orm'
+import { eq } from 'drizzle-orm/pg-core/expressions'
+import type { FastifyInstance } from 'fastify'
+import { type Account, uint256 } from 'starknet'
+
+import { Entrypoint, VAULT_FACTORY_ADDRESS } from '@/constants/contracts'
+import { otp, registration } from '@/db/schema'
+import { computeAddress } from '@/utils/address'
+import { hashPhoneNumber } from '@/utils/phoneNumber'
 
 interface VerifyOtpRequestBody {
-  phone_number: string;
-  sent_otp: string;
-  public_key_x: string;
-  public_key_y: string;
+  phone_number: string
+  sent_otp: string
+  public_key_x: string
+  public_key_y: string
 }
 
-export function verifyOtp(fastify: FastifyInstance, account: Account, classHash: string) {
+export function verifyOtp(fastify: FastifyInstance, deployer: Account) {
   fastify.post<{
-    Body: VerifyOtpRequestBody;
+    Body: VerifyOtpRequestBody
   }>(
     '/verify_otp',
+
     {
       schema: {
         body: {
@@ -30,9 +35,10 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
         },
       },
     },
+
     async (request, reply) => {
       try {
-        const { phone_number, sent_otp, public_key_x, public_key_y } = request.body;
+        const { phone_number, sent_otp, public_key_x, public_key_y } = request.body
 
         // validating the otp
         // - if otp is old or otp is already used
@@ -41,25 +47,25 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
           .from(otp)
           .where(eq(otp.phone_number, phone_number))
           .orderBy(desc(otp.created_at))
-          .limit(1);
+          .limit(1)
 
         if (!otp_record.length) {
           return reply.code(400).send({
             message: 'You need to request the otp first.',
-          });
+          })
         }
-        const record = otp_record[0];
+        const record = otp_record[0]
 
         if (record.used) {
           return reply.code(400).send({
             message: 'otp already used.',
-          });
+          })
         }
 
         if (record.otp !== sent_otp) {
           return reply.code(400).send({
             message: 'Wrong otp.',
-          });
+          })
         }
 
         // update the otp as used
@@ -68,32 +74,37 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
           .set({
             used: true,
           })
-          .where(eq(otp.phone_number, phone_number));
+          .where(eq(otp.phone_number, phone_number))
 
         // public key, approver, limit
-        const { contract_address, transaction_hash } = await account.deployContract({
-          classHash,
-          constructorCalldata: [
+        const { transaction_hash } = await deployer.execute({
+          contractAddress: VAULT_FACTORY_ADDRESS,
+          calldata: [
+            hashPhoneNumber(phone_number),
             uint256.bnToUint256(public_key_x),
             uint256.bnToUint256(public_key_y),
             0,
             1000000000,
             0,
           ],
-        });
+          entrypoint: Entrypoint.DEPLOY_ACCOUNT,
+        })
+
+        const contractAddress = computeAddress(phone_number)
+
         fastify.log.info(
           'Deploying account: ',
-          contract_address,
+          contractAddress,
           ' for: ',
           phone_number,
           ' with tx hash: ',
           transaction_hash,
-        );
+        )
 
-        if (!contract_address) {
+        if (!transaction_hash) {
           return reply.code(500).send({
             message: 'Error in deploying smart contract. Please try again later',
-          });
+          })
         }
 
         // update the user record as confirmed and add the account address
@@ -101,17 +112,17 @@ export function verifyOtp(fastify: FastifyInstance, account: Account, classHash:
           .update(registration)
           .set({
             is_confirmed: true,
-            contract_address,
+            contract_address: contractAddress,
           })
-          .where(eq(registration.phone_number, phone_number));
+          .where(eq(registration.phone_number, phone_number))
 
         return reply.code(200).send({
-          contract_address,
-        });
+          contract_address: contractAddress,
+        })
       } catch (error) {
-        fastify.log.error(error);
-        return reply.code(500).send({ message: 'Internal Server Error' });
+        fastify.log.error(error)
+        return reply.code(500).send({ message: 'Internal Server Error' })
       }
     },
-  );
+  )
 }
