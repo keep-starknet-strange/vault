@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-class SendingAmountModel: ObservableObject {
-    @Published var amount: String = "0"
-}
-
+@MainActor
 struct SendingAmountView: View {
 
     @Environment(\.dismiss) var dismiss
+
+    @EnvironmentObject private var starknetModel: StarknetModel
+    @EnvironmentObject private var transferModel: TransferModel
 
     @State private var amount: String = "0"
 
@@ -36,7 +36,9 @@ struct SendingAmountView: View {
 
             VStack(spacing: 32) {
                 PrimaryButton("Continue", disabled: self.parsedAmount <= 0) {
-                    // TODO: Send transaction
+                    Task {
+                        try await starknetModel.sendUSDC(to: transferModel.recipientPhoneNumber!)
+                    }
                 }
 
                 NumPad(amount: self.$amount)

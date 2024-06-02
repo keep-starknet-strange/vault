@@ -12,6 +12,8 @@ struct PhoneValidationView: View {
 
     @EnvironmentObject private var registrationModel: RegistrationModel
 
+    @AppStorage("starknetMainAddress") private var address: String = "0xdead"
+
     @State private var presentingNextView = false
     @State private var otp = "" {
         didSet {
@@ -41,10 +43,23 @@ struct PhoneValidationView: View {
                                         throw "Failed to generate public key"
                                     }
 
-                                    registrationModel.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue, publicKey: publicKey) { result in
+                                    registrationModel.confirmRegistration(
+                                        phoneNumber: self.phoneNumber,
+                                        otp: newValue,
+                                        publicKeyX: publicKey.x.toHex(),
+                                        publicKeyY: publicKey.y.toHex()
+                                    ) { result in
                                         switch result {
                                         case .success(let address):
+
+                                            #if DEBUG
                                             print(address)
+                                            #endif
+
+                                            // save address
+                                            self.address = address
+
+                                            // next view
                                             presentingNextView = true
 
                                         case .failure(let error):
