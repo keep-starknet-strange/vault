@@ -11,11 +11,12 @@ struct SendingRecipientView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    @EnvironmentObject private var transferModel: TransferModel
+
     @StateObject private var contactsModel = ContactsModel()
 
     @State private var presentingNewRecipientView = false
     @State private var presentingSendingAmountView = false
-    @State private var selectedContact: Contact?
 
     var body: some View {
         List() {
@@ -107,7 +108,7 @@ struct SendingRecipientView: View {
                         let isLast = index == self.contactsModel.contacts.count - 1
 
                         Button {
-                            self.selectedContact = contact
+                            self.transferModel.setPhoneNumber(contact.phone)
                             self.presentingSendingAmountView = true
                         } label: {
                             ContactRow(contact: contact)

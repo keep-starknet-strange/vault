@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C1C9D822C0CE0280028C8FD /* StarknetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D812C0CE0280028C8FD /* StarknetModel.swift */; };
+		9C1C9D842C0D093F0028C8FD /* P256Signer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D832C0D093F0028C8FD /* P256Signer.swift */; };
+		9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D852C0D0F320028C8FD /* Uint256.swift */; };
+		9C1C9D882C0D1FC60028C8FD /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D872C0D1FC60028C8FD /* TransferModel.swift */; };
 		9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C22BF39635004FFFD1 /* BalanceView.swift */; };
 		9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C42BF3CB86004FFFD1 /* Background.swift */; };
 		9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */; };
@@ -101,6 +105,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9C1C9D812C0CE0280028C8FD /* StarknetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarknetModel.swift; sourceTree = "<group>"; };
+		9C1C9D832C0D093F0028C8FD /* P256Signer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P256Signer.swift; sourceTree = "<group>"; };
+		9C1C9D852C0D0F320028C8FD /* Uint256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uint256.swift; sourceTree = "<group>"; };
+		9C1C9D872C0D1FC60028C8FD /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
 		9C2E73C22BF39635004FFFD1 /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		9C2E73C42BF3CB86004FFFD1 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureEnclaveManager.swift; sourceTree = "<group>"; };
@@ -260,6 +268,8 @@
 				9C62590D2BFA7D260039DE9C /* Icon.swift */,
 				9C62590F2BFAADB90039DE9C /* NavigationBar.swift */,
 				9C6259162BFB6A910039DE9C /* UIImage.swift */,
+				9C1C9D832C0D093F0028C8FD /* P256Signer.swift */,
+				9C1C9D852C0D0F320028C8FD /* Uint256.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -427,6 +437,8 @@
 				9C5CFDAD2BC828C9001776E1 /* PhoneNumberModel.swift */,
 				9CD1BE952BD589AD0077A60B /* RegistrationModel.swift */,
 				9C62591C2BFE20AF0039DE9C /* ContactsModel.swift */,
+				9C1C9D812C0CE0280028C8FD /* StarknetModel.swift */,
+				9C1C9D872C0D1FC60028C8FD /* TransferModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -578,12 +590,15 @@
 				9CE7A75B2BE12CBC008509FE /* Data+Hex.swift in Sources */,
 				9CD778BC2BBED06700BA4677 /* CustomTabBar.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
+				9C1C9D822C0CE0280028C8FD /* StarknetModel.swift in Sources */,
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
+				9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */,
 				9C5CFDA82BC73DB0001776E1 /* SearchBar.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
 				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
 				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
 				9C6259172BFB6A910039DE9C /* UIImage.swift in Sources */,
+				9C1C9D842C0D093F0028C8FD /* P256Signer.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9C62591B2BFCF0650039DE9C /* SendingView.swift in Sources */,
 				9CDFD4432BADA297000466B9 /* BiometricAuthManager.swift in Sources */,
@@ -622,6 +637,7 @@
 				9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */,
 				9C6259212BFE56590039DE9C /* NoAvatar.swift in Sources */,
 				9C62591D2BFE20AF0039DE9C /* ContactsModel.swift in Sources */,
+				9C1C9D882C0D1FC60028C8FD /* TransferModel.swift in Sources */,
 				9C62590E2BFA7D260039DE9C /* Icon.swift in Sources */,
 				9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */,
 				9C5CFDB22BC82C57001776E1 /* Array+indexed.swift in Sources */,

@@ -6,23 +6,11 @@
 //
 
 import Foundation
+import Starknet
 
-struct PublicKey {
-    var x: Data
-    var y: Data
-
-    var debugDescription: String {
-        return "{ x: \(self.x.toHex()), y: \(self.y.toHex()) }"
-    }
-}
-
-struct Signature {
-    var r: Data
-    var s: Data
-
-    var debugDescription: String {
-        return "{ r: \(self.r.toHex()), s: \(self.s.toHex()) }"
-    }
+struct P256Signature {
+    var r: Uint256
+    var s: Uint256
 }
 
 class SecureEnclaveManager {
@@ -33,7 +21,7 @@ class SecureEnclaveManager {
 
     // MARK: Public
 
-    public func generateKeyPair() throws -> PublicKey? {
+    public func generateKeyPair() throws -> P256PublicKey? {
         // compute private key access rights
         let access = SecAccessControlCreateWithFlags(
             kCFAllocatorDefault,
@@ -72,38 +60,17 @@ class SecureEnclaveManager {
         return parsedPublicKey
     }
 
-    public func sign(message: Data) throws -> Signature {
+    public func sign(hash: Felt) throws -> P256Signature {
         let privateKey = try self.getPrivateKey()
 
-        guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-            throw "Error obtaining public key from private key."
-        }
-
-        // extract public key data
-        guard let parsedPublicKey = self.parse(publicKey: publicKey) else {
-            throw "Error parsing public key."
-        }
-
-        print("Public key: \(publicKey)\n")
-        print("Public key: \(parsedPublicKey.debugDescription)\n")
-
-        // signature
-        var hash = "04c659dac4479d23f29a8b7c44e30c87e6f0d662a40b25007eebfaeaa1cb086c"
-        guard let signature = self.sign(hash: Data(hex: hash)!, with: privateKey) else {
+        // Signature
+        guard let signature = self.sign(hash: hash.value.serialize(), with: privateKey) else {
             throw "Error signing hash."
         }
 
-        print("Hash: 0x\(hash)")
-        print("Signature: \(signature.debugDescription)")
-
-        // signature
-        hash = "0601d3d2e265c10ff645e1554c435e72ce6721f0ba5fc96f0c650bfc6231191a"
-        guard let signature = self.sign(hash: Data(hex: hash)!, with: privateKey) else {
-            throw "Error signing hash."
-        }
-
-        print("Hash: 0x\(hash)")
-        print("Signature: \(signature.debugDescription)")
+        #if DEBUG
+        print("Signature: \(signature)")
+        #endif
 
         return signature
     }
@@ -125,7 +92,7 @@ class SecureEnclaveManager {
         return item as! SecKey
     }
 
-    private func sign(hash: Data, with privateKey: SecKey) -> Signature? {
+    private func sign(hash: Data, with privateKey: SecKey) -> P256Signature? {
         var error: Unmanaged<CFError>?
 
         guard let signature = SecKeyCreateSignature(
@@ -144,13 +111,13 @@ class SecureEnclaveManager {
 
     // MARK: Parsing
 
-    private func parse(publicKey: SecKey) -> PublicKey? {
+    private func parse(publicKey: SecKey) -> P256PublicKey? {
         var error: Unmanaged<CFError>?
 
         if let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? {
-            return PublicKey(
-                x: publicKeyData[1..<33],
-                y: publicKeyData[33..<65]
+            return P256PublicKey(
+                x: Uint256(fromHex: publicKeyData[1..<33].toHex())!,
+                y: Uint256(fromHex: publicKeyData[33..<65].toHex())!
             )
         } else {
             if let error = error {
@@ -160,15 +127,15 @@ class SecureEnclaveManager {
         }
     }
 
-    private func parse(signature signatureData: Data) -> Signature {
+    private func parse(signature signatureData: Data) -> P256Signature {
         let rLength = Int(signatureData[3]) - 1
         let sLength = Int(signatureData[6 + rLength]) - 1
         let rOffset = 5
         let sOffset = 8 + rLength
 
-        return Signature(
-            r: signatureData[rOffset..<(rOffset + rLength)],
-            s: signatureData[sOffset..<(sOffset + sLength)]
+        return P256Signature(
+            r: Uint256(fromHex: signatureData[rOffset..<(rOffset + rLength)].toHex())!,
+            s: Uint256(fromHex: signatureData[sOffset..<(sOffset + sLength)].toHex())!
         )
     }
 }

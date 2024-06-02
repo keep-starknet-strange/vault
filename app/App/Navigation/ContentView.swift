@@ -13,6 +13,7 @@ struct ContentView: View {
 
     @StateObject private var registrationModel: RegistrationModel
     @StateObject private var navigationModel = NavigationModel()
+    @StateObject private var starknetModel = StarknetModel()
 
     init() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -39,7 +40,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        if !self.isOnboarded {
+        if self.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $navigationModel.selectedTab) {
                     NavigationStack {
@@ -59,6 +60,7 @@ struct ContentView: View {
                     .tag(Tab.earn)
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
+                .environmentObject(starknetModel)
 
                 CustomTabbar(selectedTab: $navigationModel.selectedTab)
             }

@@ -9,7 +9,7 @@ import Foundation
 
 enum Endpoint {
     case getOTP(String, String)
-    case verifyOTP(String, String, PublicKey)
+    case verifyOTP(String, String, String, String)
 }
 
 class VaultService {
@@ -26,13 +26,13 @@ class VaultService {
             body["nickname"] = nickname
             break
 
-        case let .verifyOTP(phoneNumber, otp, publicKey):
+        case let .verifyOTP(phoneNumber, otp, publicKeyX, publicKeyY):
             url.append(path: "/verify_otp")
 
             body["phone_number"] = phoneNumber
             body["sent_otp"] = otp
-            body["public_key_x"] = publicKey.x.toHex()
-            body["public_key_y"] = publicKey.y.toHex()
+            body["public_key_x"] = publicKeyX
+            body["public_key_y"] = publicKeyY
         }
 
         // Convert the dictionary into JSON data
@@ -101,8 +101,14 @@ class VaultService {
         }
     }
 
-    func verifyOTP(phoneNumber: String, otp: String, publicKey: PublicKey, completion: @escaping (Result<String, Error>) -> Void) {
-        self.query(endpoint: .verifyOTP(phoneNumber, otp, publicKey)) { result in
+    func verifyOTP(
+        phoneNumber: String,
+        otp: String,
+        publicKeyX: String,
+        publicKeyY: String,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        self.query(endpoint: .verifyOTP(phoneNumber, otp, publicKeyX, publicKeyY)) { result in
             switch result {
             case .success(let json):
                 guard let address = json["contract_address"] as? String else {

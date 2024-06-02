@@ -21,11 +21,6 @@ class RegistrationModel: ObservableObject {
     func startRegistration(phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
         self.isLoading = true
 
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            self.isLoading = false
-//            completion(.success(Void()))
-//        }
-
         vaultService.getOTP(phoneNumber: phoneNumber.rawString()) { result in
             self.isLoading = false
             completion(result)
@@ -35,17 +30,18 @@ class RegistrationModel: ObservableObject {
     func confirmRegistration(
         phoneNumber: PhoneNumber,
         otp: String,
-        publicKey: PublicKey,
+        publicKeyX: String,
+        publicKeyY: String,
         completion: @escaping (Result<String, Error>
     ) -> Void) {
         self.isLoading = true
 
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            self.isLoading = false
-//            completion(.success("0xdead"))
-//        }
-
-        vaultService.verifyOTP(phoneNumber: phoneNumber.rawString(), otp: otp, publicKey: publicKey) { result in
+        vaultService.verifyOTP(
+            phoneNumber: phoneNumber.rawString(),
+            otp: otp,
+            publicKeyX: publicKeyX,
+            publicKeyY: publicKeyY
+        ) { result in
             self.isLoading = false
             completion(result)
         }

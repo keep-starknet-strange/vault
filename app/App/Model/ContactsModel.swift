@@ -9,6 +9,7 @@ import Foundation
 import Contacts
 import Combine
 import UIKit
+import CoreTelephony
 
 struct Contact: Identifiable {
     var id = UUID()
@@ -27,22 +28,12 @@ class ContactsModel: ObservableObject {
     init() {
         checkAuthorizationStatus()
 
-        #if DEBUG
-        self.contacts = [
-            Contact(name: "Kenny McCormick", phone: "+123456789"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-            Contact(name: "Bobby", phone: "+987654321"),
-        ]
-        #endif
+        //        #if DEBUG
+        //        self.contacts = [
+        //            Contact(name: "Kenny McCormick", phone: "+123456789"),
+        //            Contact(name: "Bobby", phone: "+987654321"),
+        //        ]
+        //        #endif
     }
 
     public func checkAuthorizationStatus() {
@@ -106,12 +97,14 @@ class ContactsModel: ObservableObject {
             do {
                 try self?.contactStore.enumerateContacts(with: request) { (cnContact, stop) in
                     let name = "\(cnContact.givenName) \(cnContact.familyName)".trimmingCharacters(in: .whitespaces)
-                    let phone = cnContact.phoneNumbers.first?.value.stringValue ?? ""
                     let imageData = cnContact.imageData
 
+                    // Phone
+                    let phoneNumber = cnContact.phoneNumbers.first?.value.stringValue ?? ""
+
                     // Only add contacts with a name AND a phone number
-                    if !name.isEmpty && !phone.isEmpty {
-                        let contact = Contact(name: name, phone: phone, imageData: imageData)
+                    if !name.isEmpty && phoneNumber.hasPrefix("+") {
+                        let contact = Contact(name: name, phone: phoneNumber, imageData: imageData)
                         contacts.append(contact)
                     }
                 }

@@ -84,6 +84,8 @@ let users: [String: User] = [
 
 struct HomeView: View {
 
+    @StateObject private var transferModel = TransferModel()
+
     @State private var showingAddFundsWebView = false
     @State private var showingSendingView = false
 
@@ -139,6 +141,7 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity)
                     .fullScreenCover(isPresented: self.$showingSendingView) {
                         SendingView()
+                            .environmentObject(transferModel)
                     }
 
                     Spacer(minLength: 8)
