@@ -16,13 +16,13 @@ import { verifyOtp } from './verifyOtp'
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/
 
-export function declareRoutes(fastify: FastifyInstance, account: Account, classHash: string) {
+export function declareRoutes(fastify: FastifyInstance, deployer: Account) {
   getStatusRoute(fastify)
   getBalanceRoute(fastify)
   getCurrentExpenseRoute(fastify)
   getTransactionHistory(fastify)
   getOtp(fastify)
-  verifyOtp(fastify, account, classHash)
+  verifyOtp(fastify, deployer)
   getHistoricalBalanceRoute(fastify)
   getGenerateClaimLinkRoute(fastify)
   getClaimRoute(fastify)

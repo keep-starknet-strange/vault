@@ -1,7 +1,5 @@
-import { readFileSync } from 'node:fs'
-
 import Fastify from 'fastify'
-import { Account, json } from 'starknet'
+import { Account } from 'starknet'
 
 import { fastifyDrizzle } from '@/db/plugin'
 import { declareRoutes } from '@/routes'
@@ -36,14 +34,10 @@ export async function buildApp(config: AppConfiguration) {
     throw new Error('Deployer private key not set')
   }
 
-  const account = new Account({ nodeUrl: process.env.NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
-  const { class_hash } = await account.declareIfNot({
-    contract: readFileSync('./src/assets/vault_account.sierra.json', 'utf-8'),
-    casm: json.parse(readFileSync('./src/assets/vault_account.casm.json', 'utf-8')),
-  })
+  const deployer = new Account({ nodeUrl: process.env.NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
 
   // Declare routes
-  declareRoutes(app, account, class_hash)
+  declareRoutes(app, deployer)
 
   return app
 }
