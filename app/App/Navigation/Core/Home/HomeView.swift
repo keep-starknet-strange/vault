@@ -84,8 +84,6 @@ let users: [String: User] = [
 
 struct HomeView: View {
 
-    @StateObject private var transferModel = TransferModel()
-
     @State private var showingAddFundsWebView = false
     @State private var showingSendingView = false
 
@@ -139,10 +137,6 @@ struct HomeView: View {
                             .fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)
-                    .fullScreenCover(isPresented: self.$showingSendingView) {
-                        SendingView()
-                            .environmentObject(transferModel)
-                    }
 
                     Spacer(minLength: 8)
 
@@ -227,6 +221,12 @@ struct HomeView: View {
             }
         )
         .removeNavigationBarBorder()
+        .fullScreenCover(isPresented: self.$showingSendingView) {
+            SendingView()
+                .onDisappear {
+                    print("Bye")
+                }
+        }
     }
 
     func formatSectionHeader(for date: Date) -> String {
@@ -249,3 +249,4 @@ struct HomeView: View {
         HomeView()
     }
 }
+

@@ -10,7 +10,7 @@ import PhoneNumberKit
 
 struct NewRecipientView: View {
 
-    @EnvironmentObject private var contactsModel: ContactsModel
+    @EnvironmentObject private var model: Model
 
     @Environment(\.dismiss) var dismiss
 
@@ -37,7 +37,7 @@ struct NewRecipientView: View {
                     fatalError("Should be disabled")
                 }
 
-                self.contactsModel.addContact(
+                self.model.addContact(
                     name: self.parsedName,
                     phone: parsedPhoneNumber.rawString()
                 ) { contact in

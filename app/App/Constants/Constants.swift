@@ -62,7 +62,6 @@ struct Constants {
     struct Starknet {
         static let blankAccountClassHash = Felt("0x022d51f548b95dda56852e1e3211ebdcc623637794baf768afff33807f8c4563");
         static let vaultFactoryAddress = Felt("0x060f7dc1dcb936fd9bff710d4a19da3870e611e014b3ceaa662d24ac87221894");
-        static let usdcAddress = Felt("0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080")
+        static let usdcAddress = Felt("0x07ab0b8855a61f480b4423c46c32fa7c553f0aac3531bbddaa282d86244f7a23")
     }
 }
-

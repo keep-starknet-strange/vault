@@ -10,14 +10,14 @@ import PhoneNumberKit
 
 struct PhoneRequestView: View {
 
-    @EnvironmentObject private var registrationModel: RegistrationModel
+    @EnvironmentObject private var model: Model
 
     @State private var presentingNextView = false
     @State private var phoneNumber = ""
     @State private var parsedPhoneNumber: PhoneNumber?
 
     var body: some View {
-        OnboardingPage(isLoading: $registrationModel.isLoading) {
+        OnboardingPage(isLoading: $model.isLoading) {
             VStack(alignment: .center, spacing: 64) {
                 VStack(alignment: .center, spacing: 24) {
                     Text("A Personalized Touch").textTheme(.headlineLarge)
@@ -33,7 +33,7 @@ struct PhoneRequestView: View {
                     VStack(alignment: .center, spacing: 16) {
                         // TODO: implement login
                         PrimaryButton("Sign up", disabled: self.parsedPhoneNumber == nil) {
-                            registrationModel.startRegistration(phoneNumber: self.parsedPhoneNumber!) { result in
+                            self.model.startRegistration(phoneNumber: self.parsedPhoneNumber!) { result in
                                 switch result {
                                 case .success():
                                     presentingNextView = true
@@ -59,12 +59,12 @@ struct PhoneRequestView: View {
 #if DEBUG
 struct PhoneRequestViewPreviews : PreviewProvider {
 
-    @StateObject static var registrationModel = RegistrationModel(vaultService: VaultService())
+    @StateObject static var model = Model(vaultService: VaultService())
 
     static var previews: some View {
         NavigationStack {
             PhoneRequestView()
-                .environmentObject(self.registrationModel)
+                .environmentObject(self.model)
         }
     }
 }

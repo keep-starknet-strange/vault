@@ -35,11 +35,3 @@ enum Tab: Int, CaseIterable{
         }
     }
 }
-
-class NavigationModel: ObservableObject {
-    @Published var selectedTab: Tab = Tab.payments
-
-    func openTab(_ tab: Tab) {
-        self.selectedTab = tab
-    }
-}

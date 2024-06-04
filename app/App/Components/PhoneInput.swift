@@ -10,11 +10,11 @@ import PhoneNumberKit
 
 struct PhoneInput: View {
 
-    @StateObject private var phoneNumberModel = PhoneNumberModel()
+    @EnvironmentObject private var model: Model
 
     @Binding var phoneNumber: String {
         didSet {
-            self.parsedPhoneNumber = self.phoneNumberModel.parse(phoneNumber: self.phoneNumber)
+            self.parsedPhoneNumber = self.model.parse(phoneNumber: self.phoneNumber)
         }
     }
     @Binding var parsedPhoneNumber: PhoneNumber?
@@ -38,7 +38,7 @@ struct PhoneInput: View {
                 showingPicker = true
             } label: {
                 let flagRessource = ImageResource(
-                    name: self.phoneNumberModel.selectedCountryData.regionCode.lowercased(),
+                    name: self.model.selectedCountryData.regionCode.lowercased(),
                     bundle: Bundle.main
                 )
 
@@ -49,7 +49,7 @@ struct PhoneInput: View {
                         .scaledToFill()
                         .clipShape(Capsule())
 
-                Text("\(self.phoneNumberModel.selectedCountryData.phoneCode)")
+                Text("\(self.model.selectedCountryData.phoneCode)")
                     .foregroundStyle(.neutral2)
                     .fontWeight(.medium)
                 }
@@ -61,9 +61,8 @@ struct PhoneInput: View {
             .buttonStyle(NoopButtonStyle())
             .sheet(isPresented: $showingPicker) {
                 CountryPickerView()
-                    .environmentObject(self.phoneNumberModel)
                     .onAppear {
-                        self.phoneNumberModel.searchedCountry = ""
+                        self.model.searchedCountry = ""
                     }
             }
 
@@ -77,10 +76,10 @@ struct PhoneInput: View {
                 })
                 .keyboardType(.numberPad)
                 .onChange(of: self.phoneNumber, initial: false) { (_, newValue) in
-                    self.phoneNumber = self.phoneNumberModel.format(phoneNumber: newValue)
+                    self.phoneNumber = self.model.format(phoneNumber: newValue)
                 }
         }
-        .onReceive(self.phoneNumberModel.$selectedRegionCode) { _ in
+        .onReceive(self.model.$selectedRegionCode) { _ in
             self.phoneNumber = ""
         }
     }
