@@ -10,19 +10,12 @@ import Starknet
 import BigInt
 
 public struct Uint256: NumAsHexProtocol {
-    public var value: BigUInt {
-        didSet {
-            let (high, low) = self.value.quotientAndRemainder(dividingBy: BigUInt(2).power(128))
-
-            self.low = Felt(low)!
-            self.high = Felt(high)!
-        }
-    }
+    public var value: BigUInt
 
     public static let max = BigUInt(2).power(256)
 
-    public var low: Felt = Felt.zero
-    public var high: Felt = Felt.zero
+    public var low: Felt
+    public var high: Felt
 
     public init?(_ exactly: some BinaryInteger) {
         let value = BigUInt(exactly: exactly)
@@ -31,6 +24,11 @@ public struct Uint256: NumAsHexProtocol {
             return nil
         }
 
+        let (high, low) = value.quotientAndRemainder(dividingBy: BigUInt(2).power(128))
+
+        self.low = Felt(low)!
+        self.high = Felt(high)!
+
         self.value = value
     }
 
@@ -38,6 +36,11 @@ public struct Uint256: NumAsHexProtocol {
         let value = BigUInt(clamping: clamping)
 
         self.value = value < Uint256.max ? value : Uint256.max - 1
+
+        let (high, low) = value.quotientAndRemainder(dividingBy: BigUInt(2).power(128))
+
+        self.low = Felt(low)!
+        self.high = Felt(high)!
     }
 
     public init?(fromHex hex: String) {

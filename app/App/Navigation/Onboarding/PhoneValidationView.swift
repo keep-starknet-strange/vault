@@ -10,7 +10,7 @@ import PhoneNumberKit
 
 struct PhoneValidationView: View {
 
-    @EnvironmentObject private var registrationModel: RegistrationModel
+    @EnvironmentObject private var model: Model
 
     @AppStorage("starknetMainAddress") private var address: String = "0xdead"
 
@@ -24,7 +24,7 @@ struct PhoneValidationView: View {
     let phoneNumber: PhoneNumber!
 
     var body: some View {
-        OnboardingPage(isLoading: $registrationModel.isLoading) {
+        OnboardingPage(isLoading: $model.isLoading) {
             VStack(alignment: .center, spacing: 64) {
                 VStack(alignment: .center, spacing: 24) {
                     Text("6-digits code").textTheme(.headlineLarge)
@@ -43,7 +43,7 @@ struct PhoneValidationView: View {
                                         throw "Failed to generate public key"
                                     }
 
-                                    registrationModel.confirmRegistration(
+                                    self.model.confirmRegistration(
                                         phoneNumber: self.phoneNumber,
                                         otp: newValue,
                                         publicKeyX: publicKey.x.toHex(),
@@ -90,7 +90,7 @@ struct PhoneValidationView: View {
 #if DEBUG
 struct PhoneValidationViewPreviews : PreviewProvider {
 
-    @StateObject static var registrationModel = RegistrationModel(vaultService: VaultService())
+    @StateObject static var model = Model(vaultService: VaultService())
 
     static let phoneNumberKit = PhoneNumberKit()
 
@@ -105,7 +105,7 @@ struct PhoneValidationViewPreviews : PreviewProvider {
     static var previews: some View {
         NavigationStack {
             PhoneValidationView(phoneNumber: self.phoneNumber)
-                .environmentObject(self.registrationModel)
+                .environmentObject(self.model)
         }
     }
 }

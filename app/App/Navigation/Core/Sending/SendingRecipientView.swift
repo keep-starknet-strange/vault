@@ -11,9 +11,7 @@ struct SendingRecipientView: View {
 
     @Environment(\.dismiss) var dismiss
 
-    @EnvironmentObject private var transferModel: TransferModel
-
-    @StateObject private var contactsModel = ContactsModel()
+    @EnvironmentObject private var model: Model
 
     @State private var presentingNewRecipientView = false
     @State private var presentingSendingAmountView = false
@@ -21,11 +19,11 @@ struct SendingRecipientView: View {
     var body: some View {
         List() {
 
-            switch self.contactsModel.authorizationStatus {
+            switch self.model.contactsAuthorizationStatus {
             case .notDetermined, .denied:
                 Section {
                     Button {
-                        contactsModel.requestAccess()
+                        model.requestContactsAccess()
                     } label: {
                         HStack(alignment: .top, spacing: 16) {
                             Image(systemName: "person.fill")
@@ -98,17 +96,17 @@ struct SendingRecipientView: View {
                     .listRowSeparator(.hidden)
             }
 
-            if !self.contactsModel.contacts.isEmpty {
+            if !self.model.contacts.isEmpty {
                 Section {
                     ForEach(
-                        Array(self.contactsModel.contacts.enumerated()),
+                        Array(self.model.contacts.enumerated()),
                         id: \.offset
                     ) { index, contact in
                         let isFirst = index == 0
-                        let isLast = index == self.contactsModel.contacts.count - 1
+                        let isLast = index == self.model.contacts.count - 1
 
                         Button {
-                            self.transferModel.setPhoneNumber(contact.phone)
+                            self.model.setPhoneNumber(contact.phone)
                             self.presentingSendingAmountView = true
                         } label: {
                             ContactRow(contact: contact)
@@ -173,7 +171,6 @@ struct SendingRecipientView: View {
 
         .navigationDestination(isPresented: self.$presentingNewRecipientView) {
             NewRecipientView()
-                .environmentObject(self.contactsModel)
         }
         .navigationDestination(isPresented: self.$presentingSendingAmountView) {
             SendingAmountView()

@@ -62,14 +62,20 @@ class SecureEnclaveManager {
 
     public func sign(hash: Felt) throws -> P256Signature {
         let privateKey = try self.getPrivateKey()
+        let hashData = hash.value.serialize()
 
         // Signature
-        guard let signature = self.sign(hash: hash.value.serialize(), with: privateKey) else {
+        guard let signature = self.sign(hash: hashData, with: privateKey) else {
             throw "Error signing hash."
         }
 
         #if DEBUG
-        print("Signature: \(signature)")
+        print("Hash: \(hash.toHex())")
+
+        print("Signature: \(signature)\n")
+        print("Signature:")
+        print("R: \(signature.r.low) - \(signature.r.high)\n")
+        print("S: \(signature.s.low) - \(signature.s.high)\n")
         #endif
 
         return signature
@@ -128,10 +134,10 @@ class SecureEnclaveManager {
     }
 
     private func parse(signature signatureData: Data) -> P256Signature {
-        let rLength = Int(signatureData[3]) - 1
-        let sLength = Int(signatureData[6 + rLength]) - 1
-        let rOffset = 5
-        let sOffset = 8 + rLength
+        let rLength = Int(signatureData[3])
+        let sLength = Int(signatureData[5 + rLength])
+        let rOffset = 4
+        let sOffset = 6 + rLength
 
         return P256Signature(
             r: Uint256(fromHex: signatureData[rOffset..<(rOffset + rLength)].toHex())!,

@@ -10,9 +10,18 @@ import SwiftUI
 @main
 struct VaultApp: App {
 
+    @StateObject private var model: Model
+
+    init() {
+        let vaultService = VaultService()
+
+        self._model = StateObject(wrappedValue: Model(vaultService: vaultService))
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(self.model)
         }
     }
 }

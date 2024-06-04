@@ -11,9 +11,7 @@ struct ContentView: View {
 
     @AppStorage("isOnboarded") var isOnboarded: Bool = false
 
-    @StateObject private var registrationModel: RegistrationModel
-    @StateObject private var navigationModel = NavigationModel()
-    @StateObject private var starknetModel = StarknetModel()
+    @State private var selectedTab: Tab = Tab.payments
 
     init() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -31,45 +29,35 @@ struct ContentView: View {
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.accentColor)]
 
         UITabBar.appearance().standardAppearance = tabBarAppearance
-
-        // init vault API models
-
-        let vaultService = VaultService()
-
-        self._registrationModel = StateObject(wrappedValue: RegistrationModel(vaultService: vaultService))
     }
 
     var body: some View {
         if self.isOnboarded {
             ZStack(alignment: .bottom) {
-                TabView(selection: $navigationModel.selectedTab) {
+                TabView(selection: $selectedTab) {
                     NavigationStack {
-                        HomeView().edgesIgnoringSafeArea(.bottom)
+                        HomeView()
                     }
                     .tag(Tab.payments)
-                    .toolbarBackground(.hidden, for: .tabBar)
 
                     NavigationStack {
-                        BudgetView().edgesIgnoringSafeArea(.bottom)
+                        BudgetView()
                     }
                     .tag(Tab.budget)
 
                     NavigationStack {
-                        EarnView().edgesIgnoringSafeArea(.bottom)
+                        EarnView()
                     }
                     .tag(Tab.earn)
                 }
-                .toolbarBackground(.hidden, for: .navigationBar)
-                .environmentObject(starknetModel)
+                .edgesIgnoringSafeArea(.bottom)
 
-                CustomTabbar(selectedTab: $navigationModel.selectedTab)
+                CustomTabbar(selectedTab: $selectedTab)
             }
-            .ignoresSafeArea(.keyboard, edges: .bottom)
         } else {
             NavigationStack {
                 OnboardingView()
             }
-            .environmentObject(registrationModel)
         }
     }
 }

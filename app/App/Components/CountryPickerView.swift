@@ -12,14 +12,14 @@ struct CountryPickerView: View {
 
     @Environment(\.dismiss) var dismiss
 
-    @EnvironmentObject private var phoneNumberModel: PhoneNumberModel
+    @EnvironmentObject private var model: Model
 
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
                     HStack(spacing: 8) {
-                        SearchBar(search: $phoneNumberModel.searchedCountry)
+                        SearchBar(search: $model.searchedCountry)
                         Button {
                             self.dismiss()
                         } label: {
@@ -28,14 +28,14 @@ struct CountryPickerView: View {
                     }
                     .padding(16)
 
-                    List(self.phoneNumberModel.filteredCountries.indexed(), id: \.element) { index, countryData in
+                    List(self.model.filteredCountries.indexed(), id: \.element) { index, countryData in
                         let flagRessource = ImageResource(name: countryData.regionCode.lowercased(), bundle: Bundle.main)
                         let isFirst = index == 0;
-                        let isLast = index == self.phoneNumberModel.filteredCountries.count - 1
-                        let isSelected = self.phoneNumberModel.isSelected(countryData.regionCode)
+                        let isLast = index == self.model.filteredCountries.count - 1
+                        let isSelected = self.model.isSelected(countryData.regionCode)
 
                         Button {
-                            self.phoneNumberModel.selectedRegionCode = countryData.regionCode
+                            self.model.selectedRegionCode = countryData.regionCode
                             self.dismiss()
                         } label: {
                             HStack(spacing: 16) {
@@ -88,7 +88,7 @@ struct CountryPickerView: View {
 #if DEBUG
 struct CountryPickerViewPreviews : PreviewProvider {
 
-    @StateObject static var phoneNumberModel = PhoneNumberModel()
+    @StateObject static var model = Model(vaultService: VaultService())
 
     @State static var isPresented = true
     @State static var selectedRegionCode = Locale.current.regionOrFrance.identifier
@@ -101,7 +101,7 @@ struct CountryPickerViewPreviews : PreviewProvider {
                 }
                 .sheet(isPresented: $isPresented) {
                     CountryPickerView()
-                        .environmentObject(self.phoneNumberModel)
+                        .environmentObject(self.model)
                 }
             }
         }

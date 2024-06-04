@@ -12,8 +12,7 @@ struct SendingAmountView: View {
 
     @Environment(\.dismiss) var dismiss
 
-    @EnvironmentObject private var starknetModel: StarknetModel
-    @EnvironmentObject private var transferModel: TransferModel
+    @EnvironmentObject private var model: Model
 
     @State private var amount: String = "0"
 
@@ -35,9 +34,9 @@ struct SendingAmountView: View {
             Spacer()
 
             VStack(spacing: 32) {
-                PrimaryButton("Continue", disabled: self.parsedAmount <= 0) {
+                PrimaryButton("Send", disabled: self.parsedAmount <= 0) {
                     Task {
-                        try await starknetModel.sendUSDC(to: transferModel.recipientPhoneNumber!)
+                        try await self.model.sendUSDC(to: self.model.recipientPhoneNumber!)
                     }
                 }
 
