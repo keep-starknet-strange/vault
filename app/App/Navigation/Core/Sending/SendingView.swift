@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SendingView: View {
+
+    @EnvironmentObject var model: Model
+
     var body: some View {
         NavigationStack {
             SendingRecipientView()

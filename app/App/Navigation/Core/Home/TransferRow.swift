@@ -26,6 +26,7 @@ struct TransferRow: View {
         let formattedDate = dateFormatter.string(from: transfer.date)
 
         HStack(spacing: 12) {
+            // TODO: use Avatar component
             if let avatarUrl = displayedUser.avatarUrl {
                 AsyncImage(
                     url: URL(string: avatarUrl),

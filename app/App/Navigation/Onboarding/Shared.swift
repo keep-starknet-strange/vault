@@ -38,7 +38,7 @@ struct OnboardingPage<Content>: View where Content : View {
                         .opacity(0.5)
                         .ignoresSafeArea()
 
-                    SpinnerView()
+                    SpinnerView(isComplete: .constant(false))
                 }
             }
         }

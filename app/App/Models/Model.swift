@@ -12,6 +12,14 @@ import SwiftUI
 import Starknet
 import BigInt
 
+enum Status: Equatable {
+    case none
+    case active
+    case loading
+    case success
+    case error(String)
+}
+
 // Aggregate Model
 @MainActor
 class Model: ObservableObject {
@@ -20,9 +28,23 @@ class Model: ObservableObject {
 
     // App
     @Published var isLoading = false
+    @Published var showMessage = false
+
+    // Navgiation
+    @Published var showSendingSheet = false {
+        didSet {
+            if self.showSendingSheet {
+                self.initiateTransfer()
+            } else {
+                self.dismissTransfer()
+            }
+        }
+    }
 
     // Sending USDC
-    @Published var recipientPhoneNumber: String?
+    @Published var recipientContact: Contact?
+    @Published var sendingAmount: String = ""
+    @Published var sendingStatus: Status = .none
 
     // Country picker
     @Published var selectedRegionCode = Locale.current.regionOrFrance.identifier
@@ -31,6 +53,15 @@ class Model: ObservableObject {
     // Contacts
     @Published var contacts: [Contact] = []
     @Published var contactsAuthorizationStatus: CNAuthorizationStatus = .notDetermined
+
+    var parsedSendingAmount: Double {
+        // Replace the comma with a dot
+        let amount = self.sendingAmount.replacingOccurrences(of: ",", with: ".")
+
+        // Check if the string ends with a dot and append a zero if true
+        // Convert the final string to a Float
+        return Double(amount.hasSuffix(".") ? "\(amount)0" : amount) ?? 0
+    }
 
     private var updatesHandler: Task<Void, Error>? = nil
 
@@ -156,48 +187,19 @@ extension Model {
 
 extension Model {
 
-    func sendUSDC(to phoneNumber: String) async throws {
-        guard let recipientAddress = self.getAddress(from: phoneNumber) else {
-            return
-        }
+    func executeTransaction(calls: [StarknetCall]) async throws -> StarknetInvokeTransactionResponse {
+        let nonce = try await self.account.getNonce()
+        let maxFee = self.estimateFees()
 
-        let calldata: [Felt] = [
-            recipientAddress,
-            1000,
-            0,
-        ]
-
-        let call = StarknetCall(
-            contractAddress: Constants.Starknet.usdcAddress,
-            entrypoint: starknetSelector(from: "transfer"),
-            calldata: calldata
-        )
-
-        do {
-            let nonce = try await self.account.getNonce()
-            let maxFee = try await self.estimateFees(calls: [call], nonce: nonce)
-            let result = try await account.executeV1(call: call, params: StarknetOptionalInvokeParamsV1(nonce: nonce, maxFee: maxFee))
-
-            #if DEBUG
-            print("tx: \(result.transactionHash)")
-            #endif
-        } catch let error {
-            print(error)
-        }
+        return try await account.executeV1(calls: calls, params: StarknetOptionalInvokeParamsV1(nonce: nonce, maxFee: maxFee))
     }
 
-    func estimateFees(calls: [StarknetCall], nonce: Felt) async throws -> Felt {
-        let calldata = starknetCallsToExecuteCalldata(calls: calls, cairoVersion: .one)
-        let transaction = StarknetInvokeTransactionV1(
-            senderAddress: self.account.address,
-            calldata: calldata,
-            signature: [],
-            maxFee: .zero,
-            nonce: nonce,
-            forFeeEstimation: true
-        )
+    func executeTransaction(call: StarknetCall) async throws -> StarknetInvokeTransactionResponse {
+        return try await self.executeTransaction(calls: [call])
+    }
 
-        return try await self.provider.estimateFee(for: transaction, simulationFlags: [.skipValidate]).toMaxFee(multiplier: 2)
+    func estimateFees() -> Felt {
+        return Felt(fromHex: "0x1000000000000000000")! // 1 ETH
     }
 
     func getAddress(from phoneNumber: String) -> Felt? {
@@ -294,8 +296,48 @@ extension Model {
 
 extension Model {
 
-    func setPhoneNumber(_ phoneNumber: String) {
-        self.recipientPhoneNumber = phoneNumber
+    func setRecipient(_ recipient: Contact) {
+        self.recipientContact = recipient
+    }
+
+    func executeTransfer() async {
+        guard
+            let recipientContact = self.recipientContact,
+            let recipientAddress = self.getAddress(from: recipientContact.phone),
+            let amount = USDCAmount(from: self.parsedSendingAmount)
+        else {
+            self.sendingStatus = .error("Invalid request.")
+            return
+        }
+
+        let call = StarknetCall(
+            contractAddress: Constants.Starknet.usdcAddress,
+            entrypoint: starknetSelector(from: "transfer"),
+            calldata: [
+                recipientAddress,
+                amount.value.low,
+                amount.value.high,
+            ]
+        )
+
+        self.sendingStatus = .loading
+
+        do {
+            let result = try await self.executeTransaction(call: call)
+
+            self.sendingStatus = .success
+
+            #if DEBUG
+            print("tx: \(result.transactionHash)")
+            #endif
+        } catch let error {
+            self.sendingStatus = .success
+//            self.sendingStatus = .error("An error has occured during the transaction.")
+
+            #if DEBUG
+            print(error)
+            #endif
+        }
     }
 }
 
@@ -361,8 +403,14 @@ extension Model {
             }
         }
     }
+
+    private func initiateTransfer() {
+        self.recipientContact = nil
+        self.sendingAmount = "0"
+        self.sendingStatus = .active
+    }
+
+    private func dismissTransfer() {
+        self.sendingStatus = .none
+    }
 }
-
-// 0x2334fc9b4a819bba25a30049b77f0b70, 0x9e46dd8c93845f498cf2d7ba56dffdac, 0x94d7ee023f38c2806c7e481c7ba8a86f, 0x2223df297537543c658505ccf5c21500
-
-// 0x3f10e3271c59e25cec85e5745da7c29d, 0xbc20ce5c846a01abda56dbab1c7c7cb8, 0xe9cfb575d16a256c551860e0f0619123, 0x8970ea31c4d2417ed69bc51d2548e219
