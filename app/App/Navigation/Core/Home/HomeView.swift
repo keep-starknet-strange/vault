@@ -84,8 +84,9 @@ let users: [String: User] = [
 
 struct HomeView: View {
 
+    @EnvironmentObject private var model: Model
+
     @State private var showingAddFundsWebView = false
-    @State private var showingSendingView = false
 
     private var me: User {
         get {
@@ -97,14 +98,14 @@ struct HomeView: View {
 
     init() {
         self.history = History(transfers: [
-            Transfer(from: users["me"]!, to: users["sbf"]!, amount: USDCAmount(1_604_568_230_000), timestamp: 1712199068),
-            Transfer(from: users["me"]!, to: users["apple"]!, amount: USDCAmount(4_249_990_000), timestamp: 1711924459),
-            Transfer(from: users["vitalik"]!, to: users["me"]!, amount: USDCAmount(70_000_000_000), timestamp: 1711878225),
+            Transfer(from: users["me"]!, to: users["sbf"]!, amount: USDCAmount(from: 1_604_568.230)!, timestamp: 1712199068),
+            Transfer(from: users["me"]!, to: users["apple"]!, amount: USDCAmount(from: 4_249.99)!, timestamp: 1711924459),
+            Transfer(from: users["vitalik"]!, to: users["me"]!, amount: USDCAmount(from: 70_000)!, timestamp: 1711878225),
 
-            Transfer(from: users["alex"]!, to: users["me"]!, amount: USDCAmount(1_000_000), timestamp: 1711847328),
-            Transfer(from: users["me"]!, to: users["satoshi"]!, amount: USDCAmount(32_570_000), timestamp: 1712000648),
+            Transfer(from: users["alex"]!, to: users["me"]!, amount: USDCAmount(from: 1_000_000)!, timestamp: 1711847328),
+            Transfer(from: users["me"]!, to: users["satoshi"]!, amount: USDCAmount(from: 32.57)!, timestamp: 1712000648),
 
-            Transfer(from: users["abdel"]!, to: users["me"]!, amount: USDCAmount(10_000), timestamp: 1711828026),
+            Transfer(from: users["abdel"]!, to: users["me"]!, amount: USDCAmount(from: 0.01)!, timestamp: 1711828026),
         ])
     }
 
@@ -130,7 +131,7 @@ struct HomeView: View {
                     Spacer(minLength: 16)
 
                     IconButtonWithText("Send") {
-                        self.showingSendingView = true
+                        self.model.showSendingSheet = true
                     } icon: {
                         Image(systemName: "arrow.up")
                             .iconify()
@@ -221,11 +222,8 @@ struct HomeView: View {
             }
         )
         .removeNavigationBarBorder()
-        .fullScreenCover(isPresented: self.$showingSendingView) {
+        .fullScreenCover(isPresented: self.$model.showSendingSheet) {
             SendingView()
-                .onDisappear {
-                    print("Bye")
-                }
         }
     }
 
@@ -244,9 +242,15 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        HomeView()
+#if DEBUG
+struct HomeViewPreviews : PreviewProvider {
+
+    @StateObject static var model = Model(vaultService: VaultService())
+
+    static var previews: some View {
+        NavigationStack {
+            HomeView().environmentObject(model)
+        }
     }
 }
-
+#endif

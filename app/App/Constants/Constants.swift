@@ -11,8 +11,7 @@ import Starknet
 
 struct Constants {
 
-    static let usdcDecimals = 6
-    static let usdcDecimalPlaces: Double = pow(10, Double(usdcDecimals))
+    static let usdcDecimals: UInt8 = 6
 
     static let gradient1 = Gradient(colors: [.gradient1A, .gradient1B])
     static let linearGradient1 = LinearGradient(

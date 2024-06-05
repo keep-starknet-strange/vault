@@ -14,33 +14,22 @@ struct SendingAmountView: View {
 
     @EnvironmentObject private var model: Model
 
-    @State private var amount: String = "0"
-
-    private var parsedAmount: Float {
-        // Replace the comma with a dot
-        let amount = self.amount.replacingOccurrences(of: ",", with: ".")
-
-        // Check if the string ends with a dot and append a zero if true
-        // Convert the final string to a Float
-        return Float(amount.hasSuffix(".") ? "\(amount)0" : amount) ?? 0
-    }
+    @State private var showingConfirmation = false
 
     var body: some View {
         VStack {
             Spacer()
 
-            FancyAmount(amount: self.$amount)
+            FancyAmount(amount: self.$model.sendingAmount)
 
             Spacer()
 
             VStack(spacing: 32) {
-                PrimaryButton("Send", disabled: self.parsedAmount <= 0) {
-                    Task {
-                        try await self.model.sendUSDC(to: self.model.recipientPhoneNumber!)
-                    }
+                PrimaryButton("Send", disabled: self.model.parsedSendingAmount <= 0) {
+                    self.showingConfirmation = true
                 }
 
-                NumPad(amount: self.$amount)
+                NumPad(amount: self.$model.sendingAmount)
             }
         }
         .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
@@ -58,11 +47,20 @@ struct SendingAmountView: View {
         )
         .removeNavigationBarBorder()
         .navigationBarBackButtonHidden(true)
+        .sheetPopover(isPresented: self.$showingConfirmation) {
+            ConfirmationView()
+        }
     }
 }
 
-#Preview {
-    NavigationStack {
-        SendingView()
+#if DEBUG
+struct SendingAmountViewPreviews : PreviewProvider {
+
+    @StateObject static var model = Model(vaultService: VaultService())
+
+    static var previews: some View {
+        SendingAmountView()
+            .environmentObject(self.model)
     }
 }
+#endif

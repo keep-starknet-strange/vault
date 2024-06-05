@@ -106,7 +106,7 @@ struct SendingRecipientView: View {
                         let isLast = index == self.model.contacts.count - 1
 
                         Button {
-                            self.model.setPhoneNumber(contact.phone)
+                            self.model.setRecipient(contact)
                             self.presentingSendingAmountView = true
                         } label: {
                             ContactRow(contact: contact)

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
 
+    @EnvironmentObject var model: Model
+
     @AppStorage("isOnboarded") var isOnboarded: Bool = false
 
     @State private var selectedTab: Tab = Tab.payments

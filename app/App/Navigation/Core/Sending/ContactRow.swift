@@ -13,18 +13,7 @@ struct ContactRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            if
-                let imageData = self.contact.imageData,
-                let uiImage = UIImage(data: imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 42, height: 42)
-                    .scaledToFit()
-                    .clipShape(Circle())
-            } else {
-                NoAvatar(name: self.contact.name)
-            }
+            Avatar(imageData: self.contact.imageData, name: self.contact.name)
 
             VStack(alignment: .leading) {
                 Text(self.contact.name)
