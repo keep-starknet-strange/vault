@@ -22,7 +22,7 @@ struct ContactRow: View {
 
                 Spacer()
 
-                Text(self.contact.phone).textTheme(.subtitle)
+                Text(/*self.contact.phone*/"+33612345678").textTheme(.subtitle)
             }
             .padding(.vertical, 6)
 

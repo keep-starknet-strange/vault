@@ -131,7 +131,7 @@ struct HomeView: View {
                     Spacer(minLength: 16)
 
                     IconButtonWithText("Send") {
-                        self.model.showSendingSheet = true
+                        self.model.showSendingView = true
                     } icon: {
                         Image(systemName: "arrow.up")
                             .iconify()
@@ -222,7 +222,7 @@ struct HomeView: View {
             }
         )
         .removeNavigationBarBorder()
-        .fullScreenCover(isPresented: self.$model.showSendingSheet) {
+        .fullScreenCover(isPresented: self.$model.showSendingView) {
             SendingView()
         }
     }
@@ -242,15 +242,18 @@ struct HomeView: View {
     }
 }
 
-#if DEBUG
-struct HomeViewPreviews : PreviewProvider {
+#Preview {
+    struct HomeViewPreviews: View {
 
-    @StateObject static var model = Model(vaultService: VaultService())
+        @StateObject var model = Model(vaultService: VaultService())
 
-    static var previews: some View {
-        NavigationStack {
-            HomeView().environmentObject(model)
+        var body: some View {
+            NavigationStack {
+                HomeView()
+                    .environmentObject(self.model)
+            }
         }
     }
+
+    return HomeViewPreviews()
 }
-#endif

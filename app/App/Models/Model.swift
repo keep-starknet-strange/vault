@@ -13,9 +13,10 @@ import Starknet
 import BigInt
 
 enum Status: Equatable {
-    case none
-    case active
+    case none // TODO: find a better name
     case loading
+    case signing
+    case signed
     case success
     case error(String)
 }
@@ -30,21 +31,21 @@ class Model: ObservableObject {
     @Published var isLoading = false
     @Published var showMessage = false
 
-    // Navgiation
-    @Published var showSendingSheet = false {
+    // Sending USDC
+    @Published var recipientContact: Contact?
+    @Published var sendingAmount: String = ""
+    @Published var sendingStatus: Status = .none
+    @Published var showSendingView = false {
         didSet {
-            if self.showSendingSheet {
+            if self.showSendingView {
                 self.initiateTransfer()
             } else {
                 self.dismissTransfer()
             }
         }
     }
-
-    // Sending USDC
-    @Published var recipientContact: Contact?
-    @Published var sendingAmount: String = ""
-    @Published var sendingStatus: Status = .none
+    @Published var showSendingConfirmation = false
+    @Published var signedSendingTransaction: StarknetInvokeTransactionV1? = nil
 
     // Country picker
     @Published var selectedRegionCode = Locale.current.regionOrFrance.identifier
@@ -187,20 +188,38 @@ extension Model {
 
 extension Model {
 
-    func executeTransaction(calls: [StarknetCall]) async throws -> StarknetInvokeTransactionResponse {
+    // maxFee / nonce
+
+    func getParams() async throws -> StarknetInvokeParamsV1 {
         let nonce = try await self.account.getNonce()
         let maxFee = self.estimateFees()
 
-        return try await account.executeV1(calls: calls, params: StarknetOptionalInvokeParamsV1(nonce: nonce, maxFee: maxFee))
-    }
-
-    func executeTransaction(call: StarknetCall) async throws -> StarknetInvokeTransactionResponse {
-        return try await self.executeTransaction(calls: [call])
+        return StarknetInvokeParamsV1(nonce: nonce, maxFee: maxFee)
     }
 
     func estimateFees() -> Felt {
         return Felt(fromHex: "0x1000000000000000000")! // 1 ETH
     }
+
+    // invoke
+
+    func executeTransaction(signedTransaction: StarknetInvokeTransactionV1) async throws -> StarknetInvokeTransactionResponse {
+        return try await self.provider.addInvokeTransaction(signedTransaction)
+    }
+
+    // sign
+
+    func signTransaction(calls: [StarknetCall]) async throws -> StarknetInvokeTransactionV1 {
+        let params = try await self.getParams()
+
+        return try self.account.signV1(calls: calls, params: params)
+    }
+
+    func signTransaction(call: StarknetCall) async throws -> StarknetInvokeTransactionV1 {
+        return try await self.signTransaction(calls: [call])
+    }
+
+    // addr utils
 
     func getAddress(from phoneNumber: String) -> Felt? {
         guard let phoneNumberFelt = Felt.fromShortString(phoneNumber) else {
@@ -301,6 +320,33 @@ extension Model {
     }
 
     func executeTransfer() async {
+        guard let signedTransaction = self.signedSendingTransaction else {
+            self.sendingStatus = .error("Invalid request.")
+            return
+        }
+
+        self.sendingStatus = .loading
+
+        do {
+            let result = try await self.executeTransaction(signedTransaction: signedTransaction)
+
+            self.sendingStatus = .success
+
+            #if DEBUG
+            print("tx: \(result.transactionHash)")
+            #endif
+        } catch let error {
+            self.sendingStatus = .success
+//            self.sendingStatus = .error("An error has occured during the transaction.")
+
+            #if DEBUG
+            print(error)
+            #endif
+        }
+
+    }
+
+    func signTransfer() async {
         guard
             let recipientContact = self.recipientContact,
             let recipientAddress = self.getAddress(from: recipientContact.phone),
@@ -320,19 +366,14 @@ extension Model {
             ]
         )
 
-        self.sendingStatus = .loading
+        self.sendingStatus = .signing
 
         do {
-            let result = try await self.executeTransaction(call: call)
+            self.signedSendingTransaction = try await self.signTransaction(call: call)
 
-            self.sendingStatus = .success
-
-            #if DEBUG
-            print("tx: \(result.transactionHash)")
-            #endif
+            self.sendingStatus = .signed
         } catch let error {
-            self.sendingStatus = .success
-//            self.sendingStatus = .error("An error has occured during the transaction.")
+            self.sendingStatus = .none
 
             #if DEBUG
             print(error)
@@ -407,7 +448,7 @@ extension Model {
     private func initiateTransfer() {
         self.recipientContact = nil
         self.sendingAmount = "0"
-        self.sendingStatus = .active
+        self.signedSendingTransaction = nil
     }
 
     private func dismissTransfer() {
