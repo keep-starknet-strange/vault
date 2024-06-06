@@ -17,14 +17,12 @@ struct ConfirmationView: View {
         let recipientConact = self.model.recipientContact!
         let usdcAmount = USDCAmount(from: self.model.parsedSendingAmount)!
 
-        switch self.model.sendingStatus {
-        case .none:
-            EmptyView()
+        VStack {
+            Text("Finalize your transfer")
+                .textTheme(.headlineSmall)
+                .padding(.vertical, 32)
 
-        case .active:
-            Text("Finalize your transfer").textTheme(.headlineSmall)
-
-            Spacer().frame(height: 24)
+            Spacer().frame(height: 16)
 
             HStack {
                 VStack(spacing: 8) {
@@ -96,31 +94,16 @@ struct ConfirmationView: View {
             .background(.background3.opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            Spacer().frame(height: 64)
+            Spacer()
 
             PrimaryButton("Send") {
                 Task {
-                    await self.model.executeTransfer()
+                    await self.model.signTransfer()
                 }
             }
-
-        case .loading, .success:
-            Text("Executing your transfer").textTheme(.headlineSmall)
-                .onTapGesture {
-                    self.model.sendingStatus = .success
-                }
-
-            Spacer().frame(height: 32)
-
-            SpinnerView(isComplete: .constant(self.model.sendingStatus == .success))
-
-        case .error(let message):
-            Text(message).textTheme(.headlineSmall)
-
-            // TODO: better error display
-
-            Spacer()
         }
+        .padding()
+        .presentationDetents([.medium, .large])
     }
 }
 
@@ -129,9 +112,8 @@ struct ConfirmationView: View {
 
         @StateObject var model = {
             let model = Model(vaultService: VaultService())
-            model.setRecipient(Contact(name: "Very Long Bobby Name", phone: "+33612345678"))
 
-            model.sendingStatus = .active
+            model.setRecipient(Contact(name: "Very Long Bobby Name", phone: "+33612345678"))
 
             return model
         }()
@@ -140,7 +122,7 @@ struct ConfirmationView: View {
             VStack {}
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .defaultBackground()
-                .sheetPopover(isPresented: .constant(true)) {
+                .sheet(isPresented: .constant(true)) {
                     ConfirmationView()
                         .environmentObject(model)
                 }

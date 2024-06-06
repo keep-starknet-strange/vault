@@ -179,7 +179,17 @@ struct SendingRecipientView: View {
 }
 
 #Preview {
-    NavigationStack {
-        SendingRecipientView()
+    struct SendingRecipientViewPreviews: View {
+
+        @StateObject var model = Model(vaultService: VaultService())
+
+        var body: some View {
+            NavigationStack {
+                SendingRecipientView()
+                    .environmentObject(self.model)
+            }
+        }
     }
+
+    return SendingRecipientViewPreviews()
 }

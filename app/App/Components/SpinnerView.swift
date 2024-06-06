@@ -39,10 +39,6 @@ struct SpinnerView: View {
                     .frame(width: 48, height: 48)
                     .animation(.easeIn(duration: 1.5).repeatForever(autoreverses: true), value: self.isTrimming)
                     .animation(.linear(duration: 0.3), value: self.isComplete)
-                    .onAppear {
-                        self.isTrimming = true
-                        self.isSpinning = true
-                    }
             }
             .rotationEffect(Angle(degrees: isSpinning ? 360 : 0))
             .animation(.linear(duration: 1.0).repeatForever(autoreverses: false), value: isSpinning)
@@ -55,6 +51,15 @@ struct SpinnerView: View {
                 .foregroundColor(.accent)
                 .animation(.easeIn(duration: 0.2).delay(0.3), value: isComplete)
 
+        }
+        .onAppear {
+            // small delay because SwiftUI animation are broken
+            Task { @MainActor in
+                try await Task.sleep(for: .seconds(0.1))
+
+                self.isTrimming = true
+                self.isSpinning = true
+            }
         }
     }
 }
