@@ -1,7 +1,7 @@
 import { ec, hash } from "./deps.ts";
 
 export const USDC_ADDRESS =
-  "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8";
+  "0x07ab0b8855a61f480b4423c46c32fa7c553f0aac3531bbddaa282d86244f7a23";
 
 export const USDC_DECIMALS = 6;
 
@@ -14,7 +14,7 @@ export const USDC_DECIMALS = 6;
 export function balanceStorageLocation(address: string) {
   const addressBound = 2n ** 251n;
 
-  let hashed = hash.getSelectorFromName("ERC20_balances");
+  let hashed = hash.getSelectorFromName("balances");
   hashed = ec.starkCurve.pedersen(hashed, address);
 
   let location = BigInt(hashed);
