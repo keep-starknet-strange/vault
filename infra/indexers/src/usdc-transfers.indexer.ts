@@ -14,11 +14,9 @@ const filter = {
 	],
 };
 
-let streamUrl =
-	(Deno.env.get("NETWORK") || "testnet") === "MAINNET"
-		? "https://mainnet.starknet.a5a.ch"
-		: "https://sepolia.starknet.a5a.ch";
-let startingBlock = Number(Deno.env.get("STARTING_BLOCK")) || 0;
+// TODO: multiple chains support
+const streamUrl = "https://sepolia.starknet.a5a.ch"
+const startingBlock = Number(Deno.env.get("STARTING_BLOCK")) || 0;
 
 export const config = {
 	streamUrl,
@@ -35,30 +33,34 @@ export const config = {
 export default function decodeUSDCTransfers({ header, events }: Block) {
 	const { blockNumber, blockHash, timestamp } = header!;
 
-	return (events ?? []).map(({ event, transaction }) => {
-		const transactionHash = transaction.meta.hash;
-		const transferId = `${transactionHash}_${event.index ?? 0}`;
+	return (events ?? [])
+		.map(({ event, transaction }) => {
+			if (!event.data) return null
 
-		const [fromAddress, toAddress, amountAddedLow, amountAddedHigh] =
-			event.data;
+			const transactionHash = transaction.meta.hash;
+			const transferId = `${transactionHash}_${event.index ?? 0}`;
 
-		const amountBn = uint256.uint256ToBN({
-			low: amountAddedLow,
-			high: amountAddedHigh,
-		});
-		const amount = formatUnits(amountBn, USDC_DECIMALS);
+			const [fromAddress, toAddress, amountAddedLow, amountAddedHigh] =
+				event.data;
 
-		return {
-			network: "starknet-mainnet",
-			block_hash: blockHash,
-			block_number: +blockNumber,
-			block_timestamp: timestamp,
-			transaction_hash: transactionHash,
-			transfer_id: transferId,
-			from_address: fromAddress,
-			to_address: toAddress,
-			amount,
-			created_at: new Date().toISOString(),
-		};
-	});
+			const amountBn = uint256.uint256ToBN({
+				low: amountAddedLow,
+				high: amountAddedHigh,
+			});
+			const amount = formatUnits(amountBn, USDC_DECIMALS);
+
+			return {
+				network: "starknet-sepolia",
+				block_hash: blockHash,
+				block_number: +(blockNumber ?? 0),
+				block_timestamp: timestamp,
+				transaction_hash: transactionHash,
+				transfer_id: transferId,
+				from_address: fromAddress,
+				to_address: toAddress,
+				amount,
+				created_at: new Date().toISOString(),
+			};
+		})
+		.filter(Boolean);
 }

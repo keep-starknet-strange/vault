@@ -11,7 +11,7 @@ export const USDC_DECIMALS = 6;
  * @param address The address.
  * @returns The storage location.
  */
-export function balanceStorageLocation(address: string) {
+export function balanceStorageLocation(address: string): bigint {
   const addressBound = 2n ** 251n;
 
   let hashed = hash.getSelectorFromName("balances");
