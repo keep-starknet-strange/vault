@@ -1,5 +1,5 @@
-import { Block, formatUnits, hash, uint256 } from "./deps.ts";
-import { USDC_ADDRESS, USDC_DECIMALS } from "./usdc.ts";
+import { Block, hash, uint256 } from "./deps.ts";
+import { USDC_ADDRESS } from "./usdc.ts";
 
 const filter = {
 	header: {
@@ -47,7 +47,6 @@ export default function decodeUSDCTransfers({ header, events }: Block) {
 				low: amountAddedLow,
 				high: amountAddedHigh,
 			});
-			const amount = formatUnits(amountBn, USDC_DECIMALS);
 
 			return {
 				network: "starknet-sepolia",
@@ -58,7 +57,7 @@ export default function decodeUSDCTransfers({ header, events }: Block) {
 				transfer_id: transferId,
 				from_address: fromAddress,
 				to_address: toAddress,
-				amount,
+				amount: amountBn.toString(),
 				created_at: new Date().toISOString(),
 			};
 		})

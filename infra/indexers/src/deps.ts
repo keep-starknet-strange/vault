@@ -1,5 +1,4 @@
 export { ec, hash, uint256 } from "https://esm.sh/starknet@5.14";
-export { formatUnits } from "https://esm.sh/viem@1.4";
 
 export type {
   Block,

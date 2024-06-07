@@ -2,11 +2,10 @@ import {
 	Block,
 	FieldElement,
 	Filter,
-	formatUnits,
 	hash,
 	uint256,
 } from "./deps.ts";
-import { balanceStorageLocation, USDC_ADDRESS, USDC_DECIMALS } from "./usdc.ts";
+import { balanceStorageLocation, USDC_ADDRESS } from "./usdc.ts";
 
 const filter: Filter = {
 	header: {
@@ -92,7 +91,7 @@ export default function decodeUSDCBalances({
 			block_number: +(blockNumber ?? 0),
 			block_timestamp: timestamp,
 			address,
-			balance: formatUnits(balanceBn, USDC_DECIMALS),
+			balance: balanceBn.toString(),
 		};
 	});
 }
