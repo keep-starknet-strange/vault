@@ -89,11 +89,16 @@ export default function decodeUSDCBalances({
 		})
 
 		return {
-			network: 'starknet-sepolia',
-			block_number: +(blockNumber ?? 0),
-			block_timestamp: timestamp,
-			address,
-			balance: balanceBn.toString(),
+			entity: {
+				id: address
+			},
+			update: {
+				network: 'starknet-sepolia',
+				block_number: +(blockNumber ?? 0),
+				block_timestamp: timestamp,
+				address,
+				balance: balanceBn.toString(),
+			}
 		}
 	})
 }
