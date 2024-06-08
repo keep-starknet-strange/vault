@@ -18,5 +18,5 @@ create table balance_usdc(
     block_timestamp timestamp,
     address text unique primary key,
     balance text,
-    _cursor bigint
+    _cursor int8range
 );
