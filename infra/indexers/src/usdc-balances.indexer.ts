@@ -35,6 +35,7 @@ export const config = {
 	finality: 'DATA_STATUS_ACCEPTED',
 	filter,
 	sinkType: 'postgres',
+	entityMode: true,
 	sinkOptions: {
 		tableName: 'balance_usdc',
 	},
