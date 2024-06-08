@@ -90,7 +90,7 @@ export default function decodeUSDCBalances({
 
 		return {
 			entity: {
-				id: address
+				address
 			},
 			update: {
 				network: 'starknet-sepolia',
