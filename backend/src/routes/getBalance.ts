@@ -1,4 +1,5 @@
-import { eq } from 'drizzle-orm/pg-core/expressions'
+import { sql } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm/pg-core/expressions'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcBalance } from '@/db/schema'
@@ -24,7 +25,9 @@ export function getBalanceRoute(fastify: FastifyInstance) {
       try {
         // Use Drizzle ORM to find the balance by address
         const balanceRecord = await fastify.db.query.usdcBalance
-          .findFirst({ where: eq(usdcBalance.address, address) })
+          .findFirst({
+            where: and(eq(usdcBalance.address, address), sql`upper_inf(_cursor)`),
+          })
           .execute()
 
         const balance = balanceRecord?.balance ?? '0'

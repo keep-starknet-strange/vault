@@ -14,7 +14,5 @@ export function drizzle(client: postgres.Sql, config: DrizzleConfig = {}) {
 
 export async function migrate(client: postgres.Sql, config: DrizzleConfig = {}) {
   // Notice that the path must be relative to the application root.
-  return await ogMigrate(drizzle(client, config), {
-    migrationsFolder: './src/db/migrations',
-  })
+  return await ogMigrate(drizzle(client, config), { migrationsFolder: './drizzle' })
 }

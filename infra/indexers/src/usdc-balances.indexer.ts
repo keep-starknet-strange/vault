@@ -89,10 +89,7 @@ export default function decodeUSDCBalances({
 		})
 
 		return {
-			entity: {
-				address
-			},
-			update: {
+			insert: {
 				network: 'starknet-sepolia',
 				block_number: +(blockNumber ?? 0),
 				block_timestamp: timestamp,

@@ -1,4 +1,8 @@
-import { bigint, boolean, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
+import { bigint, boolean, customType, integer, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
+
+const int8range = customType({
+  dataType: () => 'int8range',
+})
 
 export const usdcTransfer = pgTable('transfer_usdc', {
   transferId: text('transfer_id').primaryKey(),
@@ -20,7 +24,7 @@ export const usdcBalance = pgTable('balance_usdc', {
   blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
   address: text('address'),
   balance: text('balance'),
-  cursor: bigint('_cursor', { mode: 'number' }),
+  cursor: int8range('_cursor'),
 })
 
 export const registration = pgTable('registration', {
