@@ -19,7 +19,7 @@ spec:
         secretKeyRef:
           name: apibara-api-key
           key: production
-    - name: POSTGRES_CONNECTION_STRING
+    - name: DATABASE_URL
       valueFrom:
         secretKeyRef:
           name: database-connection-string
