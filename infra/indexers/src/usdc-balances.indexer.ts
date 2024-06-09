@@ -1,5 +1,5 @@
 import { USDC_ADDRESS } from './constants.ts';
-import sql from './db.ts';
+import client from './db.ts';
 import {
 	Block,
 	FieldElement,
@@ -64,7 +64,8 @@ export default async function decodeUSDCBalances({
 	}
 
 	// Setp 2: get existing balances from db to decide if a balance needs to be inserted or updated
-	const balances = await sql`
+	await client.connect()
+	const res = await client.query(`
 	SELECT
 		address
 	FROM
@@ -73,8 +74,9 @@ export default async function decodeUSDCBalances({
 		address
 	IN
 		(${Array.from(recipientAddresses).join(',')})
-	`
-	const balancesSet = balances.reduce<Set<string>>((acc, { address }) => {
+	`)
+
+	const balancesSet = res.rows.reduce<Set<string>>((acc, { address }) => {
 		acc.add(address)
 		return acc
 	}, new Set())

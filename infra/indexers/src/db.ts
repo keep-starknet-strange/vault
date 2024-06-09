@@ -1,5 +1,6 @@
-import { postgres } from './deps.ts'
+import { pg } from './deps.ts'
 
-const sql = postgres(Deno.env.get('DATABASE_URL') ?? '')
+const { Client } = pg
+const client = new Client({ connectionString: Deno.env.get('DATABASE_URL') })
 
-export default sql
+export default client

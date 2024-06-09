@@ -6,5 +6,5 @@ export type {
   Filter,
 } from 'https://esm.sh/@apibara/indexer@0.3/starknet'
 
-import postgres from 'https://esm.sh/postgres@3.4.4'
-export { postgres }
+import pg from 'https://esm.sh/pg@8.12'
+export { pg }
