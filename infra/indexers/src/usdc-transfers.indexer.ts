@@ -16,7 +16,7 @@ const filter = {
 
 // TODO: multiple chains support
 const streamUrl = 'https://sepolia.starknet.a5a.ch'
-const startingBlock = Number(Deno.env.get('STARTING_BLOCK')) || 0
+const startingBlock = Number(Deno.env.get('STARTING_BLOCK')) ?? 0
 
 export const config = {
 	streamUrl,

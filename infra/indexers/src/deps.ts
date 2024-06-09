@@ -5,3 +5,6 @@ export type {
   FieldElement,
   Filter,
 } from 'https://esm.sh/@apibara/indexer@0.3/starknet'
+
+import postgres from 'https://esm.sh/postgres@3.4.4'
+export { postgres }

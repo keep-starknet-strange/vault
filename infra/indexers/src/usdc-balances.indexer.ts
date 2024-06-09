@@ -1,4 +1,5 @@
 import { USDC_ADDRESS } from './constants.ts';
+import sql from './db.ts';
 import {
 	Block,
 	FieldElement,
@@ -26,7 +27,7 @@ const filter: Filter = {
 
 // TODO: multiple chains support
 const streamUrl = 'https://sepolia.starknet.a5a.ch'
-const startingBlock = Number(Deno.env.get('STARTING_BLOCK')) || 0
+const startingBlock = Number(Deno.env.get('STARTING_BLOCK')) ?? 0
 
 export const config = {
 	streamUrl,
@@ -41,7 +42,7 @@ export const config = {
 	},
 }
 
-export default function decodeUSDCBalances({
+export default async function decodeUSDCBalances({
 	header,
 	events,
 	stateUpdate,
@@ -49,18 +50,36 @@ export default function decodeUSDCBalances({
 	const { blockNumber, timestamp } = header!
 
 	// Step 1: collect addresses that have been part of a transfer.
-	const addresses = (events ?? []).reduce<Set<string>>((acc, { event }) => {
-		if (!event.data) return acc
+	const allAddresses = new Set<string>()
+	const recipientAddresses = new Set<string>()
 
+	for (const { event } of events ?? []) {
+		if (!event.data) continue
 		const [fromAddress, toAddress] = event.data
 
-		acc.add(fromAddress)
-		acc.add(toAddress)
+		allAddresses.add(fromAddress)
+		allAddresses.add(toAddress)
 
+		recipientAddresses.add(toAddress)
+	}
+
+	// Setp 2: get existing balances from db to decide if a balance needs to be inserted or updated
+	const balances = await sql`
+	SELECT
+		address
+	FROM
+		balance_usdc
+	WHERE
+		address
+	IN
+		(${Array.from(recipientAddresses).join(',')})
+	`
+	const balancesSet = balances.reduce<Set<string>>((acc, { address }) => {
+		acc.add(address)
 		return acc
 	}, new Set())
 
-	// Step 2: collect balances for each address.
+	// Step 3: collect balances for each address.
 	const storageMap = new Map<bigint, bigint>()
 	const storageDiffs = stateUpdate?.stateDiff?.storageDiffs ?? []
 
@@ -77,7 +96,7 @@ export default function decodeUSDCBalances({
 		}
 	}
 
-	return Array.from(addresses).map((address) => {
+	return Array.from(allAddresses).map((address) => {
 		const addressBalanceLocation = getStorageLocation(address, 'balances')
 
 		const addressBalanceLow = storageMap.get(addressBalanceLocation)
@@ -88,14 +107,23 @@ export default function decodeUSDCBalances({
 			high: addressBalanceHigh ?? 0n,
 		})
 
-		return {
-			insert: {
-				network: 'starknet-sepolia',
-				block_number: +(blockNumber ?? 0),
-				block_timestamp: timestamp,
-				address,
-				balance: balanceBn.toString(),
+		return balancesSet.has(address) ? {
+				entity: {
+					address
+				},
+				update: {
+					block_number: +(blockNumber ?? 0),
+					block_timestamp: timestamp,
+					balance: balanceBn.toString(),
+				}
+			}: {
+				insert: {
+					network: 'starknet-sepolia',
+					block_number: +(blockNumber ?? 0),
+					block_timestamp: timestamp,
+					address,
+					balance: balanceBn.toString(),
+				}
 			}
-		}
 	})
 }
