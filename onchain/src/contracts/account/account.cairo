@@ -5,6 +5,7 @@ mod VaultAccount {
     use core::option::OptionTrait;
     use core::result::ResultTrait;
     use core::starknet::{get_tx_info, SyscallResultTrait};
+    use openzeppelin::account::utils::execute_calls;
     use openzeppelin::account::AccountComponent;
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
@@ -14,13 +15,22 @@ mod VaultAccount {
     use starknet::account::Call;
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
-    use starknet::{get_caller_address, contract_address_const, get_contract_address};
+    use starknet::{
+        get_caller_address, contract_address_const, get_contract_address, get_block_timestamp,
+        call_contract_syscall
+    };
     use vault::components::TransactionApprovalComponent;
     use vault::components::WeeklyLimitComponent;
     use vault::components::WhitelistComponent;
     use vault::components::spending_limit::weekly::interface::IWeeklyLimit;
-    use vault::contracts::account::interface::{IVaultAccount, IClaimLink};
-    use vault::utils::claim::Claim;
+    use vault::contracts::account::interface::{IVaultAccount, IVaultAccountFunctionnalities};
+    use vault::utils::{
+        claim::Claim,
+        outside_execution::{
+            OutsideExecution, IOutsideExecution, hash_outside_execution_message,
+            ERC165_OUTSIDE_EXECUTION_INTERFACE_ID
+        }
+    };
     use vault::utils::snip12::SNIP12MetadataImpl;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
@@ -74,6 +84,8 @@ mod VaultAccount {
         account: AccountComponent::Storage,
         claims: LegacyMap<felt252, bool>,
         usdc_address: ContractAddress,
+        /// Keeps track of used nonces for outside transactions (`execute_from_outside`)
+        outside_nonces: LegacyMap<felt252, bool>,
         public_key: (u256, u256),
         #[substorage(v0)]
         src5: SRC5Component::Storage,
@@ -102,6 +114,7 @@ mod VaultAccount {
         WeeklyLimitEvent: WeeklyLimitComponent::Event,
         #[flat]
         WhitelistEvent: WhitelistComponent::Event,
+        TransactionExecuted: TransactionExecuted,
     }
 
     //
@@ -138,7 +151,7 @@ mod VaultAccount {
     //
 
     #[abi(embed_v0)]
-    impl ClaimLink of IClaimLink<ContractState> {
+    impl ClaimLink of IVaultAccountFunctionnalities<ContractState> {
         fn claim(ref self: ContractState, claim: Claim, signature: Array<felt252>) {
             let hash = claim.get_message_hash(get_contract_address());
 
@@ -152,6 +165,50 @@ mod VaultAccount {
 
             let usdc = IERC20Dispatcher { contract_address: self.usdc_address.read() };
             usdc.transfer(get_caller_address(), claim.amount);
+        }
+        fn execute_from_outside(
+            ref self: ContractState, outside_execution: OutsideExecution, signature: Array<felt252>
+        ) -> Array<Span<felt252>> {
+            // Checks
+            if outside_execution.caller.into() != 'ANY_CALLER' {
+                assert(get_caller_address() == outside_execution.caller, 'Invalid caller');
+            }
+
+            let block_timestamp = get_block_timestamp();
+            assert(outside_execution.execute_after < block_timestamp, 'Too early');
+            assert(block_timestamp < outside_execution.execute_before, 'Too late');
+
+            let nonce = outside_execution.nonce;
+
+            assert(!self.outside_nonces.read(nonce), 'Already used nonce');
+
+            let outside_tx_hash = hash_outside_execution_message(@outside_execution);
+
+            let calls = outside_execution.calls;
+
+            assert!(
+                self.is_valid_signature(outside_tx_hash, signature) == starknet::VALIDATED,
+                "Invalid signature for paymaster"
+            );
+
+            // Effects
+            self.outside_nonces.write(nonce, true);
+
+            // Interactions
+            let retdata = execute_multicall(calls);
+
+            self.emit(TransactionExecuted { hash: outside_tx_hash, response: retdata.span() });
+            retdata
+        }
+
+        fn get_outside_execution_message_hash(
+            self: @ContractState, outside_execution: OutsideExecution
+        ) -> felt252 {
+            hash_outside_execution_message(@outside_execution)
+        }
+
+        fn is_valid_outside_execution_nonce(self: @ContractState, nonce: felt252) -> bool {
+            !self.outside_nonces.read(nonce)
         }
 
         #[cfg(test)]
@@ -209,6 +266,51 @@ mod VaultAccount {
         }
     }
 
+    /// @notice Emitted when the account executes a transaction
+    /// @param hash The transaction hash
+    /// @param response The data returned by the methods called
+    #[derive(Drop, starknet::Event)]
+    struct TransactionExecuted {
+        #[key]
+        hash: felt252,
+        response: Span<Span<felt252>>
+    }
+
+    fn execute_multicall(mut calls: Span<Call>) -> Array<Span<felt252>> {
+        let mut result: Array<Span<felt252>> = array![];
+        let mut idx = 0;
+        loop {
+            match calls.pop_front() {
+                Option::Some(call) => {
+                    match call_contract_syscall(*call.to, *call.selector, *call.calldata) {
+                        Result::Ok(retdata) => {
+                            result.append(retdata);
+                            idx = idx + 1;
+                        },
+                        Result::Err(revert_reason) => {
+                            let mut data = array!['Call failed', idx];
+                            data.append_all(revert_reason);
+                            panic(data);
+                        },
+                    }
+                },
+                Option::None => { break; },
+            }
+        };
+        result
+    }
+
+    #[generate_trait]
+    impl ArrayExtImpl<T, impl TDrop: Drop<T>> of ArrayExtTrait<T> {
+        fn append_all(ref self: Array<T>, mut value: Array<T>) {
+            loop {
+                match value.pop_front() {
+                    Option::Some(item) => self.append(item),
+                    Option::None => { break; },
+                }
+            }
+        }
+    }
     //
     // Weekly Limit impl
     //
