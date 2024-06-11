@@ -5,7 +5,6 @@
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "drizzle:generate": "drizzle-kit generate:pg",
-    "prepare": "yarn drizzle:generate",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint . --max-warnings=0"

@@ -1,5 +1,4 @@
 import { USDC_ADDRESS } from './constants.ts';
-import client from './db.ts';
 import {
 	Block,
 	FieldElement,
@@ -38,11 +37,10 @@ export const config = {
 	sinkType: 'postgres',
 	sinkOptions: {
 		tableName: 'balance_usdc',
-    entityMode: true,
 	},
 }
 
-export default async function decodeUSDCBalances({
+export default function decodeUSDCBalances({
 	header,
 	events,
 	stateUpdate,
@@ -50,38 +48,18 @@ export default async function decodeUSDCBalances({
 	const { blockNumber, timestamp } = header!
 
 	// Step 1: collect addresses that have been part of a transfer.
-	const allAddresses = new Set<string>()
-	const recipientAddresses = new Set<string>()
+	const addresses = (events ?? []).reduce<Set<string>>((acc, { event }) => {
+		if (!event.data) return acc
 
-	for (const { event } of events ?? []) {
-		if (!event.data) continue
 		const [fromAddress, toAddress] = event.data
 
-		allAddresses.add(fromAddress)
-		allAddresses.add(toAddress)
+		acc.add(fromAddress)
+		acc.add(toAddress)
 
-		recipientAddresses.add(toAddress)
-	}
-
-	// Setp 2: get existing balances from db to decide if a balance needs to be inserted or updated
-	await client.connect()
-	const res = await client.query(`
-	SELECT
-		address
-	FROM
-		balance_usdc
-	WHERE
-		address
-	IN
-		(${Array.from(recipientAddresses).join(',')})
-	`)
-
-	const balancesSet = res.rows.reduce<Set<string>>((acc, { address }) => {
-		acc.add(address)
 		return acc
 	}, new Set())
 
-	// Step 3: collect balances for each address.
+	// Step 2: collect balances for each address.
 	const storageMap = new Map<bigint, bigint>()
 	const storageDiffs = stateUpdate?.stateDiff?.storageDiffs ?? []
 
@@ -98,7 +76,7 @@ export default async function decodeUSDCBalances({
 		}
 	}
 
-	return Array.from(allAddresses).map((address) => {
+	return Array.from(addresses).map((address) => {
 		const addressBalanceLocation = getStorageLocation(address, 'balances')
 
 		const addressBalanceLow = storageMap.get(addressBalanceLocation)
@@ -109,23 +87,12 @@ export default async function decodeUSDCBalances({
 			high: addressBalanceHigh ?? 0n,
 		})
 
-		return balancesSet.has(address) ? {
-				entity: {
-					address
-				},
-				update: {
-					block_number: +(blockNumber ?? 0),
-					block_timestamp: timestamp,
-					balance: balanceBn.toString(),
-				}
-			}: {
-				insert: {
-					network: 'starknet-sepolia',
-					block_number: +(blockNumber ?? 0),
-					block_timestamp: timestamp,
-					address,
-					balance: balanceBn.toString(),
-				}
-			}
+		return {
+			network: 'starknet-sepolia',
+			block_number: +(blockNumber ?? 0),
+			block_timestamp: timestamp,
+			address,
+			balance: balanceBn.toString(),
+		}
 	})
 }
