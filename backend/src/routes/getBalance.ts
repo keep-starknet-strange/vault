@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm/pg-core/expressions'
+import { eq, max } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcBalance } from '@/db/schema'
@@ -23,11 +23,17 @@ export function getBalanceRoute(fastify: FastifyInstance) {
 
       try {
         // Use Drizzle ORM to find the balance by address
-        const balanceRecord = await fastify.db.query.usdcBalance
-          .findFirst({ where: eq(usdcBalance.address, address) })
+        const balanceRecord = await fastify.db
+          .select({
+            cursor: max(usdcBalance.cursor),
+            balance: usdcBalance.balance,
+          })
+          .from(usdcBalance)
+          .where(eq(usdcBalance.address, address))
+          .groupBy(usdcBalance.balance)
           .execute()
 
-        const balance = balanceRecord?.balance ?? '0'
+        const balance = balanceRecord[0]?.balance ?? '0'
 
         return reply.send({ balance })
       } catch (error) {

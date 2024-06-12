@@ -2,7 +2,8 @@ import Fastify from 'fastify'
 import { Account } from 'starknet'
 
 import { fastifyDrizzle } from '@/db/plugin'
-import { declareRoutes } from '@/routes'
+
+import { declareRoutes } from './routes'
 
 export type AppConfiguration = {
   database: {

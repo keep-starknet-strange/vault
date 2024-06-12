@@ -1,12 +1,12 @@
+import { USDC_ADDRESS } from './constants.ts';
 import {
 	Block,
 	FieldElement,
 	Filter,
-	formatUnits,
 	hash,
 	uint256,
-} from "./deps.ts";
-import { balanceStorageLocation, USDC_ADDRESS, USDC_DECIMALS } from "./usdc.ts";
+} from './deps.ts'
+import { getStorageLocation } from './utils.ts'
 
 const filter: Filter = {
 	header: {
@@ -15,77 +15,84 @@ const filter: Filter = {
 	events: [
 		{
 			fromAddress: USDC_ADDRESS,
-			keys: [hash.getSelectorFromName("Transfer") as FieldElement],
+			keys: [hash.getSelectorFromName('Transfer') as FieldElement],
 			includeReceipt: false,
 		},
 	],
 	stateUpdate: {
 		storageDiffs: [{ contractAddress: USDC_ADDRESS }],
 	},
-};
+}
 
-let streamUrl =
-	(Deno.env.get("NETWORK") || "testnet") === "MAINNET"
-		? "https://mainnet.starknet.a5a.ch"
-		: "https://sepolia.starknet.a5a.ch";
-let startingBlock = Number(Deno.env.get("STARTING_BLOCK")) || 0;
+// TODO: multiple chains support
+const streamUrl = 'https://sepolia.starknet.a5a.ch'
+const startingBlock = Number(Deno.env.get('STARTING_BLOCK')) ?? 0
 
 export const config = {
 	streamUrl,
 	startingBlock,
-	network: "starknet",
-	finality: "DATA_STATUS_ACCEPTED",
+	network: 'starknet',
+	finality: 'DATA_STATUS_ACCEPTED',
 	filter,
-	sinkType: "postgres",
+	sinkType: 'postgres',
 	sinkOptions: {
-		tableName: "balance_usdc",
+		tableName: 'balance_usdc',
 	},
-};
+}
 
 export default function decodeUSDCBalances({
 	header,
 	events,
 	stateUpdate,
 }: Block) {
-	const { blockNumber, timestamp } = header!;
+	const { blockNumber, timestamp } = header!
 
 	// Step 1: collect addresses that have been part of a transfer.
-	const addresses = (events ?? []).reduce((addresses, { event }) => {
-		const [fromAddress, toAddress] = event.data;
-		addresses.add(fromAddress);
-		addresses.add(toAddress);
-		return addresses;
-	}, new Set<string>());
+	const addresses = (events ?? []).reduce<Set<string>>((acc, { event }) => {
+		if (!event.data) return acc
+
+		const [fromAddress, toAddress] = event.data
+
+		acc.add(fromAddress)
+		acc.add(toAddress)
+
+		return acc
+	}, new Set())
 
 	// Step 2: collect balances for each address.
-	const storageDiffs = stateUpdate?.stateDiff?.storageDiffs ?? [];
-	if (storageDiffs.length !== 1) {
-		throw new Error("Inconsistent state update.");
+	const storageMap = new Map<bigint, bigint>()
+	const storageDiffs = stateUpdate?.stateDiff?.storageDiffs ?? []
+
+	for (const storageDiff of storageDiffs) {
+		for (const storageEntry of storageDiff.storageEntries ?? []) {
+			if (!storageEntry.key || !storageEntry.value) {
+				continue
+			}
+
+			const key = BigInt(storageEntry.key)
+			const value = BigInt(storageEntry.value)
+
+			storageMap.set(key, value)
+		}
 	}
 
-	const storageEntries = storageDiffs[0].storageEntries;
-
 	return Array.from(addresses).map((address) => {
-		const location = balanceStorageLocation(address);
-		// Notice that balances may use 2 felts.
-		const entryLow = storageEntries.find(
-			(entry) => BigInt(entry.key) === location,
-		);
-		const entryHigh = storageEntries.find(
-			(entry) => BigInt(entry.key) === location + 1n,
-		);
+		const addressBalanceLocation = getStorageLocation(address, 'balances')
+
+		const addressBalanceLow = storageMap.get(addressBalanceLocation)
+		const addressBalanceHigh = storageMap.get(addressBalanceLocation + 1n)
 
 		const balanceBn = uint256.uint256ToBN({
-			low: entryLow?.value ?? 0n,
-			high: entryHigh?.value ?? 0n,
-		});
+			low: addressBalanceLow ?? 0n,
+			high: addressBalanceHigh ?? 0n,
+		})
 
 		return {
-			network: "starknet-mainnet",
-			block_number: +blockNumber,
+			network: 'starknet-sepolia',
+			block_number: +(blockNumber ?? 0),
 			block_timestamp: timestamp,
 			address,
-			balance: formatUnits(balanceBn, USDC_DECIMALS),
-		};
-	});
+			balance: balanceBn.toString(),
+		}
+	})
 }

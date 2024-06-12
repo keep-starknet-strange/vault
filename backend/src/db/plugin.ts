@@ -31,6 +31,8 @@ const plugin: FastifyPluginCallback<FastifyDrizzleOptions> = (fastify, opts: Fas
     const client = postgres(opts.connectionString, { max: 1, onnotice })
     await migrate(client)
 
+    console.log('done')
+
     fastify.log.info('Database migration finished')
   })
 
