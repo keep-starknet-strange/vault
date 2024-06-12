@@ -3,4 +3,5 @@ export const BLANK_ACCOUNT_CLASS_HASH = '0x022d51f548b95dda56852e1e3211ebdcc6236
 
 export enum Entrypoint {
   DEPLOY_ACCOUNT = 'deploy_account',
+  EXECUTE_FROM_OUTSIDE = 'execute_from_outside_v2',
 }

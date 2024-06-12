@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     hookTimeout: 50000,
-    coverage: { provider: 'istanbul', reporter: ['text', 'json-summary', 'json'] },
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json-summary', 'json'],
+    },
   },
 })
