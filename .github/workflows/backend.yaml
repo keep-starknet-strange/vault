@@ -46,7 +46,7 @@ jobs:
 
       # Check format and lint in the PR code's backend directory
       - name: "Check format and lint"
-        run: pnpm check
+        run: pnpm lint
         working-directory: ./pr-code/backend
 
       # Generate coverage report in the PR code's backend directory
