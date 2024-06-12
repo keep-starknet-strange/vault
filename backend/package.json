@@ -6,6 +6,7 @@
     "typecheck": "tsc --noEmit",
     "drizzle:generate": "drizzle-kit generate:pg",
     "test": "vitest",
+    "prepare": "pnpm drizzle:generate",
     "coverage": "vitest run --coverage",
     "lint": "eslint . --max-warnings=0",
     "fix": "eslint . --fix"
