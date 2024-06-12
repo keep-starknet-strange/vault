@@ -20,10 +20,6 @@ pub mod WhitelistComponent {
         class_hash_entrypoints: LegacyMap<(ClassHash, felt252), bool>,
     }
 
-    #[event]
-    #[derive(Drop, starknet::Event)]
-    enum Event {}
-
     #[generate_trait]
     impl WhitelistContractsImpl<
         TContractState, +HasComponent<TContractState>
@@ -78,6 +74,7 @@ pub mod WhitelistComponent {
             storage_read_syscall(0, address.try_into().unwrap()).unwrap_syscall() == 1
         }
     }
+
     #[generate_trait]
     impl WhitelistClassHashesImpl<
         TContractState, +HasComponent<TContractState>
@@ -132,6 +129,7 @@ pub mod WhitelistComponent {
             storage_read_syscall(0, address.try_into().unwrap()).unwrap_syscall() == 1
         }
     }
+
     #[generate_trait]
     impl WhitelistEntrypointsImpl<
         TContractState, +HasComponent<TContractState>

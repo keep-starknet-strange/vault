@@ -1,13 +1,16 @@
+use openzeppelin::presets::interfaces::ERC20UpgradeableABIDispatcherTrait;
 use openzeppelin::utils::cryptography::snip12::OffchainMessageHashImpl;
 use starknet::{account::Call, ContractAddress};
 use starknet::{testing, contract_address_const, info::get_tx_info};
-use vault::contracts::account::interface::{
-    IVaultAccountFunctionnalitiesDispatcher, IVaultAccountFunctionnalitiesDispatcherTrait
+use vault::components::outside_execution::interface::{
+    IOutsideExecution_V2Dispatcher, IOutsideExecution_V2DispatcherTrait
 };
-use openzeppelin::presets::interfaces::ERC20UpgradeableABIDispatcherTrait;
+use vault::contracts::account::interface::{
+    VaultAccountABIDispatcher, VaultAccountABIDispatcherTrait
+};
 use vault::tests::{utils, constants};
-use vault::utils::{outside_execution::OutsideExecution, claim::Claim};
-use vault::utils::snip12::SNIP12MetadataImpl;
+use vault::utils::claim::Claim;
+use vault::utils::outside_execution::OutsideExecution;
 
 //
 // Claim link
@@ -17,7 +20,7 @@ use vault::utils::snip12::SNIP12MetadataImpl;
 fn test_claim_link_valid_signature_not_already_claimed_works() {
     let address = utils::setup_vault_account().contract_address;
     let erc20 = utils::setup_erc20(address);
-    let claimer = IVaultAccountFunctionnalitiesDispatcher { contract_address: address };
+    let claimer = VaultAccountABIDispatcher { contract_address: address };
 
     claimer.set_usdc_address(erc20.contract_address);
 
@@ -35,14 +38,13 @@ fn test_claim_link_valid_signature_not_already_claimed_works() {
 fn test_claim_link_invalid_signature_not_already_claimed_fails() {
     let address = utils::setup_vault_account().contract_address;
     let erc20 = utils::setup_erc20(address);
-    let claimer = IVaultAccountFunctionnalitiesDispatcher { contract_address: address };
+    let claimer = VaultAccountABIDispatcher { contract_address: address };
 
     claimer.set_usdc_address(erc20.contract_address);
 
     testing::set_contract_address(contract_address_const::<0x1>());
 
-    // println!("hash: {}", Claim { amount: constants::AMOUNT, nonce: 0
-    // }.get_message_hash(address));
+    // println!("hash: {}", Claim { amount: constants::AMOUNT, nonce: 0 }.get_message_hash(address));
 
     claimer
         .claim(
@@ -55,7 +57,7 @@ fn test_claim_link_invalid_signature_not_already_claimed_fails() {
 fn test_claim_link_valid_signature_already_claimed_fails() {
     let address = utils::setup_vault_account().contract_address;
     let erc20 = utils::setup_erc20(address);
-    let claimer = IVaultAccountFunctionnalitiesDispatcher { contract_address: address };
+    let claimer = VaultAccountABIDispatcher { contract_address: address };
 
     claimer.set_usdc_address(erc20.contract_address);
 
@@ -77,45 +79,33 @@ fn test_claim_link_valid_signature_already_claimed_fails() {
 fn test_execute_from_outside_multiple_erc20_transfers_works() {
     let address = utils::setup_vault_account().contract_address;
     let erc20 = utils::setup_erc20(address);
-    let execute_from_outsider = IVaultAccountFunctionnalitiesDispatcher {
-        contract_address: address
-    };
+    let execute_from_outsider = VaultAccountABIDispatcher { contract_address: address };
+    let recipient1 = constants::RECIPIENT_1();
+    let recipient2 = constants::RECIPIENT_2();
+    let outside_execution = constants::OUTSIDE_EXECUTION_DOUBLE_TRANSFER(
+        erc20_address: erc20.contract_address
+    );
 
+    // setup chain ID
+    testing::set_chain_id('SN_MAIN');
+
+    // setup timestamp
     testing::set_block_timestamp(10);
-    execute_from_outsider.set_usdc_address(erc20.contract_address);
-    println!("address: {}", Into::<ContractAddress, felt252>::into(address));
 
+    // setup contract_address
     testing::set_contract_address(contract_address_const::<0x1>());
-    assert!(erc20.balance_of(contract_address_const::<0xb00b5>()) == 0, "Invalid initial balance");
-    assert!(erc20.balance_of(contract_address_const::<0xdead>()) == 0, "Invalid initial balance");
-    let calls = array![
-        Call {
-            to: erc20.contract_address,
-            selector: selector!("transfer"),
-            calldata: array![0xb00b5, 1000000, 0].span()
-        },
-        Call {
-            to: erc20.contract_address,
-            selector: selector!("transfer"),
-            calldata: array![0xdead, 2000000, 0].span()
-        }
-    ]
-        .span();
-    let exec = OutsideExecution {
-        caller: contract_address_const::<'ANY_CALLER'>(),
-        nonce: 1,
-        execute_after: 0,
-        execute_before: 999999999999,
-        calls
-    };
+
+    // check balances before
+    assert!(erc20.balance_of(recipient1).is_zero(), "Invalid initial balance");
+    assert!(erc20.balance_of(recipient2).is_zero(), "Invalid initial balance");
+
     execute_from_outsider
-        .execute_from_outside(exec, signature: constants::VALID_SIGNATURE_EXECUTE_FROM_OUTSIDE());
-    assert!(
-        erc20.balance_of(contract_address_const::<0xb00b5>()) == 1000000, "Invalid final balance"
-    );
-    assert!(
-        erc20.balance_of(contract_address_const::<0xdead>()) == 2000000, "Invalid final balance"
-    );
+        .execute_from_outside_v2(
+            :outside_execution, signature: constants::VALID_SIGNATURE_EXECUTE_FROM_OUTSIDE().span()
+        );
+
+    assert!(erc20.balance_of(recipient1) == constants::AMOUNT_1, "Invalid initial balance");
+    assert!(erc20.balance_of(recipient2) == constants::AMOUNT_2, "Invalid initial balance");
 }
 
 #[test]
@@ -123,41 +113,26 @@ fn test_execute_from_outside_multiple_erc20_transfers_works() {
 fn test_execute_from_outside_multiple_erc20_wrong_sig_fails() {
     let address = utils::setup_vault_account().contract_address;
     let erc20 = utils::setup_erc20(address);
-    let execute_from_outsider = IVaultAccountFunctionnalitiesDispatcher {
-        contract_address: address
-    };
+    let execute_from_outsider = VaultAccountABIDispatcher { contract_address: address };
+    let recipient1 = constants::RECIPIENT_1();
+    let recipient2 = constants::RECIPIENT_2();
+    let outside_execution = constants::OUTSIDE_EXECUTION_DOUBLE_TRANSFER(
+        erc20_address: erc20.contract_address
+    );
 
+    // setup timestamp
     testing::set_block_timestamp(10);
-    execute_from_outsider.set_usdc_address(erc20.contract_address);
 
+    // setup contract_address
     testing::set_contract_address(contract_address_const::<0x1>());
-    assert!(erc20.balance_of(contract_address_const::<0xb00b5>()) == 0, "Invalid initial balance");
-    assert!(erc20.balance_of(contract_address_const::<0xdead>()) == 0, "Invalid initial balance");
-    let calls = array![
-        Call {
-            to: erc20.contract_address,
-            selector: selector!("transfer"),
-            calldata: array![0xb00b5, 1000000, 0].span()
-        },
-        Call {
-            to: erc20.contract_address,
-            selector: selector!("transfer"),
-            calldata: array![0xdead, 2000000, 0].span()
-        }
-    ]
-        .span();
-    let exec = OutsideExecution {
-        caller: contract_address_const::<'ANY_CALLER'>(),
-        nonce: 1,
-        execute_after: 0,
-        execute_before: 999999999999,
-        calls
-    };
-    execute_from_outsider.execute_from_outside(exec, signature: constants::INVALID_SIGNATURE());
-    assert!(
-        erc20.balance_of(contract_address_const::<0xb00b5>()) == 1000000, "Invalid final balance"
-    );
-    assert!(
-        erc20.balance_of(contract_address_const::<0xdead>()) == 2000000, "Invalid final balance"
-    );
+
+    // check balances before
+    assert!(erc20.balance_of(recipient1).is_zero(), "Invalid initial balance");
+    assert!(erc20.balance_of(recipient2).is_zero(), "Invalid initial balance");
+
+    // execute with bad signature
+    execute_from_outsider
+        .execute_from_outside_v2(
+            :outside_execution, signature: constants::INVALID_SIGNATURE().span()
+        );
 }

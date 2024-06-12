@@ -1,4 +1,6 @@
 use openzeppelin::utils::serde::SerializedAppend;
+use starknet::{ContractAddress, contract_address_const, account::Call};
+use vault::utils::outside_execution::OutsideExecution;
 
 const P256_PUBLIC_KEY: (u256, u256) =
     (
@@ -13,13 +15,13 @@ const AMOUNT: u256 = 0x123456789;
 const USDC_ADDRESS: felt252 = 0x7880f487915d45e939b41d22488bd30ad3f07ad5da8cb4655f83244c783cdef;
 
 mod P256_SIGNATURE_CLAIM {
-    const R: u256 = 0xeeaa86daaad4be7c1de32963cb6aaac83d177e3244f076d849fe2d7bd4707232;
-    const S: u256 = 0xb95ab7445b7456036ea751db94ef9532fac8861249179f8b51a8e64c4443a267;
+    const R: u256 = 0x25d4a2005a80beacfbe27edb41ca986e70b75bae3ac1583c2d68f5c7f2037c27;
+    const S: u256 = 0x699f8bd178ab7f8f32d97cbdd5eb92ae1390f3e26ca9fa915109d6bc941aced8;
 }
 
 mod P256_SIGNATURE_EXECUTE_FROM_OUTSIDE {
-    const R: u256 = 0xe05e8f6dde8528ed2219009cb6dab35b255f2e56fcb555852451a7afbb5efaab;
-    const S: u256 = 0x95f4e9ece4d759cbebd01a6ad6730f229b7a62028767e3625db7abcdc799c454;
+    const R: u256 = 0xabb79917313a01f3a6bdc4f6405a3e9f6c80e4b1fa5188adde1fde9ed643009;
+    const S: u256 = 0x1e9ed91c32c487851357cf4334994bc7aca1291c68bf293e57d6811fc498449;
 }
 
 const PUBLIC_KEY: felt252 = 0x1f3c942d7f492a37608cde0d77b884a5aa9e11d2919225968557370ddb5a5aa;
@@ -32,6 +34,7 @@ fn VALID_SIGNATURE_CLAIM() -> Array<felt252> {
 
     sig
 }
+
 fn VALID_SIGNATURE_EXECUTE_FROM_OUTSIDE() -> Array<felt252> {
     let mut sig = array![];
 
@@ -56,10 +59,53 @@ fn INVALID_SIGNATURE() -> Array<felt252> {
 
 const SUPPLY: u256 = 1_000_000_000_000_000_000; // 1 ETH
 
+const AMOUNT_1: u256 = 1_000_000; // 1 USDC
+const AMOUNT_2: u256 = 2_000_000; // 2 USDC
+
 fn NAME() -> ByteArray {
     "NAME"
 }
 
 fn SYMBOL() -> ByteArray {
     "SYMBOL"
+}
+
+//
+// Accounts
+//
+
+fn RECIPIENT_1() -> ContractAddress {
+    contract_address_const::<'recipient1'>()
+}
+
+fn RECIPIENT_2() -> ContractAddress {
+    contract_address_const::<'recipient2'>()
+}
+
+//
+// Outside execution
+//
+
+fn OUTSIDE_EXECUTION_DOUBLE_TRANSFER(erc20_address: ContractAddress) -> OutsideExecution {
+    let mut calldata1 = array![];
+    calldata1.append_serde(RECIPIENT_1());
+    calldata1.append_serde(AMOUNT_1);
+
+    let mut calldata2 = array![];
+    calldata2.append_serde(RECIPIENT_2());
+    calldata2.append_serde(AMOUNT_2);
+
+    let calls = array![
+        Call { to: erc20_address, selector: selector!("transfer"), calldata: calldata1.span(), },
+        Call { to: erc20_address, selector: selector!("transfer"), calldata: calldata2.span(), }
+    ]
+        .span();
+
+    OutsideExecution {
+        caller: contract_address_const::<'ANY_CALLER'>(),
+        nonce: 1,
+        execute_after: 0,
+        execute_before: 999999999999,
+        calls,
+    }
 }
