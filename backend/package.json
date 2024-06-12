@@ -36,6 +36,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.7",
+    "elliptic": "^6.5.5",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
     "otp-generator": "^4.0.1",

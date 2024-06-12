@@ -12,7 +12,7 @@ dotenv.config()
 describe('Verify OTP test', () => {
   let container: StartedPostgreSqlContainer
   let app: FastifyInstance
-  const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af'
+  const testAddress = process.env.DEPLOYER_ADDRESS as string
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string
   const otherPhoneNumber = process.env.TWILIO_PHONE_NUMBER as string
   const testPublicKeyX = '0x817e6fe65ffaf529a672dc3f6b4c709db8e88f163a7831739df91cf0daf81133'
