@@ -5,6 +5,7 @@ import type { Account } from 'starknet'
 import type { Database } from '@/db/drizzle'
 
 import { getClaimRoute } from './claim'
+import { getExecuteFromOutsideRoute } from './executeFromOutside'
 import { getGenerateClaimLinkRoute } from './generateClaimLink'
 import { getBalanceRoute } from './getBalance'
 import { getCurrentExpenseRoute } from './getCurrentExpense'
@@ -27,6 +28,7 @@ export function declareRoutes(fastify: FastifyInstance, deployer: Account) {
   getGenerateClaimLinkRoute(fastify)
   getClaimRoute(fastify)
   getLimitRoute(fastify)
+  getExecuteFromOutsideRoute(fastify, deployer)
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
