@@ -9,19 +9,21 @@ mod VaultAccount {
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use openzeppelin::utils::cryptography::snip12::{OffchainMessageHashImpl, StructHash};
+    use openzeppelin::utils::cryptography::snip12::{
+        OffchainMessageHashImpl, StructHash, SNIP12Metadata
+    };
     use starknet::ContractAddress;
     use starknet::account::Call;
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
     use starknet::{get_caller_address, contract_address_const, get_contract_address};
-    use vault::components::TransactionApprovalComponent;
-    use vault::components::WeeklyLimitComponent;
-    use vault::components::WhitelistComponent;
     use vault::components::spending_limit::weekly::interface::IWeeklyLimit;
+    use vault::components::{
+        WeeklyLimitComponent, WhitelistComponent, TransactionApprovalComponent,
+        OutsideExecutionComponent
+    };
     use vault::contracts::account::interface::{IVaultAccount, IClaimLink};
     use vault::utils::claim::Claim;
-    use vault::utils::snip12::SNIP12MetadataImpl;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
@@ -32,6 +34,9 @@ mod VaultAccount {
     );
     component!(path: WeeklyLimitComponent, storage: weekly_limit, event: WeeklyLimitEvent);
     component!(path: WhitelistComponent, storage: whitelist, event: WhitelistEvent);
+    component!(
+        path: OutsideExecutionComponent, storage: outside_execution, event: OutsideExecutionEvent
+    );
 
     // Account
     #[abi(embed_v0)]
@@ -41,6 +46,12 @@ mod VaultAccount {
     #[abi(embed_v0)]
     impl DeclarerImpl = AccountComponent::DeclarerImpl<ContractState>;
     impl AccountInternalImpl = AccountComponent::InternalImpl<ContractState>;
+
+    // Outside Execution
+    #[abi(embed_v0)]
+    impl OutsideExecution_V2 =
+        OutsideExecutionComponent::OutsideExecution_V2Impl<ContractState>;
+    impl OutsideExecution_V2InternalImpl = OutsideExecutionComponent::InternalImpl<ContractState>;
 
     // Weekly Limit
     impl WeeklyLimitInternalImpl = WeeklyLimitComponent::InternalImpl<ContractState>;
@@ -70,8 +81,6 @@ mod VaultAccount {
 
     #[storage]
     struct Storage {
-        #[substorage(v0)]
-        account: AccountComponent::Storage,
         claims: LegacyMap<felt252, bool>,
         usdc_address: ContractAddress,
         public_key: (u256, u256),
@@ -83,6 +92,10 @@ mod VaultAccount {
         weekly_limit: WeeklyLimitComponent::Storage,
         #[substorage(v0)]
         whitelist: WhitelistComponent::Storage,
+        #[substorage(v0)]
+        account: AccountComponent::Storage,
+        #[substorage(v0)]
+        outside_execution: OutsideExecutionComponent::Storage,
     }
 
     //
@@ -102,6 +115,19 @@ mod VaultAccount {
         WeeklyLimitEvent: WeeklyLimitComponent::Event,
         #[flat]
         WhitelistEvent: WhitelistComponent::Event,
+        #[flat]
+        OutsideExecutionEvent: OutsideExecutionComponent::Event,
+    }
+
+    // SNIP12
+    impl VaultSNIP12Metadata of SNIP12Metadata {
+        fn name() -> felt252 {
+            'Vault'
+        }
+
+        fn version() -> felt252 {
+            0
+        }
     }
 
     //
@@ -120,6 +146,7 @@ mod VaultAccount {
             self.public_key.write((pub_key_x, pub_key_y));
             self.transaction_approval.initializer(:approver);
             self.weekly_limit.initializer(:limit);
+            self.outside_execution.initializer();
             self
                 .usdc_address
                 .write(
