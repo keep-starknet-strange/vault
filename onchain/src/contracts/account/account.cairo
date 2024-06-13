@@ -12,7 +12,7 @@ mod VaultAccount {
     use openzeppelin::utils::cryptography::snip12::{
         OffchainMessageHashImpl, StructHash, SNIP12Metadata
     };
-    use starknet::ContractAddress;
+    use starknet::{ContractAddress, ClassHash};
     use starknet::account::Call;
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
@@ -24,6 +24,8 @@ mod VaultAccount {
     };
     use vault::contracts::account::interface::{IVaultAccount, IClaimLink};
     use vault::utils::claim::Claim;
+    use openzeppelin::upgrades::UpgradeableComponent;
+    use openzeppelin::upgrades::interface::IUpgradeable;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
@@ -37,6 +39,7 @@ mod VaultAccount {
     component!(
         path: OutsideExecutionComponent, storage: outside_execution, event: OutsideExecutionEvent
     );
+    component!(path: UpgradeableComponent, storage: upgradeable, event: UpgradeableEvent);
 
     // Account
     #[abi(embed_v0)]
@@ -75,6 +78,9 @@ mod VaultAccount {
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
 
+    // Upgradeable
+    impl UpgradeableInternalImpl = UpgradeableComponent::InternalImpl<ContractState>;
+
     //
     // Storage
     //
@@ -96,6 +102,8 @@ mod VaultAccount {
         account: AccountComponent::Storage,
         #[substorage(v0)]
         outside_execution: OutsideExecutionComponent::Storage,
+        #[substorage(v0)]
+        upgradeable: UpgradeableComponent::Storage,
     }
 
     //
@@ -117,6 +125,8 @@ mod VaultAccount {
         WhitelistEvent: WhitelistComponent::Event,
         #[flat]
         OutsideExecutionEvent: OutsideExecutionComponent::Event,
+        #[flat]
+        UpgradeableEvent: UpgradeableComponent::Event,
     }
 
     // SNIP12
@@ -244,6 +254,18 @@ mod VaultAccount {
     impl WeeklyLimit of IWeeklyLimit<ContractState> {
         fn get_weekly_limit(self: @ContractState) -> u256 {
             self.weekly_limit.get_weekly_limit()
+        }
+    }
+
+    //
+    // Upgradeable impl
+    //
+
+    #[abi(embed_v0)]
+    impl UpgradeableImpl of IUpgradeable<ContractState> {
+        fn upgrade(ref self: ContractState, new_class_hash: ClassHash) {
+            self.account.assert_only_self();
+            self.upgradeable._upgrade(new_class_hash);
         }
     }
 }
