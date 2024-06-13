@@ -10,13 +10,14 @@ import Foundation
 enum Endpoint {
     case getOTP(String, String)
     case verifyOTP(String, String, String, String)
+    case executeFromOutside(String, [String], [String])
 }
 
 class VaultService {
 
     private func query(endpoint: Endpoint, completion: @escaping @Sendable (Result<[String: Any], Error>) -> Void) {
         var url = Constants.vaultBaseURL
-        var body: [String: String] = [:]
+        var body: [String: Any] = [:]
 
         switch endpoint {
         case let .getOTP(phoneNumber, nickname):
@@ -33,6 +34,12 @@ class VaultService {
             body["sent_otp"] = otp
             body["public_key_x"] = publicKeyX
             body["public_key_y"] = publicKeyY
+
+        case let .executeFromOutside(address, calldata, signature):
+            url.append(path: "/execute_from_outside")
+
+            body["address"] = address
+            body["calldata"] = calldata + [signature.count] + signature
         }
 
         // Convert the dictionary into JSON data
@@ -117,6 +124,28 @@ class VaultService {
                 }
 
                 completion(.success(address))
+
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func executeFromOutside(
+        address: String,
+        calldata: [String],
+        signature: [String],
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        self.query(endpoint: .executeFromOutside(address, calldata, signature)) { result in
+            switch result {
+            case .success(let json):
+                guard let txHash = json["transaction_hash"] as? String else {
+                    completion(.failure("Unkown Error"))
+                    return
+                }
+
+                completion(.success(txHash))
 
             case .failure(let error):
                 completion(.failure(error))
