@@ -42,6 +42,7 @@
 		9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDA2BB09C4D005816B4 /* Notification.swift */; };
 		9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDD2BB0A564005816B4 /* AppIcon.swift */; };
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
+		9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */; };
 		9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */; };
 		9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8B2BCD5D790077A60B /* String+character.swift */; };
 		9CD1BE902BD53F7A0077A60B /* VaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8F2BD53F7A0077A60B /* VaultService.swift */; };
@@ -141,6 +142,7 @@
 		9C637CDA2BB09C4D005816B4 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		9C637CDD2BB0A564005816B4 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
+		9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideExecution.swift; sourceTree = "<group>"; };
 		9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInput.swift; sourceTree = "<group>"; };
 		9CD1BE8B2BCD5D790077A60B /* String+character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+character.swift"; sourceTree = "<group>"; };
 		9CD1BE8F2BD53F7A0077A60B /* VaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultService.swift; sourceTree = "<group>"; };
@@ -442,6 +444,7 @@
 				9C5CFDAD2BC828C9001776E1 /* Model.swift */,
 				9C62591C2BFE20AF0039DE9C /* Contact.swift */,
 				9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */,
+				9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
 				9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */,
+				9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */,
 				9C6259102BFAADB90039DE9C /* NavigationBar.swift in Sources */,
 				9CD778C42BC1B63800BA4677 /* BudgetView.swift in Sources */,
 				9C5CFDB02BC828DE001776E1 /* Locale.swift in Sources */,

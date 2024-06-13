@@ -45,7 +45,10 @@ class Model: ObservableObject {
         }
     }
     @Published var showSendingConfirmation = false
-    @Published var signedSendingTransaction: StarknetInvokeTransactionV1? = nil
+
+    // Starknet
+    @Published var outsideExecution: OutsideExecution?
+    @Published var outsideExecutionSignature: StarknetSignature?
 
     // Country picker
     @Published var selectedRegionCode = Locale.current.regionOrFrance.identifier
@@ -82,10 +85,12 @@ class Model: ObservableObject {
 
     private lazy var provider: StarknetProviderProtocol = StarknetProvider(url: "https://rpc.nethermind.io/sepolia-juno/?apikey=\(Constants.starknetRpcApiKey)")!
 
+    private lazy var signer = P256Signer()
+
     private lazy var account: StarknetAccountProtocol = {
         return StarknetAccount(
             address: Felt(stringLiteral: self.address),
-            signer: P256Signer(),
+            signer: self.signer,
             provider: self.provider,
             chainId: .sepolia,
             cairoVersion: .one
@@ -99,7 +104,7 @@ class Model: ObservableObject {
         // Contacts
         checkContactsAuthorizationStatus()
 
-        self.address = "0x014DfAEE92F238254e3eb3621ADcC6323C5eCde6F2417980D56eaEc7ee23Cc2d"
+        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
     }
 
     deinit {
@@ -125,8 +130,8 @@ extension Model {
         otp: String,
         publicKeyX: String,
         publicKeyY: String,
-        completion: @escaping (Result<String, Error>
-        ) -> Void) {
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
         self.isLoading = true
 
         vaultService.verifyOTP(
@@ -139,8 +144,24 @@ extension Model {
             completion(result)
         }
     }
-}
 
+    func executeTransactionFromOutside(
+        outsideExecution: OutsideExecution,
+        signature: StarknetSignature,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        self.isLoading = true
+
+        vaultService.executeFromOutside(
+            address: self.address,
+            calldata: outsideExecution.calldata.map { String($0.value, radix: 10) },
+            signature: signature.map { String($0.value, radix: 10) }
+        ) { result in
+            self.isLoading = false
+            completion(result)
+        }
+    }
+}
 
 // MARK: - Country picker
 
@@ -188,19 +209,6 @@ extension Model {
 
 extension Model {
 
-    // maxFee / nonce
-
-    func getParams() async throws -> StarknetInvokeParamsV1 {
-        let nonce = try await self.account.getNonce()
-        let maxFee = self.estimateFees()
-
-        return StarknetInvokeParamsV1(nonce: nonce, maxFee: maxFee)
-    }
-
-    func estimateFees() -> Felt {
-        return Felt(fromHex: "0x1000000000000000000")! // 1 ETH
-    }
-
     // invoke
 
     func executeTransaction(signedTransaction: StarknetInvokeTransactionV1) async throws -> StarknetInvokeTransactionResponse {
@@ -209,14 +217,8 @@ extension Model {
 
     // sign
 
-    func signTransaction(calls: [StarknetCall]) async throws -> StarknetInvokeTransactionV1 {
-        let params = try await self.getParams()
-
-        return try self.account.signV1(calls: calls, params: params)
-    }
-
-    func signTransaction(call: StarknetCall) async throws -> StarknetInvokeTransactionV1 {
-        return try await self.signTransaction(calls: [call])
+    func signOutsideExecution(outsideExecution: OutsideExecution) async throws -> StarknetSignature {
+        return try self.signer.sign(transactionHash: self.outsideExecution!.getMessageHash(forSigner: self.account.address))
     }
 
     // addr utils
@@ -320,30 +322,33 @@ extension Model {
     }
 
     func executeTransfer() async {
-        guard let signedTransaction = self.signedSendingTransaction else {
+        guard
+            let outsideExecution = self.outsideExecution,
+            let outsideExecutionSignature = self.outsideExecutionSignature
+        else {
             self.sendingStatus = .error("Invalid request.")
             return
         }
 
         self.sendingStatus = .loading
 
-        do {
-            let result = try await self.executeTransaction(signedTransaction: signedTransaction)
+        self.executeTransactionFromOutside(outsideExecution: outsideExecution, signature: outsideExecutionSignature) { result in
+            switch result {
+            case .success(let txHash):
+                self.sendingStatus = .success
+#if DEBUG
+                print("tx: \(txHash)")
+#endif
 
-            self.sendingStatus = .success
+            case .failure(let error):
+                self.sendingStatus = .success
+//                self.sendingStatus = .error("An error has occured during the transaction.")
 
-            #if DEBUG
-            print("tx: \(result.transactionHash)")
-            #endif
-        } catch let error {
-            self.sendingStatus = .success
-//            self.sendingStatus = .error("An error has occured during the transaction.")
-
-            #if DEBUG
-            print(error)
-            #endif
+#if DEBUG
+                print(error)
+#endif
+            }
         }
-
     }
 
     func signTransfer() async {
@@ -365,19 +370,20 @@ extension Model {
                 amount.value.high,
             ]
         )
+        self.outsideExecution = OutsideExecution(calls: [call])
 
         self.sendingStatus = .signing
 
         do {
-            self.signedSendingTransaction = try await self.signTransaction(call: call)
+            self.outsideExecutionSignature = try await self.signOutsideExecution(outsideExecution: self.outsideExecution!)
 
             self.sendingStatus = .signed
         } catch let error {
             self.sendingStatus = .none
 
-            #if DEBUG
+#if DEBUG
             print(error)
-            #endif
+#endif
         }
     }
 }
@@ -448,7 +454,8 @@ extension Model {
     private func initiateTransfer() {
         self.recipientContact = nil
         self.sendingAmount = "0"
-        self.signedSendingTransaction = nil
+        self.outsideExecution = nil
+        self.outsideExecutionSignature = nil
     }
 
     private func dismissTransfer() {
