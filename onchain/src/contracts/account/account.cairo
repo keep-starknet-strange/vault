@@ -9,13 +9,15 @@ mod VaultAccount {
     use openzeppelin::account::interface::ISRC6;
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin::upgrades::UpgradeableComponent;
+    use openzeppelin::upgrades::interface::IUpgradeable;
     use openzeppelin::utils::cryptography::snip12::{
         OffchainMessageHashImpl, StructHash, SNIP12Metadata
     };
-    use starknet::{ContractAddress, ClassHash};
     use starknet::account::Call;
     use starknet::secp256_trait::is_valid_signature;
     use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
+    use starknet::{ContractAddress, ClassHash};
     use starknet::{get_caller_address, contract_address_const, get_contract_address};
     use vault::components::spending_limit::weekly::interface::IWeeklyLimit;
     use vault::components::{
@@ -24,8 +26,6 @@ mod VaultAccount {
     };
     use vault::contracts::account::interface::{IVaultAccount, IClaimLink};
     use vault::utils::claim::Claim;
-    use openzeppelin::upgrades::UpgradeableComponent;
-    use openzeppelin::upgrades::interface::IUpgradeable;
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
