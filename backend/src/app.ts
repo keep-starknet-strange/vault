@@ -18,7 +18,7 @@ export type AppConfiguration = {
 }
 
 export async function buildApp(config: AppConfiguration) {
-  const app = Fastify()
+  const app = Fastify({ logger: true })
 
   dotenv.config()
   app.register(fastifyDrizzle, {
