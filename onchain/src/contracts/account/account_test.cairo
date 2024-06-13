@@ -12,6 +12,8 @@ use vault::tests::{utils, constants};
 use vault::utils::claim::Claim;
 use vault::utils::outside_execution::OutsideExecution;
 
+// use vault::contracts::account::account::VaultAccount::VaultSNIP12Metadata;
+
 //
 // Claim link
 //
@@ -85,6 +87,9 @@ fn test_execute_from_outside_multiple_erc20_transfers_works() {
     let outside_execution = constants::OUTSIDE_EXECUTION_DOUBLE_TRANSFER(
         erc20_address: erc20.contract_address
     );
+
+    // println!("addr: {}", Into::<ContractAddress, felt252>::into(address));
+    // println!("erc20: {}", Into::<ContractAddress, felt252>::into(erc20.contract_address));
 
     // setup chain ID
     testing::set_chain_id('SN_MAIN');
