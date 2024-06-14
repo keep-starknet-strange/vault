@@ -88,14 +88,15 @@ class SecureEnclaveManager {
             kSecClass as String: kSecClassKey,
             kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
             kSecAttrLabel as String: Self.privateKeyLabel,
+            kSecMatchLimit as String: kSecMatchLimitAll,
             kSecReturnRef as String: true,
         ]
 
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        var items: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &items)
         guard status == errSecSuccess else { throw "Failed to retrieve private key" }
 
-        return item as! SecKey
+        return items!.lastObject as! SecKey
     }
 
     private func sign(hash: Data, with privateKey: SecKey) -> P256Signature? {
