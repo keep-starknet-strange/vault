@@ -1,4 +1,4 @@
-import { eq, max } from 'drizzle-orm'
+import { and, eq, max } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcBalance } from '@/db/schema'
@@ -21,19 +21,22 @@ export function getBalanceRoute(fastify: FastifyInstance) {
         return reply.status(400).send({ message: 'Invalid address format.' })
       }
 
+      const subQuery = fastify.db
+        .select({ maxCursor: max(usdcBalance.cursor).as('maxCursor') })
+        .from(usdcBalance)
+        .as('subQuery')
+
       try {
         // Use Drizzle ORM to find the balance by address
-        const balanceRecord = await fastify.db
-          .select({
-            cursor: max(usdcBalance.cursor),
-            balance: usdcBalance.balance,
-          })
+        const balanceRecords = await fastify.db
+          .select({ balance: usdcBalance.balance })
           .from(usdcBalance)
-          .where(eq(usdcBalance.address, address))
-          .groupBy(usdcBalance.balance)
+          .innerJoin(subQuery, and(eq(usdcBalance.address, address), eq(usdcBalance.cursor, subQuery.maxCursor)))
           .execute()
 
-        const balance = balanceRecord[0]?.balance ?? '0'
+        console.log(balanceRecords)
+
+        const balance = balanceRecords[0]?.balance ?? '0'
 
         return reply.send({ balance })
       } catch (error) {
