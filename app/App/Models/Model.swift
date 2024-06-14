@@ -218,6 +218,7 @@ extension Model {
     // sign
 
     func signOutsideExecution(outsideExecution: OutsideExecution) async throws -> StarknetSignature {
+        print("MessageHash: \(self.outsideExecution!.getMessageHash(forSigner: self.account.address))")
         return try self.signer.sign(transactionHash: self.outsideExecution!.getMessageHash(forSigner: self.account.address))
     }
 
