@@ -46,6 +46,17 @@ class Amount {
         self.value = Uint256(clamping: BigUInt(shiftedValue))
     }
 
+    public init?(from: String, decimals: UInt8) {
+        self.decimals = decimals
+
+        guard let value = BigUInt(from, radix: 10) else {
+            print("Cannot convert to BigUint")
+            return nil
+        }
+
+        self.value = Uint256(clamping: value)
+    }
+
     // MARK: - Formatters
 
     public func toFixed(_ digits: Int = 2) -> String {
@@ -62,6 +73,10 @@ class Amount {
 
 class USDCAmount: Amount {
     init?(from: Double) {
+        super.init(from: from, decimals: Constants.usdcDecimals)
+    }
+
+    init?(from: String) {
         super.init(from: from, decimals: Constants.usdcDecimals)
     }
 }
