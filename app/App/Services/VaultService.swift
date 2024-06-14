@@ -11,6 +11,12 @@ enum Endpoint {
     case getOTP(String, String)
     case verifyOTP(String, String, String, String)
     case executeFromOutside(String, [String], [String])
+    case getBalance(String)
+}
+
+enum Method {
+    case get
+    case post
 }
 
 class VaultService {
@@ -18,6 +24,7 @@ class VaultService {
     private func query(endpoint: Endpoint, completion: @escaping @Sendable (Result<[String: Any], Error>) -> Void) {
         var url = Constants.vaultBaseURL
         var body: [String: Any] = [:]
+        var method: Method?
 
         switch endpoint {
         case let .getOTP(phoneNumber, nickname):
@@ -25,7 +32,8 @@ class VaultService {
 
             body["phone_number"] = phoneNumber
             body["nickname"] = nickname
-            break
+
+            method = .post
 
         case let .verifyOTP(phoneNumber, otp, publicKeyX, publicKeyY):
             url.append(path: "/verify_otp")
@@ -35,11 +43,21 @@ class VaultService {
             body["public_key_x"] = publicKeyX
             body["public_key_y"] = publicKeyY
 
+            method = .post
+
         case let .executeFromOutside(address, calldata, signature):
             url.append(path: "/execute_from_outside")
 
             body["address"] = address
             body["calldata"] = calldata + [signature.count] + signature
+
+            method = .post
+
+        case let .getBalance(address):
+            url.append(path: "/get_balance")
+            url.append(queryItems: [URLQueryItem(name: "address", value: address)])
+
+            method = .get
         }
 
         // Convert the dictionary into JSON data
@@ -51,9 +69,18 @@ class VaultService {
         // Create a URLRequest object and configure it for a POST method
         var request = URLRequest(url: url)
 
-        request.httpMethod = "POST"
-        request.httpBody = jsonData
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        switch method {
+        case .get:
+            request.httpMethod = "GET"
+
+        case .post:
+            request.httpMethod = "POST"
+            request.httpBody = jsonData
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        case nil:
+            fatalError("Unknown error.")
+        }
 
         // fetch request
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -146,6 +173,23 @@ class VaultService {
                 }
 
                 completion(.success(txHash))
+
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func getBalance(of address: String, completion: @escaping (Result<String, Error>) -> Void) {
+        self.query(endpoint: .getBalance(address)) { result in
+            switch result {
+            case .success(let json):
+                guard let balance = json["balance"] as? String else {
+                    completion(.failure("Unkown Error"))
+                    return
+                }
+
+                completion(.success(balance))
 
             case .failure(let error):
                 completion(.failure(error))

@@ -27,6 +27,9 @@ class Model: ObservableObject {
 
     @AppStorage("starknetMainAddress") private var address: String = ""
 
+    // API Data
+    @Published var balance: USDCAmount?
+
     // App
     @Published var isLoading = false
     @Published var showMessage = false
@@ -105,6 +108,8 @@ class Model: ObservableObject {
         checkContactsAuthorizationStatus()
 
         self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
+
+        self.getBalance()
     }
 
     deinit {
@@ -159,6 +164,19 @@ extension Model {
         ) { result in
             self.isLoading = false
             completion(result)
+        }
+    }
+
+    func getBalance() {
+        vaultService.getBalance(of: self.address) { result in
+            switch result {
+            case .success(let balance):
+                self.balance = USDCAmount(from: balance)!
+
+            case .failure(let error):
+                // TODO: Handle error
+                print(error)
+            }
         }
     }
 }

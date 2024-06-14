@@ -8,18 +8,26 @@
 import SwiftUI
 
 struct BalanceView: View {
+
+    @Binding var balance: USDCAmount?
+
     var body: some View {
+        let fixedBalance = self.balance?.toFixed() ?? "0.00"
+        let splittedBalance = fixedBalance.components(separatedBy: ".")
+        let integerPart = splittedBalance[0]
+        let decimalPart = splittedBalance[1]
+
         HStack(spacing: 4) {
             Text("$")
                 .font(.custom("Sofia Pro", size: 32))
                 .textTheme(.hero)
 
             HStack(alignment: .bottom, spacing: 0) {
-                Text("456.")
+                Text("\(integerPart).")
                     .font(.custom("Sofia Pro", size: 64))
                     .textTheme(.hero)
 
-                Text("18")
+                Text("\(decimalPart)")
                     .font(.custom("Sofia Pro", size: 36))
                     .foregroundStyle(.neutral2)
                     .textTheme(.hero)
@@ -30,5 +38,5 @@ struct BalanceView: View {
 }
 
 #Preview {
-    BalanceView()
+    BalanceView(balance: .constant(USDCAmount(from: 456.18)))
 }

@@ -121,7 +121,7 @@ struct HomeView: View {
                         .foregroundStyle(.neutral2)
                         .textTheme(.bodyPrimary)
 
-                    BalanceView()
+                    BalanceView(balance: self.$model.balance)
                 }
                 .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
 
@@ -194,7 +194,7 @@ struct HomeView: View {
                             )
                     }
                 } header: {
-                    Text(formatSectionHeader(for: day).uppercased())
+                    Text(self.formatSectionHeader(for: day).uppercased())
                         .textTheme(.headlineSmall)
                         .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
                 }
@@ -227,7 +227,7 @@ struct HomeView: View {
         }
     }
 
-    func formatSectionHeader(for date: Date) -> String {
+    private func formatSectionHeader(for date: Date) -> String {
         let calendar = Calendar.current
 
         if calendar.isDateInToday(date) {
