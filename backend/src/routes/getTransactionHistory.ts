@@ -1,4 +1,4 @@
-import { count, eq } from 'drizzle-orm'
+import { and, asc, eq, gt, or, sql } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcTransfer } from '@/db/schema'
@@ -7,7 +7,8 @@ import { addressRegex } from '.'
 
 interface TransactionHistoryQuery {
   address: string
-  pagination?: string
+  first: number
+  after?: number
 }
 
 export function getTransactionHistory(fastify: FastifyInstance) {
@@ -15,10 +16,14 @@ export function getTransactionHistory(fastify: FastifyInstance) {
     '/transaction_history',
 
     async (request, reply) => {
-      const { address, pagination = '1' } = request.query as TransactionHistoryQuery
+      const { address, first, after } = request.query as TransactionHistoryQuery
 
       if (!address) {
         return reply.status(400).send({ error: 'Address is required.' })
+      }
+
+      if (!first) {
+        return reply.status(400).send({ error: 'First is required.' })
       }
 
       // Validate address format
@@ -26,35 +31,37 @@ export function getTransactionHistory(fastify: FastifyInstance) {
         return reply.status(400).send({ error: 'Invalid address format.' })
       }
 
-      // Hardcoding the limit to 10 entries per page
-      const limit = 10
-      const offset = (Number.parseInt(pagination) - 1) * limit
-
       try {
-        const transactionCount = await fastify.db
-          .select({ count: count() })
-          .from(usdcTransfer)
-          .where(eq(usdcTransfer.fromAddress, address))
-          .execute()
-
-        const transactionList = await fastify.db.query.usdcTransfer
-          .findMany({
-            where: eq(usdcTransfer.fromAddress, address),
-            columns: {
-              transactionHash: true,
-              fromAddress: true,
-              toAddress: true,
-              amount: true,
-              network: true,
-              blockTimestamp: true,
+        const firstTimestamp = after ? Number(after) : Number(0)
+        const txs = await fastify.db
+          .select({
+            transaction_timestamp: usdcTransfer.blockTimestamp,
+            amount: usdcTransfer.amount,
+            from: {
+              nickname: sql`"from_user"."nickname"`,
+              contract_address: sql`"from_user"."contract_address"`,
+              phone_number: sql`"from_user"."phone_number"`,
             },
-            limit,
-            offset,
+            to: {
+              nickname: sql`"to_user"."nickname"`,
+              contract_address: sql`"to_user"."contract_address"`,
+              phone_number: sql`"to_user"."phone_number"`,
+            },
           })
+          .from(usdcTransfer)
+          .leftJoin(sql`registration AS "from_user"`, eq(usdcTransfer.fromAddress, sql`"from_user"."contract_address"`))
+          .leftJoin(sql`registration AS "to_user"`, eq(usdcTransfer.toAddress, sql`"to_user"."contract_address"`))
+          .where(
+            and(
+              gt(usdcTransfer.blockTimestamp, new Date(firstTimestamp)),
+              or(eq(usdcTransfer.fromAddress, address), eq(usdcTransfer.toAddress, address)),
+            ),
+          )
+          .limit(first)
+          .orderBy(asc(usdcTransfer.blockTimestamp))
           .execute()
 
-        const pageCount = Math.ceil(transactionCount[0].count / limit)
-        return reply.status(200).send({ page_count: pageCount, transactions: transactionList })
+        return reply.status(200).send({ transactions: txs })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ error: 'Internal server error' })
