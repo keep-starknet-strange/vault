@@ -83,14 +83,15 @@ describe('executeFromOutside test', () => {
   test(
     'should execute from outside usdc transfers',
     async () => {
+      const executeFromOutsideAddress = '0x01e2c3fe6982be3263dd15ec6700ba23f8bb1c00e04eaae5a3d0c8b11fae13bb'
       const response = await app.inject({
         method: 'POST',
         url: '/execute_from_outside',
         body: {
-          address: testAddress,
+          address: executeFromOutsideAddress,
           calldata: CallData.compile(
             signOutsideUsdcTransfer(
-              testAddress,
+              executeFromOutsideAddress,
               [{ amount: 1, recipient: testAddress }],
               +new Date(), // nonce avoid duplicate
               TESTNET_USDC,
