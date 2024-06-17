@@ -130,9 +130,7 @@ extension Model {
 
             switch result {
             case .success(let response):
-                if response.results.ok {
-                    onSuccess()
-                }
+                onSuccess()
 
             case .failure(let error):
                 // TODO: Handle error
@@ -160,7 +158,7 @@ extension Model {
 
                 switch result {
                 case .success(let response):
-                    self.address = response.results.contract_address
+                    self.address = response.contract_address
                     onSuccess()
 
                 case .failure(let error):
@@ -182,7 +180,7 @@ extension Model {
         vaultService.send(GetBalance(address: self.address)) { result in
             switch result {
             case .success(let response):
-                self.balance = USDCAmount(from: response.results.balance)!
+                self.balance = USDCAmount(from: response.balance)!
 
             case .failure(let error):
                 // TODO: Handle error
@@ -369,20 +367,22 @@ extension Model {
                 signature: outsideExecutionSignature
             )
         ) { result in
-            switch result {
-            case .success(let response):
-                self.sendingStatus = .success
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    self.sendingStatus = .success
 #if DEBUG
-                print("tx: \(response.results.transaction_hash)")
+                    print("tx: \(response.transaction_hash)")
 #endif
 
-            case .failure(let error):
-                self.sendingStatus = .success
-//                self.sendingStatus = .error("An error has occured during the transaction.")
+                case .failure(let error):
+                    self.sendingStatus = .success
+                    //                self.sendingStatus = .error("An error has occured during the transaction.")
 
 #if DEBUG
-                print(error)
+                    print(error)
 #endif
+                }
             }
         }
     }
