@@ -8,7 +8,7 @@
 import Foundation
 import Starknet
 
-class OutsideExecution {
+public class OutsideExecution {
 
     static let OUTSIDE_EXECUTION_TYPE_SELECTOR = Felt(fromHex: "0x312b56c05a7965066ddbda31c016d8d05afc305071c0ca3cdc2192c3c2f1f0f")!
     static let CALL_TYPE_SELECTOR = Felt(fromHex: "0x3635c7f2a7ba93844c0d064e18e487f35ab90f7c39d00f186a781fc3f0c2ca9")!
