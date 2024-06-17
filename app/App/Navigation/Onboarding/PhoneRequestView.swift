@@ -33,15 +33,9 @@ struct PhoneRequestView: View {
                     VStack(alignment: .center, spacing: 16) {
                         // TODO: implement login
                         PrimaryButton("Sign up", disabled: self.parsedPhoneNumber == nil) {
-                            self.model.startRegistration(phoneNumber: self.parsedPhoneNumber!) { result in
-                                switch result {
-                                case .success():
-                                    presentingNextView = true
-
-                                case .failure(let error):
-                                    print(error)
-                                    // TODO: handle error
-                                }
+                            self.model.startRegistration(phoneNumber: self.parsedPhoneNumber!) {
+                                // next view
+                                presentingNextView = true
                             }
                         }
                     }

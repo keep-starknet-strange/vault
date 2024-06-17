@@ -8,7 +8,7 @@
 import Foundation
 import Starknet
 
-struct P256PublicKey {
+public struct P256PublicKey {
     var x: Uint256
     var y: Uint256
 }

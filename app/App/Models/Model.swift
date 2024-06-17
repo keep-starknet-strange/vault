@@ -107,7 +107,7 @@ class Model: ObservableObject {
         // Contacts
         checkContactsAuthorizationStatus()
 
-        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
+//        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
 
         self.getBalance()
     }
@@ -121,57 +121,68 @@ class Model: ObservableObject {
 
 extension Model {
 
-    func startRegistration(phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
+    func startRegistration(phoneNumber: PhoneNumber, onSuccess: @escaping () -> Void) {
         self.isLoading = true
 
-        vaultService.getOTP(phoneNumber: phoneNumber.rawString()) { result in
+        // TODO: implement nickname support
+        vaultService.send(GetOTP(phoneNumber: phoneNumber, nickname: "nickname")) { result in
             self.isLoading = false
-            completion(result)
+
+            switch result {
+            case .success(let response):
+                if response.results.ok {
+                    onSuccess()
+                }
+
+            case .failure(let error):
+                // TODO: Handle error
+                #if DEBUG
+                print(error)
+                #endif
+            }
         }
     }
 
     func confirmRegistration(
         phoneNumber: PhoneNumber,
         otp: String,
-        publicKeyX: String,
-        publicKeyY: String,
-        completion: @escaping (Result<String, Error>) -> Void
+        onSuccess: @escaping () -> Void
     ) {
-        self.isLoading = true
+        do {
+            guard let publicKey = try SecureEnclaveManager.shared.generateKeyPair() else {
+                throw "Failed to generate public key."
+            }
 
-        vaultService.verifyOTP(
-            phoneNumber: phoneNumber.rawString(),
-            otp: otp,
-            publicKeyX: publicKeyX,
-            publicKeyY: publicKeyY
-        ) { result in
-            self.isLoading = false
-            completion(result)
-        }
-    }
+            self.isLoading = true
 
-    func executeTransactionFromOutside(
-        outsideExecution: OutsideExecution,
-        signature: StarknetSignature,
-        completion: @escaping (Result<String, Error>) -> Void
-    ) {
-        self.isLoading = true
+            vaultService.send(VerifyOTP(phoneNumber: phoneNumber, sentOTP: otp, publicKey: publicKey)) { result in
+                self.isLoading = false
 
-        vaultService.executeFromOutside(
-            address: self.address,
-            calldata: outsideExecution.calldata.map { String($0.value, radix: 10) },
-            signature: signature.map { String($0.value, radix: 10) }
-        ) { result in
-            self.isLoading = false
-            completion(result)
+                switch result {
+                case .success(let response):
+                    self.address = response.results.contract_address
+                    onSuccess()
+
+                case .failure(let error):
+                    // TODO: Handle error
+                    #if DEBUG
+                    print(error)
+                    #endif
+                }
+            }
+        } catch {
+            // TODO: Handle error
+            #if DEBUG
+            print(error)
+            #endif
         }
     }
 
     func getBalance() {
-        vaultService.getBalance(of: self.address) { result in
+        vaultService.send(GetBalance(address: self.address)) { result in
             switch result {
-            case .success(let balance):
-                self.balance = USDCAmount(from: balance)!
+            case .success(let response):
+                self.balance = USDCAmount(from: response.results.balance)!
 
             case .failure(let error):
                 // TODO: Handle error
@@ -351,12 +362,18 @@ extension Model {
 
         self.sendingStatus = .loading
 
-        self.executeTransactionFromOutside(outsideExecution: outsideExecution, signature: outsideExecutionSignature) { result in
+        vaultService.send(
+            ExecuteFromOutside(
+                address: self.address,
+                outsideExecution: outsideExecution,
+                signature: outsideExecutionSignature
+            )
+        ) { result in
             switch result {
-            case .success(let txHash):
+            case .success(let response):
                 self.sendingStatus = .success
 #if DEBUG
-                print("tx: \(txHash)")
+                print("tx: \(response.results.transaction_hash)")
 #endif
 
             case .failure(let error):

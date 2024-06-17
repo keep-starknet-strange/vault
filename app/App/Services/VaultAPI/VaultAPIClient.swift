@@ -1,8 +1,8 @@
 //
-//  VaultService.swift
+//  VaultAPIClient.swift
 //  Vault
 //
-//  Created by Charles Lanier on 21/04/2024.
+//  Created by Charles Lanier on 14/06/2024.
 //
 
 import Foundation
@@ -19,7 +19,11 @@ enum Method {
     case post
 }
 
+public typealias ResultCallback<Value> = (Result<Value, Error>) -> Void
+
 class VaultService {
+    private let baseEndpointUrl = Constants.vaultBaseURL
+    private let session = URLSession(configuration: .default)
 
     private func query(endpoint: Endpoint, completion: @escaping @Sendable (Result<[String: Any], Error>) -> Void) {
         var url = Constants.vaultBaseURL
@@ -84,7 +88,7 @@ class VaultService {
 
         // fetch request
         URLSession.shared.dataTask(with: request) { data, response, error in
-            guard 
+            guard
                 let data = data,
                 let httpResponse = response as? HTTPURLResponse,
                 error == nil
@@ -116,6 +120,67 @@ class VaultService {
                 }
             }
         }.resume()
+    }
+
+
+
+
+
+
+
+
+
+
+    /// Sends a request to Vault servers, calling the completion method when finished
+    public func send<T: APIRequest>(_ request: T, completion: @escaping ResultCallback<DataContainer<T.Response>>) {
+        let endpoint = self.endpoint(for: request)
+
+        let task = session.dataTask(with: URLRequest(url: endpoint)) { data, response, error in
+            if let data = data {
+                do {
+                    // Decode the top level response, and look up the decoded response to see
+                    // if it's a success or a failure
+                    let vaultResponse = try JSONDecoder().decode(VaultResponse<T.Response>.self, from: data)
+
+                    if let dataContainer = vaultResponse.data {
+                        completion(.success(dataContainer))
+                    } else if let message = vaultResponse.message {
+                        completion(.failure(VaultError.server(message: message)))
+                    } else {
+                        completion(.failure(VaultError.decoding))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+
+    /// Encodes a URL based on the given request
+    /// Everything needed for a public request to Vault servers is encoded directly in this URL
+    private func endpoint<T: APIRequest>(for request: T) -> URL {
+        guard let baseUrl = URL(string: request.resourceName, relativeTo: baseEndpointUrl) else {
+            fatalError("Bad resourceName: \(request.resourceName)")
+        }
+
+        var components = URLComponents(url: baseUrl, resolvingAgainstBaseURL: true)!
+
+        // Custom query items needed for this specific request
+        let customQueryItems: [URLQueryItem]
+
+        do {
+            customQueryItems = try URLQueryItemEncoder.encode(request)
+        } catch {
+            fatalError("Wrong parameters: \(error)")
+        }
+
+        components.queryItems = customQueryItems
+
+        // Construct the final URL with all the previous data
+        return components.url!
     }
 
     func getOTP(phoneNumber: String, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -197,3 +262,4 @@ class VaultService {
         }
     }
 }
+

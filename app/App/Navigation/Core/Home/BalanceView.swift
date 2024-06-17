@@ -38,5 +38,5 @@ struct BalanceView: View {
 }
 
 #Preview {
-    BalanceView(balance: .constant(USDCAmount(from: 456.18)))
+    BalanceView(balance: .constant(USDCAmount(from: 456.18))).defaultBackground()
 }

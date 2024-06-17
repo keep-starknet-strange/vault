@@ -38,37 +38,9 @@ struct PhoneValidationView: View {
                     OTPInput(otp: $otp, numberOfFields: Constants.registrationCodeDigitsCount)
                         .onChange(of: otp, initial: false) { (_, newValue) in
                             if newValue.count == Constants.registrationCodeDigitsCount {
-                                do {
-                                    guard let publicKey = try SecureEnclaveManager.shared.generateKeyPair() else {
-                                        throw "Failed to generate public key"
-                                    }
-
-                                    self.model.confirmRegistration(
-                                        phoneNumber: self.phoneNumber,
-                                        otp: newValue,
-                                        publicKeyX: publicKey.x.toHex(),
-                                        publicKeyY: publicKey.y.toHex()
-                                    ) { result in
-                                        switch result {
-                                        case .success(let address):
-
-                                            #if DEBUG
-                                            print(address)
-                                            #endif
-
-                                            // save address
-                                            self.address = address
-
-                                            // next view
-                                            presentingNextView = true
-
-                                        case .failure(let error):
-                                            print(error)
-                                            // TODO: handle error
-                                        }
-                                    }
-                                } catch {
-                                    // TODO: Handle errors
+                                self.model.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue) {
+                                    // next view
+                                    presentingNextView = true
                                 }
                             }
                         }
