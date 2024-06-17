@@ -44,9 +44,8 @@
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
 		9C83D05B2C1DC46A006F8716 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D04C2C1DC46A006F8716 /* APIRequest.swift */; };
 		9C83D05C2C1DC46A006F8716 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D04D2C1DC46A006F8716 /* Balance.swift */; };
-		9C83D05D2C1DC46A006F8716 /* DataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D04E2C1DC46A006F8716 /* DataContainer.swift */; };
 		9C83D05F2C1DC46A006F8716 /* VaultError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0502C1DC46A006F8716 /* VaultError.swift */; };
-		9C83D0602C1DC46A006F8716 /* VaultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0512C1DC46A006F8716 /* VaultResponse.swift */; };
+		9C83D0602C1DC46A006F8716 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0512C1DC46A006F8716 /* Error.swift */; };
 		9C83D0612C1DC46A006F8716 /* GetBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0532C1DC46A006F8716 /* GetBalance.swift */; };
 		9C83D0622C1DC46A006F8716 /* HTTPParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0552C1DC46A006F8716 /* HTTPParameter.swift */; };
 		9C83D0632C1DC46A006F8716 /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0562C1DC46A006F8716 /* URLQueryItemEncoder.swift */; };
@@ -55,9 +54,9 @@
 		9C83D0682C1ED28C006F8716 /* BodyParamsEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0672C1ED28C006F8716 /* BodyParamsEncoder.swift */; };
 		9C83D06A2C1EF0F0006F8716 /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0692C1EF0F0006F8716 /* Execution.swift */; };
 		9C83D06C2C204373006F8716 /* GetOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D06B2C204373006F8716 /* GetOTP.swift */; };
-		9C83D06E2C204630006F8716 /* Ok.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D06D2C204630006F8716 /* Ok.swift */; };
 		9C83D0702C2046A6006F8716 /* VerifyOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D06F2C2046A6006F8716 /* VerifyOTP.swift */; };
 		9C83D0722C20495B006F8716 /* Deployment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0712C20495B006F8716 /* Deployment.swift */; };
+		9C83D0742C2061A2006F8716 /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C83D0732C2061A2006F8716 /* Empty.swift */; };
 		9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */; };
 		9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */; };
 		9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8B2BCD5D790077A60B /* String+character.swift */; };
@@ -159,9 +158,8 @@
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		9C83D04C2C1DC46A006F8716 /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		9C83D04D2C1DC46A006F8716 /* Balance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
-		9C83D04E2C1DC46A006F8716 /* DataContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContainer.swift; sourceTree = "<group>"; };
 		9C83D0502C1DC46A006F8716 /* VaultError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultError.swift; sourceTree = "<group>"; };
-		9C83D0512C1DC46A006F8716 /* VaultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultResponse.swift; sourceTree = "<group>"; };
+		9C83D0512C1DC46A006F8716 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		9C83D0532C1DC46A006F8716 /* GetBalance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetBalance.swift; sourceTree = "<group>"; };
 		9C83D0552C1DC46A006F8716 /* HTTPParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPParameter.swift; sourceTree = "<group>"; };
 		9C83D0562C1DC46A006F8716 /* URLQueryItemEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLQueryItemEncoder.swift; sourceTree = "<group>"; };
@@ -170,9 +168,9 @@
 		9C83D0672C1ED28C006F8716 /* BodyParamsEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyParamsEncoder.swift; sourceTree = "<group>"; };
 		9C83D0692C1EF0F0006F8716 /* Execution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
 		9C83D06B2C204373006F8716 /* GetOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOTP.swift; sourceTree = "<group>"; };
-		9C83D06D2C204630006F8716 /* Ok.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ok.swift; sourceTree = "<group>"; };
 		9C83D06F2C2046A6006F8716 /* VerifyOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyOTP.swift; sourceTree = "<group>"; };
 		9C83D0712C20495B006F8716 /* Deployment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deployment.swift; sourceTree = "<group>"; };
+		9C83D0732C2061A2006F8716 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Empty.swift; sourceTree = "<group>"; };
 		9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideExecution.swift; sourceTree = "<group>"; };
 		9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInput.swift; sourceTree = "<group>"; };
 		9CD1BE8B2BCD5D790077A60B /* String+character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+character.swift"; sourceTree = "<group>"; };
@@ -314,12 +312,11 @@
 			children = (
 				9C83D04C2C1DC46A006F8716 /* APIRequest.swift */,
 				9C83D04D2C1DC46A006F8716 /* Balance.swift */,
-				9C83D04E2C1DC46A006F8716 /* DataContainer.swift */,
 				9C83D0502C1DC46A006F8716 /* VaultError.swift */,
-				9C83D0512C1DC46A006F8716 /* VaultResponse.swift */,
+				9C83D0512C1DC46A006F8716 /* Error.swift */,
 				9C83D0692C1EF0F0006F8716 /* Execution.swift */,
-				9C83D06D2C204630006F8716 /* Ok.swift */,
 				9C83D0712C20495B006F8716 /* Deployment.swift */,
+				9C83D0732C2061A2006F8716 /* Empty.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -680,6 +677,7 @@
 				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
 				9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */,
 				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
+				9C83D0742C2061A2006F8716 /* Empty.swift in Sources */,
 				9C6259172BFB6A910039DE9C /* UIImage.swift in Sources */,
 				9C1C9D842C0D093F0028C8FD /* P256Signer.swift in Sources */,
 				9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */,
@@ -695,7 +693,6 @@
 				9C6259192BFCDCEC0039DE9C /* NewRecipientView.swift in Sources */,
 				9C4F451D2BDEEF0E00D44CBE /* Data+from.swift in Sources */,
 				9CD778D22BC4423C00BA4677 /* PhoneInput.swift in Sources */,
-				9C83D06E2C204630006F8716 /* Ok.swift in Sources */,
 				9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */,
 				9CD778B32BBC38F400BA4677 /* HistoricalGraph.swift in Sources */,
 				9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */,
@@ -704,7 +701,7 @@
 				9C83D0642C1DC46A006F8716 /* VaultAPIClient.swift in Sources */,
 				9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
-				9C83D0602C1DC46A006F8716 /* VaultResponse.swift in Sources */,
+				9C83D0602C1DC46A006F8716 /* Error.swift in Sources */,
 				9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */,
 				9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */,
 				9C6259102BFAADB90039DE9C /* NavigationBar.swift in Sources */,
@@ -751,7 +748,6 @@
 				9C1C9D922C0FB4760028C8FD /* ConfirmationView.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,
 				9C83D0702C2046A6006F8716 /* VerifyOTP.swift in Sources */,
-				9C83D05D2C1DC46A006F8716 /* DataContainer.swift in Sources */,
 				9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */,
 				9CD778C62BC1DEEA00BA4677 /* Navigation.swift in Sources */,
 			);
