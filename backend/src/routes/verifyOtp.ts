@@ -1,10 +1,10 @@
-import { desc } from 'drizzle-orm'
 import { eq } from 'drizzle-orm/pg-core/expressions'
 import type { FastifyInstance } from 'fastify'
 import { type Account, uint256 } from 'starknet'
+import { VerificationCheckListInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck'
 
 import { Entrypoint, VAULT_FACTORY_ADDRESS } from '@/constants/contracts'
-import { otp, registration } from '@/db/schema'
+import { registration } from '@/db/schema'
 import { computeAddress } from '@/utils/address'
 import { hashPhoneNumber } from '@/utils/phoneNumber'
 
@@ -15,7 +15,11 @@ interface VerifyOtpRequestBody {
   public_key_y: string
 }
 
-export function verifyOtp(fastify: FastifyInstance, deployer: Account) {
+export function verifyOtp(
+  fastify: FastifyInstance,
+  deployer: Account,
+  twilio_verification: VerificationCheckListInstance,
+) {
   fastify.post<{
     Body: VerifyOtpRequestBody
   }>(
@@ -40,41 +44,23 @@ export function verifyOtp(fastify: FastifyInstance, deployer: Account) {
       try {
         const { phone_number, sent_otp, public_key_x, public_key_y } = request.body
 
-        // validating the otp
-        // - if otp is old or otp is already used
-        const otp_record = await fastify.db
-          .select()
-          .from(otp)
-          .where(eq(otp.phone_number, phone_number))
-          .orderBy(desc(otp.created_at))
-          .limit(1)
+        // Create a verification request to twilio
+        const response = await twilio_verification
+          .create({
+            to: phone_number,
+            code: sent_otp,
+          })
+          .catch((error) => {
+            fastify.log.error(error)
+            return { status: 'unrequested' }
+          })
 
-        if (!otp_record.length) {
+        // The status of the verification. Can be: `pending`, `approved`, `canceled`, `max_attempts_reached`, `deleted`, `failed` or `expired`.
+        if (response.status != 'approved') {
           return reply.code(400).send({
-            message: 'You need to request the otp first.',
+            message: `Otp is ${response.status}.`,
           })
         }
-        const record = otp_record[0]
-
-        if (record.used) {
-          return reply.code(400).send({
-            message: 'otp already used.',
-          })
-        }
-
-        if (record.otp !== sent_otp) {
-          return reply.code(400).send({
-            message: 'Wrong otp.',
-          })
-        }
-
-        // update the otp as used
-        await fastify.db
-          .update(otp)
-          .set({
-            used: true,
-          })
-          .where(eq(otp.phone_number, phone_number))
 
         // public key, approver, limit
         const { transaction_hash } = await deployer.execute({
@@ -120,6 +106,7 @@ export function verifyOtp(fastify: FastifyInstance, deployer: Account) {
           contract_address: contractAddress,
         })
       } catch (error) {
+        console.log(error)
         fastify.log.error(error)
         return reply.code(500).send({ message: 'Internal Server Error' })
       }

@@ -32,7 +32,6 @@ describe('Get OTP test', () => {
 
     // reset db
     await app.db.delete(schema.registration)
-    await app.db.delete(schema.otp)
 
     // Insert balance to mock address
     await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' })
@@ -54,24 +53,6 @@ describe('Get OTP test', () => {
     })
 
     expect(response.statusCode).toBe(200)
-  })
-
-  test('should not send the otp to valid registered user (requesting twice within 15 mins of expiration time) : /get_otp', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/get_otp',
-      body: {
-        phone_number: testPhoneNumber,
-        nickname: testNickname,
-      },
-    })
-
-    const msg = {
-      message: 'You have already requested the OTP',
-    }
-
-    expect(response.body).toBe(JSON.stringify(msg))
-    expect(response.statusCode).toBe(400)
   })
 
   test('should fail for invalid phone_number', async () => {
