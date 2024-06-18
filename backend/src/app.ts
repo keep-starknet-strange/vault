@@ -1,5 +1,7 @@
+import dotenv from 'dotenv'
 import Fastify from 'fastify'
 import { Account } from 'starknet'
+import twilio from 'twilio'
 
 import { fastifyDrizzle } from '@/db/plugin'
 
@@ -18,6 +20,7 @@ export type AppConfiguration = {
 export async function buildApp(config: AppConfiguration) {
   const app = Fastify()
 
+  dotenv.config()
   app.register(fastifyDrizzle, {
     connectionString: config.database.connectionString,
   })
@@ -34,11 +37,23 @@ export async function buildApp(config: AppConfiguration) {
   if (!process.env.DEPLOYER_PK) {
     throw new Error('Deployer private key not set')
   }
+  if (!process.env.TWILIO_ACCOUNT_SSID) {
+    throw new Error('Twilio account ssid not set')
+  }
+  if (!process.env.TWILIO_AUTH_TOKEN) {
+    throw new Error('Twilio auth token not set')
+  }
+  if (!process.env.TWILIO_SERVICE_ID) {
+    throw new Error('Twilio service id not set')
+  }
 
   const deployer = new Account({ nodeUrl: process.env.NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
+  const twilio_services = twilio(process.env.TWILIO_ACCOUNT_SSID, process.env.TWILIO_AUTH_TOKEN).verify.v2.services(
+    process.env.TWILIO_SERVICE_ID,
+  )
 
   // Declare routes
-  declareRoutes(app, deployer)
+  declareRoutes(app, deployer, twilio_services)
 
   return app
 }

@@ -43,7 +43,7 @@
     "otp-generator": "^4.0.1",
     "postgres": "^3.4.4",
     "starknet": "^6.8.0",
-    "twilio": "^3.56.0",
+    "twilio": "^5.1.1",
     "viem": "^2.9.21"
   }
 }

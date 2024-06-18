@@ -1,7 +1,7 @@
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql'
 import dotenv from 'dotenv'
 import type { FastifyInstance } from 'fastify'
-import { afterAll, assert, beforeAll, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
 import { buildApp } from '@/app'
 
@@ -35,7 +35,6 @@ describe('Verify OTP test', () => {
 
     // reset db
     await app.db.delete(schema.registration)
-    await app.db.delete(schema.otp)
 
     // Insert balance to mock address
     await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' })
@@ -44,13 +43,6 @@ describe('Verify OTP test', () => {
     await app.db.insert(schema.registration).values({
       phone_number: testPhoneNumber,
       nickname: testNickname,
-    })
-
-    // adding a mock otp
-    await app.db.insert(schema.otp).values({
-      phone_number: testPhoneNumber,
-      otp: '666665',
-      used: true,
     })
   })
 
@@ -72,54 +64,7 @@ describe('Verify OTP test', () => {
     })
 
     const msg = {
-      message: 'You need to request the otp first.',
-    }
-
-    expect(response.body).toBe(JSON.stringify(msg))
-    expect(response.statusCode).toBe(400)
-  })
-
-  test(
-    'should verify the otp sent to the phone number : /verify_otp',
-    async () => {
-      // adding the otp to db
-      await app.db.insert(schema.otp).values({
-        phone_number: otherPhoneNumber,
-        otp: '666666',
-      })
-
-      const response = await app.inject({
-        method: 'POST',
-        url: '/verify_otp',
-        body: {
-          phone_number: otherPhoneNumber,
-          sent_otp: '666666',
-          public_key_x: testPublicKeyX,
-          public_key_y: testPublicKeyY,
-        },
-      })
-
-      assert(/^0x[0-9a-fA-F]{63}$/.test((await response.json()).contract_address))
-      expect(response.statusCode).toBe(200)
-    },
-    120 * 1000,
-    // 2 min test timeout
-  )
-
-  test('should not be able verify the otp already verified: /verify_otp', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/verify_otp',
-      body: {
-        phone_number: testPhoneNumber,
-        sent_otp: '666666',
-        public_key_x: testPublicKeyX,
-        public_key_y: testPublicKeyY,
-      },
-    })
-
-    const msg = {
-      message: 'otp already used.',
+      message: 'Otp is unrequested.',
     }
 
     expect(response.body).toBe(JSON.stringify(msg))

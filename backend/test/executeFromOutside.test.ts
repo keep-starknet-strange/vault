@@ -32,7 +32,6 @@ describe('executeFromOutside test', () => {
 
     // reset db
     await app.db.delete(schema.registration)
-    await app.db.delete(schema.otp)
   })
 
   afterAll(async () => {
