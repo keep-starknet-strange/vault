@@ -8,11 +8,16 @@
 import Foundation
 
 public struct GetBalance: APIRequest {
+
     public typealias Response = Balance
 
     // Notice how we create a composed resourceName
     public var resourceName: String {
         return "get_balance"
+    }
+
+    public var httpMethod: HTTPMethod {
+        return .GET
     }
 
     // Parameters

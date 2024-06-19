@@ -74,18 +74,6 @@
             ReferencedContainer = "container:Vault.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "VAULT_API_BASE_URL"
-            value = "https://api-production-e1fe.up.railway.app"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "STARKNET_RPC_API_KEY"
-            value = "jDKx7XygWHAY0i7s3zgzhV0We5Bsh0GvYye9GjhQWx0Ljrrg"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

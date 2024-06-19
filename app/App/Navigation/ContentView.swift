@@ -34,7 +34,9 @@ struct ContentView: View {
     }
 
     var body: some View {
-        if self.isOnboarded {
+        if !self.model.isProperlyConfigured {
+            ErrorView()
+        } else if self.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
                     NavigationStack {

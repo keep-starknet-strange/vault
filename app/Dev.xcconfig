@@ -1,0 +1,11 @@
+//
+//  Development.xcconfig
+//  Vault
+//
+//  Created by Charles Lanier on 18/06/2024.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_BASE_URL = api-production-e1fe.up.railway.app

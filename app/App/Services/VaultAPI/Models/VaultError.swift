@@ -10,5 +10,6 @@ import Foundation
 public enum VaultError: Error {
     case encoding
     case decoding
+    case unknown
     case server(message: String)
 }
