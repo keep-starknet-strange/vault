@@ -11,8 +11,6 @@ struct ContentView: View {
 
     @EnvironmentObject var model: Model
 
-    @AppStorage("isOnboarded") var isOnboarded: Bool = false
-
     @State private var selectedTab: Tab = Tab.payments
 
     init() {
@@ -36,7 +34,7 @@ struct ContentView: View {
     var body: some View {
         if !self.model.isProperlyConfigured {
             ErrorView()
-        } else if self.isOnboarded {
+        } else if self.model.isOnboarded {
             ZStack(alignment: .bottom) {
                 TabView(selection: $selectedTab) {
                     NavigationStack {

@@ -10,7 +10,7 @@ import ConfettiSwiftUI
 
 struct CelebrationView: View {
 
-    @AppStorage("isOnboarded") var isOnboarded: Bool = false
+    @EnvironmentObject var model: Model
 
     @State private var presentingNextView = false
     @State private var confetti = 0
@@ -43,7 +43,7 @@ struct CelebrationView: View {
                 }
 
                 PrimaryButton("Start exploring") {
-                    isOnboarded = true
+                    self.model.isOnboarded = true
                 }
             }
         }

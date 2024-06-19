@@ -26,9 +26,11 @@ enum Status: Equatable {
 class Model: ObservableObject {
 
     @AppStorage("starknetMainAddress") private var address: String = ""
+    @AppStorage("isOnboarded") var isOnboarded: Bool = false
 
     // API Data
     @Published var balance: USDCAmount?
+    @Published var txHistory: History?
 
     // App
     @Published var isLoading = false
@@ -98,9 +100,8 @@ class Model: ObservableObject {
         // Contacts
         checkContactsAuthorizationStatus()
 
-        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
-
         self.getBalance()
+        self.getTxHistory()
     }
 
     deinit {
@@ -185,6 +186,21 @@ extension Model {
             }
         }
     }
+
+    func getTxHistory() {
+        vaultService.send(GetTransactionsHistory(address: self.address, first: 10)) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    self.txHistory = History(address: self.address, transactions: response.transactions)
+
+                case .failure(let error):
+                    // TODO: Handle error
+                    print(error)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Country picker
@@ -248,7 +264,12 @@ extension Model {
         guard let phoneNumberFelt = Felt.fromShortString(phoneNumber) else {
             return nil
         }
-        let phoneNumberHex = phoneNumberFelt.toHex().dropFirst(2)
+
+        // TODO: remove this extra step after nonce support
+        guard let phoneNumberHex = Felt.fromShortString(phoneNumberFelt.toHex())?.toHex().dropFirst(2) else {
+            return nil
+        }
+
         guard let phoneNumberBytes = BigUInt(phoneNumberHex, radix: 16)?.serialize().bytes else {
             return nil
         }
