@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, or, sql } from 'drizzle-orm'
+import { and, desc, eq, lt, or, sql } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcTransfer } from '@/db/schema'
@@ -31,8 +31,9 @@ export function getTransactionHistory(fastify: FastifyInstance) {
         return reply.status(400).send({ error: 'Invalid address format.' })
       }
 
+      const firstTimestamp = after ? Number(after) : 0xfffffffffff // a timestamp large enough to be sure that it's in the future
+
       try {
-        const firstTimestamp = after ? Number(after) : Number(0)
         const txs = await fastify.db
           .select({
             transaction_timestamp: usdcTransfer.blockTimestamp,
@@ -53,12 +54,12 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .leftJoin(sql`registration AS "to_user"`, eq(usdcTransfer.toAddress, sql`"to_user"."contract_address"`))
           .where(
             and(
-              gt(usdcTransfer.blockTimestamp, new Date(firstTimestamp)),
+              lt(usdcTransfer.blockTimestamp, new Date(firstTimestamp)),
               or(eq(usdcTransfer.fromAddress, address), eq(usdcTransfer.toAddress, address)),
             ),
           )
           .limit(first)
-          .orderBy(asc(usdcTransfer.blockTimestamp))
+          .orderBy(desc(usdcTransfer.blockTimestamp))
           .execute()
 
         return reply.status(200).send({ transactions: txs })
