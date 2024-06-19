@@ -60,6 +60,9 @@
 		9C9F9EFC2C22368200620AC6 /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EEB2C22368200620AC6 /* URLQueryItemEncoder.swift */; };
 		9C9F9EFD2C22368200620AC6 /* VaultAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EED2C22368200620AC6 /* VaultAPIClient.swift */; };
 		9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */; };
+		9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD098892C22E32300FDDD8F /* GetTransactionsHistory.swift */; };
+		9CD0988C2C22E33800FDDD8F /* Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD0988B2C22E33800FDDD8F /* Transactions.swift */; };
+		9CD0988E2C22EBE500FDDD8F /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD0988D2C22EBE500FDDD8F /* History.swift */; };
 		9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */; };
 		9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE8B2BCD5D790077A60B /* String+character.swift */; };
 		9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD1BE972BD7C51A0077A60B /* PhoneNumber+Parse.swift */; };
@@ -178,6 +181,9 @@
 		9C9F9EEB2C22368200620AC6 /* URLQueryItemEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLQueryItemEncoder.swift; sourceTree = "<group>"; };
 		9C9F9EED2C22368200620AC6 /* VaultAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultAPIClient.swift; sourceTree = "<group>"; };
 		9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutsideExecution.swift; sourceTree = "<group>"; };
+		9CD098892C22E32300FDDD8F /* GetTransactionsHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTransactionsHistory.swift; sourceTree = "<group>"; };
+		9CD0988B2C22E33800FDDD8F /* Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transactions.swift; sourceTree = "<group>"; };
+		9CD0988D2C22EBE500FDDD8F /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		9CD1BE892BCD4F5B0077A60B /* OTPInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInput.swift; sourceTree = "<group>"; };
 		9CD1BE8B2BCD5D790077A60B /* String+character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+character.swift"; sourceTree = "<group>"; };
 		9CD1BE972BD7C51A0077A60B /* PhoneNumber+Parse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+Parse.swift"; sourceTree = "<group>"; };
@@ -323,6 +329,7 @@
 				9C9F9EE02C22368200620AC6 /* Error.swift */,
 				9C9F9EE12C22368200620AC6 /* Execution.swift */,
 				9C9F9EE22C22368200620AC6 /* VaultError.swift */,
+				9CD0988B2C22E33800FDDD8F /* Transactions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -334,6 +341,7 @@
 				9C9F9EE52C22368200620AC6 /* GetBalance.swift */,
 				9C9F9EE62C22368200620AC6 /* GetOTP.swift */,
 				9C9F9EE72C22368200620AC6 /* VerifyOTP.swift */,
+				9CD098892C22E32300FDDD8F /* GetTransactionsHistory.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -529,6 +537,7 @@
 				9C62591C2BFE20AF0039DE9C /* Contact.swift */,
 				9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */,
 				9CC82FF92C1BB9A30089042C /* OutsideExecution.swift */,
+				9CD0988D2C22EBE500FDDD8F /* History.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -696,6 +705,7 @@
 				9C9F9EFB2C22368200620AC6 /* HTTPParameter.swift in Sources */,
 				9C9F9EF32C22368200620AC6 /* Error.swift in Sources */,
 				9C9F9EF12C22368200620AC6 /* Deployment.swift in Sources */,
+				9CD0988E2C22EBE500FDDD8F /* History.swift in Sources */,
 				9C9F9EF02C22368200620AC6 /* Balance.swift in Sources */,
 				9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
@@ -733,6 +743,7 @@
 				9CD778CD2BC3115E00BA4677 /* PhoneValidationView.swift in Sources */,
 				9C6ABFD02C21D21A000227D2 /* Configuration.swift in Sources */,
 				9C4F451B2BDE999000D44CBE /* String+Error.swift in Sources */,
+				9CD0988C2C22E33800FDDD8F /* Transactions.swift in Sources */,
 				9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */,
 				9C62590C2BF9FFF60039DE9C /* Container.swift in Sources */,
 				9C6259152BFB5B9A0039DE9C /* SendingRecipientView.swift in Sources */,
@@ -755,6 +766,7 @@
 				9C6259082BF79F140039DE9C /* FancyAmount.swift in Sources */,
 				9C62591F2BFE56000039DE9C /* ContactRow.swift in Sources */,
 				9C5CFDAE2BC828C9001776E1 /* Model.swift in Sources */,
+				9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */,
 				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
 				9C1C9D922C0FB4760028C8FD /* ConfirmationView.swift in Sources */,
 				9C9F9EFD2C22368200620AC6 /* VaultAPIClient.swift in Sources */,

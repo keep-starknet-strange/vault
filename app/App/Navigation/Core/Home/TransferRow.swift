@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct TransferRow: View {
-    @State private var transfer: Transfer
-    @State private var me: User
+    @State private var transfer: Transaction
 
-    init(transfer: Transfer, me: User) {
+    init(transfer: Transaction) {
         self.transfer = transfer
-        self.me = me
     }
 
     var body: some View {
-        let isSpending = transfer.from.address == self.me.address
-        let displayedUser = isSpending ? transfer.to : transfer.from
+        let displayedUser = self.transfer.isSending ? transfer.to : transfer.from
 
         let dateFormatter = DateFormatter()
         let _ = dateFormatter.dateFormat = "HH:mm"
@@ -43,11 +40,11 @@ struct TransferRow: View {
                 )
                 .clipShape(Circle())
             } else {
-                NoAvatar(name: displayedUser.username)
+                NoAvatar(name: displayedUser.address == nil ? "?" : displayedUser.nickname)
             }
 
             VStack(alignment: .leading) {
-                Text(displayedUser.username).textTheme(.bodyPrimary)
+                Text(displayedUser.nickname).textTheme(.bodyPrimary)
 
                 Spacer()
 
@@ -57,18 +54,12 @@ struct TransferRow: View {
 
             Spacer()
 
-            Text("\(isSpending ? "-" : "")$\(transfer.amount.toFixed())")
-                .if(!isSpending) { view in
-                    view
-                        .fontWeight(.semibold)
-                }
+            Text("\(self.transfer.isSending ? "-" : "")$\(self.transfer.amount.toFixed())")
+                .fontWeight(self.transfer.isSending ? .regular : .semibold)
                 .textTheme(.bodySecondary)
                 .padding(EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6))
-                .if(!isSpending) { view in
-                    view
-                        .background(.accent)
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
-                }
+                .background(self.transfer.isSending ? .transparent : .accent)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
         }.fixedSize(horizontal: false, vertical: true)
     }
 }
