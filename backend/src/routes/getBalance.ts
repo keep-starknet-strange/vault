@@ -34,8 +34,6 @@ export function getBalanceRoute(fastify: FastifyInstance) {
           .innerJoin(subQuery, and(eq(usdcBalance.address, address), eq(usdcBalance.cursor, subQuery.maxCursor)))
           .execute()
 
-        console.log(balanceRecords)
-
         const balance = balanceRecords[0]?.balance ?? '0'
 
         return reply.send({ balance })
