@@ -24,21 +24,13 @@ struct Constants {
 
     // MARK: ENV
 
-    static let vaultBaseURL: URL = {
+    static let vaultBaseURL: URL? = {
         guard let urlString = ProcessInfo.processInfo.environment["VAULT_API_BASE_URL"],
               let url = URL(string: urlString) else {
-            fatalError("Vault API Base URL not configured properly.")
+            return nil
         }
 
         return url
-    }()
-
-    static let starknetRpcApiKey: String = {
-        guard let apiKey = ProcessInfo.processInfo.environment["STARKNET_RPC_API_KEY"] else {
-            fatalError("Starknet RPC API key not configured properly.")
-        }
-
-        return apiKey
     }()
 
     // MARK: ICONS

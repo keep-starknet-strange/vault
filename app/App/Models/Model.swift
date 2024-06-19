@@ -33,6 +33,7 @@ class Model: ObservableObject {
     // App
     @Published var isLoading = false
     @Published var showMessage = false
+    @Published var isProperlyConfigured: Bool
 
     // Sending USDC
     @Published var recipientContact: Contact?
@@ -86,28 +87,18 @@ class Model: ObservableObject {
             .sorted { $0.name < $1.name }
     }()
 
-    private lazy var provider: StarknetProviderProtocol = StarknetProvider(url: "https://rpc.nethermind.io/sepolia-juno/?apikey=\(Constants.starknetRpcApiKey)")!
-
     private lazy var signer = P256Signer()
-
-    private lazy var account: StarknetAccountProtocol = {
-        return StarknetAccount(
-            address: Felt(stringLiteral: self.address),
-            signer: self.signer,
-            provider: self.provider,
-            chainId: .sepolia,
-            cairoVersion: .one
-        )
-    }()
 
     init(vaultService: VaultService) {
         // Vault API
         self.vaultService = vaultService
 
+        self.isProperlyConfigured = self.vaultService.healthCheck
+
         // Contacts
         checkContactsAuthorizationStatus()
 
-//        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
+        self.address = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
 
         self.getBalance()
     }
@@ -126,17 +117,19 @@ extension Model {
 
         // TODO: implement nickname support
         vaultService.send(GetOTP(phoneNumber: phoneNumber, nickname: "nickname")) { result in
-            self.isLoading = false
+            DispatchQueue.main.async {
+                self.isLoading = false
 
-            switch result {
-            case .success(let response):
-                onSuccess()
+                switch result {
+                case .success:
+                    onSuccess()
 
-            case .failure(let error):
-                // TODO: Handle error
-                #if DEBUG
-                print(error)
-                #endif
+                case .failure(let error):
+                    // TODO: Handle error
+#if DEBUG
+                    print(error)
+#endif
+                }
             }
         }
     }
@@ -154,18 +147,20 @@ extension Model {
             self.isLoading = true
 
             vaultService.send(VerifyOTP(phoneNumber: phoneNumber, sentOTP: otp, publicKey: publicKey)) { result in
-                self.isLoading = false
+                DispatchQueue.main.async {
+                    self.isLoading = false
 
-                switch result {
-                case .success(let response):
-                    self.address = response.contract_address
-                    onSuccess()
+                    switch result {
+                    case .success(let response):
+                        self.address = response.contract_address
+                        onSuccess()
 
-                case .failure(let error):
-                    // TODO: Handle error
-                    #if DEBUG
-                    print(error)
-                    #endif
+                    case .failure(let error):
+                        // TODO: Handle error
+#if DEBUG
+                        print(error)
+#endif
+                    }
                 }
             }
         } catch {
@@ -178,13 +173,15 @@ extension Model {
 
     func getBalance() {
         vaultService.send(GetBalance(address: self.address)) { result in
-            switch result {
-            case .success(let response):
-                self.balance = USDCAmount(from: response.balance)!
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    self.balance = USDCAmount(from: response.balance)!
 
-            case .failure(let error):
-                // TODO: Handle error
-                print(error)
+                case .failure(let error):
+                    // TODO: Handle error
+                    print(error)
+                }
             }
         }
     }
@@ -236,17 +233,13 @@ extension Model {
 
 extension Model {
 
-    // invoke
-
-    func executeTransaction(signedTransaction: StarknetInvokeTransactionV1) async throws -> StarknetInvokeTransactionResponse {
-        return try await self.provider.addInvokeTransaction(signedTransaction)
-    }
-
     // sign
 
     func signOutsideExecution(outsideExecution: OutsideExecution) async throws -> StarknetSignature {
-        print("MessageHash: \(self.outsideExecution!.getMessageHash(forSigner: self.account.address))")
-        return try self.signer.sign(transactionHash: self.outsideExecution!.getMessageHash(forSigner: self.account.address))
+        let feltAddress = Felt(fromHex: self.address)!
+
+        print("MessageHash: \(self.outsideExecution!.getMessageHash(forSigner: feltAddress))")
+        return try self.signer.sign(transactionHash: self.outsideExecution!.getMessageHash(forSigner: feltAddress))
     }
 
     // addr utils
