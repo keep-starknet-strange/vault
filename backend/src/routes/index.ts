@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 import type { Account } from 'starknet'
-import { ServiceListInstance } from 'twilio/lib/rest/verify/v2/service'
+import { ServiceContext } from 'twilio/lib/rest/verify/v2/service'
 
 import type { Database } from '@/db/drizzle'
 
@@ -18,7 +18,7 @@ import { verifyOtp } from './verifyOtp'
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/
 
-export function declareRoutes(fastify: FastifyInstance, deployer: Account, twilio_services: ServiceListInstance) {
+export function declareRoutes(fastify: FastifyInstance, deployer: Account, twilio_services: ServiceContext) {
   getStatusRoute(fastify)
   getBalanceRoute(fastify)
   getCurrentExpenseRoute(fastify)

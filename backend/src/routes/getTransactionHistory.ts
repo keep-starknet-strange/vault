@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, or, sql } from 'drizzle-orm'
+import { and, asc, eq, lt, or, sql } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcTransfer } from '@/db/schema'
@@ -53,7 +53,7 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .leftJoin(sql`registration AS "to_user"`, eq(usdcTransfer.toAddress, sql`"to_user"."contract_address"`))
           .where(
             and(
-              gt(usdcTransfer.blockTimestamp, new Date(firstTimestamp)),
+              lt(usdcTransfer.blockTimestamp, new Date(firstTimestamp)),
               or(eq(usdcTransfer.fromAddress, address), eq(usdcTransfer.toAddress, address)),
             ),
           )
