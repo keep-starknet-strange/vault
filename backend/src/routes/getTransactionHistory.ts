@@ -6,6 +6,8 @@ import { fromCursorHash, toCursorHash } from '@/utils/pagination'
 
 import { addressRegex } from '.'
 
+const MAX_PAGE_SIZE = 20
+
 function getCursorQuery(cursor?: string): Parameters<typeof and> {
   const [transferId, timestamp] = fromCursorHash(cursor)
 
@@ -21,8 +23,8 @@ function getCursorQuery(cursor?: string): Parameters<typeof and> {
 }
 
 interface TransactionHistoryQuery {
-  address: string
-  first: string
+  address?: string
+  first?: string
   after?: string
 }
 
@@ -32,14 +34,14 @@ export function getTransactionHistory(fastify: FastifyInstance) {
 
     async (request, reply) => {
       const { address, first: firstStr, after } = request.query as TransactionHistoryQuery
-      const first = Number(firstStr)
+      const first = Number(firstStr ?? MAX_PAGE_SIZE)
 
       if (!address) {
         return reply.status(400).send({ error: 'Address is required.' })
       }
 
-      if (!first) {
-        return reply.status(400).send({ error: 'First is required.' })
+      if (first > MAX_PAGE_SIZE) {
+        return reply.status(400).send({ error: `First cannot exceed ${MAX_PAGE_SIZE}.` })
       }
 
       // Validate address format
