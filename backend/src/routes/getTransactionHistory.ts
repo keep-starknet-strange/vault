@@ -85,7 +85,7 @@ export function getTransactionHistory(fastify: FastifyInstance) {
 
         const hasNext = txs.length > first
 
-        return reply.status(200).send({ transactions: txs.slice(0, first), endCursor, hasNext })
+        return reply.status(200).send({ items: txs.slice(0, first), endCursor, hasNext })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ error: 'Internal server error' })
