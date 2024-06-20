@@ -25,12 +25,11 @@ enum Status: Equatable {
 @MainActor
 class Model: ObservableObject {
 
-    @AppStorage("starknetMainAddress") private var address: String = ""
+    @AppStorage("starknetMainAddress") var address: String = ""
     @AppStorage("isOnboarded") var isOnboarded: Bool = false
 
     // API Data
     @Published var balance: USDCAmount?
-    @Published var txHistory: History?
 
     // App
     @Published var isLoading = false
@@ -73,10 +72,6 @@ class Model: ObservableObject {
         return Double(amount.hasSuffix(".") ? "\(amount)0" : amount) ?? 0
     }
 
-    private var updatesHandler: Task<Void, Error>? = nil
-
-    private var vaultService: VaultService
-
     private var contactStore = CNContactStore()
 
     private let phoneNumberKit = PhoneNumberKit()
@@ -91,21 +86,15 @@ class Model: ObservableObject {
 
     private lazy var signer = P256Signer()
 
-    init(vaultService: VaultService) {
+    init() {
         // Vault API
-        self.vaultService = vaultService
-
-        self.isProperlyConfigured = self.vaultService.healthCheck
+        self.isProperlyConfigured = VaultService.shared.healthCheck
 
         // Contacts
-        checkContactsAuthorizationStatus()
+        self.checkContactsAuthorizationStatus()
 
+        // balance
         self.getBalance()
-        self.getTxHistory()
-    }
-
-    deinit {
-        updatesHandler?.cancel()
     }
 }
 
@@ -117,7 +106,7 @@ extension Model {
         self.isLoading = true
 
         // TODO: implement nickname support
-        vaultService.send(GetOTP(phoneNumber: phoneNumber, nickname: "nickname")) { result in
+        VaultService.shared.send(GetOTP(phoneNumber: phoneNumber, nickname: "nickname")) { result in
             DispatchQueue.main.async {
                 self.isLoading = false
 
@@ -147,7 +136,7 @@ extension Model {
 
             self.isLoading = true
 
-            vaultService.send(VerifyOTP(phoneNumber: phoneNumber, sentOTP: otp, publicKey: publicKey)) { result in
+            VaultService.shared.send(VerifyOTP(phoneNumber: phoneNumber, sentOTP: otp, publicKey: publicKey)) { result in
                 DispatchQueue.main.async {
                     self.isLoading = false
 
@@ -173,26 +162,11 @@ extension Model {
     }
 
     func getBalance() {
-        vaultService.send(GetBalance(address: self.address)) { result in
+        VaultService.shared.send(GetBalance(address: self.address)) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
                     self.balance = USDCAmount(from: response.balance)!
-
-                case .failure(let error):
-                    // TODO: Handle error
-                    print(error)
-                }
-            }
-        }
-    }
-
-    func getTxHistory() {
-        vaultService.send(GetTransactionsHistory(address: self.address, first: 10)) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self.txHistory = History(address: self.address, transactions: response.transactions)
 
                 case .failure(let error):
                     // TODO: Handle error
@@ -374,7 +348,7 @@ extension Model {
 
         self.sendingStatus = .loading
 
-        vaultService.send(
+        VaultService.shared.send(
             ExecuteFromOutside(
                 address: self.address,
                 outsideExecution: outsideExecution,

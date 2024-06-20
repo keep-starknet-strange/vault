@@ -9,7 +9,7 @@ import Foundation
 
 public struct GetTransactionsHistory: APIRequest {
 
-    public typealias Response = RawTransactions
+    public typealias Response = VaultPage<RawTransaction>
 
     // Notice how we create a composed resourceName
     public var resourceName: String {
@@ -23,9 +23,11 @@ public struct GetTransactionsHistory: APIRequest {
     // Parameters
     public let address: String
     public let first: Int
+    public let after: String?
 
-    public init(address: String, first: Int) {
+    public init(address: String, first: Int, after: String?) {
         self.address = address
         self.first = first
+        self.after = after
     }
 }

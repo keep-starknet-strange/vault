@@ -62,7 +62,7 @@ struct PhoneValidationView: View {
 #if DEBUG
 struct PhoneValidationViewPreviews : PreviewProvider {
 
-    @StateObject static var model = Model(vaultService: VaultService())
+    @StateObject static var model = Model()
 
     static let phoneNumberKit = PhoneNumberKit()
 
