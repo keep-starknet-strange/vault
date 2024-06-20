@@ -19,7 +19,3 @@ public struct RawTransaction: Decodable {
     public let from: RawTransactionUser
     public let to: RawTransactionUser
 }
-
-public struct RawTransactions: Decodable {
-    public let transactions: [RawTransaction]
-}

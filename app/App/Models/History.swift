@@ -43,19 +43,3 @@ class Transaction: Identifiable {
         self.isSending = transaction.from.contract_address == address
     }
 }
-
-class History {
-    let transactions: [Transaction]
-
-    var groupedTransactions: [Date: [Transaction]] {
-        get {
-            Dictionary(grouping: self.transactions) { (transaction) -> Date in
-                return Calendar.current.startOfDay(for: transaction.date)
-            }
-        }
-    }
-
-    init(address: String, transactions: [RawTransaction]) {
-        self.transactions = transactions.map { Transaction(address: address, transaction: $0) }
-    }
-}

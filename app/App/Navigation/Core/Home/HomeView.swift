@@ -11,6 +11,8 @@ struct HomeView: View {
 
     @EnvironmentObject private var model: Model
 
+    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 1, pageSize: 1, source: TransactionHistory())
+
     @State private var showingAddFundsWebView = false
 
     var body: some View {
@@ -78,43 +80,45 @@ struct HomeView: View {
 
             // MARK: History
 
-            if let txHistory = self.model.txHistory {
-                ForEach(
-                    txHistory.groupedTransactions.keys.sorted(by: >),
-                    id: \.self
-                ) { day in
-                    Section {
-                        ForEach(0..<txHistory.groupedTransactions[day]!.count, id: \.self) { index in
-                            let transfer = txHistory.groupedTransactions[day]![index]
-                            let isFirst = index == 0;
-                            let isLast = index == txHistory.groupedTransactions[day]!.count - 1
+            ForEach(
+                self.txHistoryModel.source.groupedTransactions.keys.sorted(by: >),
+                id: \.self
+            ) { day in
+                Section {
+                    ForEach(0..<self.txHistoryModel.source.groupedTransactions[day]!.count, id: \.self) { index in
+                        let transfer = self.txHistoryModel.source.groupedTransactions[day]![index]
+                        let isFirst = index == 0;
+                        let isLast = index == self.txHistoryModel.source.groupedTransactions[day]!.count - 1
 
-                            TransferRow(transfer: transfer)
-                                .padding(16)
-                                .background(.background2)
-                                .clipShape(
-                                    .rect(
-                                        topLeadingRadius: isFirst ? 16 : 0,
-                                        bottomLeadingRadius: isLast ? 16 : 0,
-                                        bottomTrailingRadius: isLast ? 16 : 0,
-                                        topTrailingRadius: isFirst ? 16 : 0
-                                    )
+                        TransferRow(transfer: transfer)
+                            .onAppear {
+                                self.txHistoryModel.onItemAppear(transfer)
+                            }
+                            .padding(16)
+                            .background(.background2)
+                            .clipShape(
+                                .rect(
+                                    topLeadingRadius: isFirst ? 16 : 0,
+                                    bottomLeadingRadius: isLast ? 16 : 0,
+                                    bottomTrailingRadius: isLast ? 16 : 0,
+                                    topTrailingRadius: isFirst ? 16 : 0
                                 )
-                        }
-                    } header: {
-                        Text(self.formatSectionHeader(for: day).uppercased())
-                            .textTheme(.headlineSmall)
-                            .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
+                            )
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(EmptyView())
+                } header: {
+                    Text(self.formatSectionHeader(for: day).uppercased())
+                        .textTheme(.headlineSmall)
+                        .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
                 }
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowSeparator(.hidden)
+                .listRowBackground(EmptyView())
             }
         }
         .onAppear {
             // dirty hack to remove the top padding of the list
             UICollectionView.appearance().contentInset.top = -30
+            self.txHistoryModel.loadNext()
         }
         .safeAreaInset(edge: .bottom) {
             EmptyView().frame(height: 90)
@@ -154,7 +158,7 @@ struct HomeView: View {
 #Preview {
     struct HomeViewPreviews: View {
 
-        @StateObject var model = Model(vaultService: VaultService())
+        @StateObject var model = Model()
 
         var body: some View {
             NavigationStack {

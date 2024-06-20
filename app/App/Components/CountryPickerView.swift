@@ -88,7 +88,7 @@ struct CountryPickerView: View {
 #if DEBUG
 struct CountryPickerViewPreviews : PreviewProvider {
 
-    @StateObject static var model = Model(vaultService: VaultService())
+    @StateObject static var model = Model()
 
     @State static var isPresented = true
     @State static var selectedRegionCode = Locale.current.regionOrFrance.identifier

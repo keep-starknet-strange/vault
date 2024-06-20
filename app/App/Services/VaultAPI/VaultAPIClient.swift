@@ -21,6 +21,8 @@ public typealias ResultCallback<Value> = (Result<Value, Error>) -> Void
 
 class VaultService {
 
+    static let shared = VaultService()
+
     var healthCheck: Bool {
         return baseEndpointUrl != nil
     }

@@ -53,7 +53,7 @@ struct PhoneRequestView: View {
 #if DEBUG
 struct PhoneRequestViewPreviews : PreviewProvider {
 
-    @StateObject static var model = Model(vaultService: VaultService())
+    @StateObject static var model = Model()
 
     static var previews: some View {
         NavigationStack {

@@ -111,7 +111,7 @@ struct ConfirmationView: View {
     struct ConfirmationViewPreviews : View {
 
         @StateObject var model = {
-            let model = Model(vaultService: VaultService())
+            let model = Model()
 
             model.setRecipient(Contact(name: "Very Long Bobby Name", phone: "+33612345678"))
 
