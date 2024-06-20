@@ -9,8 +9,6 @@ import { addressRegex } from '.'
 function getCursorQuery(cursor?: string): Parameters<typeof and> {
   const [transferId, timestamp] = fromCursorHash(cursor)
 
-  console.log(transferId, timestamp)
-
   return [
     or(
       and(
