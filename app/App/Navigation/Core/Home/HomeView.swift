@@ -11,7 +11,7 @@ struct HomeView: View {
 
     @EnvironmentObject private var model: Model
 
-    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 1, pageSize: 1, source: TransactionHistory())
+    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 1, pageSize: 1)
 
     @State private var showingAddFundsWebView = false
 
@@ -80,45 +80,47 @@ struct HomeView: View {
 
             // MARK: History
 
-            ForEach(
-                self.txHistoryModel.source.groupedTransactions.keys.sorted(by: >),
-                id: \.self
-            ) { day in
-                Section {
-                    ForEach(0..<self.txHistoryModel.source.groupedTransactions[day]!.count, id: \.self) { index in
-                        let transfer = self.txHistoryModel.source.groupedTransactions[day]![index]
-                        let isFirst = index == 0;
-                        let isLast = index == self.txHistoryModel.source.groupedTransactions[day]!.count - 1
+            if let txHistory = self.txHistoryModel.source {
+                ForEach(
+                    txHistory.groupedTransactions.keys.sorted(by: >),
+                    id: \.self
+                ) { day in
+                    Section {
+                        ForEach(0..<txHistory.groupedTransactions[day]!.count, id: \.self) { index in
+                            let transfer = txHistory.groupedTransactions[day]![index]
+                            let isFirst = index == 0;
+                            let isLast = index == txHistory.groupedTransactions[day]!.count - 1
 
-                        TransferRow(transfer: transfer)
-                            .onAppear {
-                                self.txHistoryModel.onItemAppear(transfer)
-                            }
-                            .padding(16)
-                            .background(.background2)
-                            .clipShape(
-                                .rect(
-                                    topLeadingRadius: isFirst ? 16 : 0,
-                                    bottomLeadingRadius: isLast ? 16 : 0,
-                                    bottomTrailingRadius: isLast ? 16 : 0,
-                                    topTrailingRadius: isFirst ? 16 : 0
+                            TransferRow(transfer: transfer)
+                                .onAppear {
+                                    self.txHistoryModel.onItemAppear(transfer)
+                                }
+                                .padding(16)
+                                .background(.background2)
+                                .clipShape(
+                                    .rect(
+                                        topLeadingRadius: isFirst ? 16 : 0,
+                                        bottomLeadingRadius: isLast ? 16 : 0,
+                                        bottomTrailingRadius: isLast ? 16 : 0,
+                                        topTrailingRadius: isFirst ? 16 : 0
+                                    )
                                 )
-                            )
+                        }
+                    } header: {
+                        Text(self.formatSectionHeader(for: day).uppercased())
+                            .textTheme(.headlineSmall)
+                            .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
                     }
-                } header: {
-                    Text(self.formatSectionHeader(for: day).uppercased())
-                        .textTheme(.headlineSmall)
-                        .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(EmptyView())
                 }
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowSeparator(.hidden)
-                .listRowBackground(EmptyView())
             }
         }
         .onAppear {
             // dirty hack to remove the top padding of the list
             UICollectionView.appearance().contentInset.top = -30
-            self.txHistoryModel.loadNext()
+            self.txHistoryModel.start(withSource: TransactionHistory(address: self.model.address))
         }
         .safeAreaInset(edge: .bottom) {
             EmptyView().frame(height: 90)
