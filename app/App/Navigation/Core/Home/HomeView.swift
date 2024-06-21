@@ -34,43 +34,46 @@ struct HomeView: View {
                 // MARK: Transfers
 
                 HStack {
-                    Spacer(minLength: 16)
+                    Spacer(minLength: 8)
 
-                    IconButtonWithText("Send") {
+                    IconButton(size: .large, priority: .primary) {
                         self.model.showSendingView = true
                     } icon: {
                         Image(systemName: "arrow.up")
                             .iconify()
                             .fontWeight(.semibold)
                     }
+                    .withText("Send")
                     .frame(maxWidth: .infinity)
 
-                    Spacer(minLength: 8)
+                    Spacer()
 
-                    IconButtonWithText("Request") {
+                    IconButton(size: .large) {
                         // TODO: Handle sending
                     } icon: {
                         Image(systemName: "arrow.down")
                             .iconify()
                             .fontWeight(.semibold)
                     }
+                    .withText("Request")
                     .frame(maxWidth: .infinity)
 
-                    Spacer(minLength: 8)
+                    Spacer()
 
-                    IconButtonWithText("Add funds") {
+                    IconButton(size: .large) {
                         self.showingAddFundsWebView = true
                     } icon: {
                         Image(systemName: "plus")
                             .iconify()
-                            .fontWeight(.semibold)
+                            .fontWeight(.medium)
                     }
+                    .withText("Add funds")
                     .frame(maxWidth: .infinity)
                     .sheet(isPresented: $showingAddFundsWebView) {
                         WebView(url: URL(string: "https://app.fun.xyz")!)
                     }
 
-                    Spacer(minLength: 16)
+                    Spacer(minLength: 8)
                 }
             }
             .padding(.bottom, 16)

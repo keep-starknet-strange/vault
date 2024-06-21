@@ -96,7 +96,7 @@ enum IconButtonSize {
             return 36
 
         case .large:
-            return 52
+            return 64
 
         case .custom(let buttonSize, _):
             return buttonSize
@@ -109,7 +109,7 @@ enum IconButtonSize {
             return 12
 
         case .large:
-            return 16
+            return 20
 
         case .custom(_, let iconSize):
             return iconSize
@@ -117,10 +117,27 @@ enum IconButtonSize {
     }
 }
 
+enum IconButtonPriority {
+    case primary
+    case secondary
+
+    var background: Color {
+        switch self {
+        case .primary:
+            return .accent
+
+        case .secondary:
+            return .background2
+        }
+    }
+}
+
 struct IconButtonStyle: ButtonStyle {
+    let priority: IconButtonPriority
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .background(.background2)
+            .background(self.priority.background)
             .clipShape(Capsule())
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
@@ -129,13 +146,20 @@ struct IconButtonStyle: ButtonStyle {
 
 struct IconButton<Icon>: View where Icon : View {
     let size: IconButtonSize
+    let priority: IconButtonPriority
     let icon: Icon
     let action: () -> Void
 
-    init(size: IconButtonSize = .medium, action: @escaping () -> Void, @ViewBuilder icon: () -> Icon) {
+    init(
+        size: IconButtonSize = .medium, 
+        priority: IconButtonPriority = .secondary,
+        action: @escaping () -> Void,
+        @ViewBuilder icon: () -> Icon
+    ) {
         self.icon = icon()
         self.size = size
         self.action = action
+        self.priority = priority
     }
 
     var body: some View {
@@ -148,27 +172,23 @@ struct IconButton<Icon>: View where Icon : View {
                 }
                 .frame(width: self.size.buttonSize, height: self.size.buttonSize)
             }
-            .buttonStyle(IconButtonStyle())
+            .buttonStyle(IconButtonStyle(priority: self.priority))
         }
+    }
+
+    @ViewBuilder func withText(_ text: String) -> some View {
+        self.modifier(IconButtonWithTextModifier(text: text))
     }
 }
 
-struct IconButtonWithText<Icon>: View where Icon : View {
-    let text: String
-    let icon: Icon
-    let action: () -> Void
+struct IconButtonWithTextModifier: ViewModifier {
+    var text: String
 
-    init(_ text: String, action: @escaping () -> Void, @ViewBuilder icon: () -> Icon) {
-        self.text = text
-        self.icon = icon()
-        self.action = action
-    }
-
-    var body: some View {
+    func body(content: Content) -> some View {
         VStack(spacing: 10) {
-            IconButton(size: .large, action: self.action) {
-                self.icon
-            }
+            content
+                .preferredColorScheme(.dark)
+                .background(.background1)
 
             Text(self.text).textTheme(.buttonIcon)
         }
@@ -213,12 +233,15 @@ struct NoopButtonStyle: ButtonStyle {
             Spacer()
 
             HStack {
-                IconButtonWithText("Settings") {} icon: {
+                IconButton(size: .large) {} icon: {
                     Image("Gear").iconify()
                 }
-                IconButtonWithText("Face ID") {} icon: {
+                .withText("Settings")
+
+                IconButton(size: .large) {} icon: {
                     Image("FaceID").iconify()
                 }
+                .withText("Face ID")
             }
 
             Spacer()
