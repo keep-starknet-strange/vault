@@ -121,8 +121,8 @@ describe('GET /transaction history route', () => {
     expect(response.statusCode).toBe(200)
 
     const mockResponseObj = generateMockData(testAddress, first, startValue, true, test_user)
-    expect(response.json().transactions).toMatchObject(mockResponseObj)
-    expect(response.json().transactions).toHaveLength(first)
+    expect(response.json().items).toMatchObject(mockResponseObj)
+    expect(response.json().items).toHaveLength(first)
   })
 
   test('should return the first 9 entries', async () => {
@@ -137,8 +137,8 @@ describe('GET /transaction history route', () => {
     expect(response.statusCode).toBe(200)
 
     const mockResponseObj = generateMockData(testAddress, first, startValue, true, test_user)
-    expect(response.json().transactions).toMatchObject(mockResponseObj)
-    expect(response.json().transactions).toHaveLength(first)
+    expect(response.json().items).toMatchObject(mockResponseObj)
+    expect(response.json().items).toHaveLength(first)
   })
   test('should return all the txs', async () => {
     const txsNb = 10
@@ -152,8 +152,8 @@ describe('GET /transaction history route', () => {
     expect(response.statusCode).toBe(200)
 
     const mockResponseObj = generateMockData(testAddress, txsNb, 0, true, test_user)
-    expect(response.json().transactions).toMatchObject(mockResponseObj)
-    expect(response.json().transactions).toHaveLength(txsNb)
+    expect(response.json().items).toMatchObject(mockResponseObj)
+    expect(response.json().items).toHaveLength(txsNb)
   })
 
   test('should return empty list unknown address', async () => {
@@ -166,8 +166,8 @@ describe('GET /transaction history route', () => {
 
     expect(response.statusCode).toBe(200)
 
-    expect(response.json().transactions).toMatchObject([])
-    expect(response.json().transactions).toHaveLength(0)
+    expect(response.json().items).toMatchObject([])
+    expect(response.json().items).toHaveLength(0)
   })
 
   test('should return an error wrong address format', async () => {
