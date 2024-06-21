@@ -6,15 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
-
-public protocol Page {
-
-    associatedtype Item: Identifiable
-
-    var info: PageInfo { get set }
-    var items: [Item] { get set }
-}
 
 public enum PaginationState: Equatable {
     case loading
@@ -39,7 +30,7 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
 
     public typealias Item = TPageable.TPage.Item
 
-    @Published private(set) var source: TPageable
+    @Published private(set) var source: TPageable?
 
     private let pageSize: Int
     private let threshold: Int
@@ -47,7 +38,7 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
 
     private var lastPageInfo: PageInfo = .default
 
-    init(threshold: Int, pageSize: Int, source: TPageable) {
+    init(threshold: Int, pageSize: Int) {
         self.threshold = threshold
         self.pageSize = pageSize
         self.source = source
@@ -65,6 +56,14 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
 
     private var canLoadMorePages: Bool { lastPageInfo.hasNext }
 
+    public func start(withSource source: TPageable) {
+        // prevent double start
+        if self.source != nil { return }
+
+        self.source = source
+        self.loadNext()
+    }
+
     public func loadNext() {
         self.state = .loading
         self.currentTask = Task {
@@ -73,6 +72,8 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
     }
 
     public func onItemAppear(_ item: Item) {
+        guard let source = self.source else { return }
+
         // (1) appeared: No more pages
         if !self.canLoadMorePages {
             return
@@ -84,12 +85,12 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
         }
 
         // (3) No index
-        guard let index = self.source.items.firstIndex(where: { $0.id == item.id }) else {
+        guard let index = source.items.firstIndex(where: { $0.id == item.id }) else {
             return
         }
 
         // (4) appeared: Threshold not reached
-        let thresholdIndex = self.source.items.index(self.source.items.endIndex, offsetBy: -threshold)
+        let thresholdIndex = source.items.index(source.items.endIndex, offsetBy: -threshold)
         if index != thresholdIndex {
             return
         }
@@ -99,9 +100,11 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
     }
 
     func loadMoreItems() async {
+        guard let source = self.source else { return }
+
         do {
             // (1) Ask the source for a page
-            let nextPage = try await self.source.loadPage(pageInfo: self.lastPageInfo, pageSize: self.pageSize)
+            let nextPage = try await source.loadPage(pageInfo: self.lastPageInfo, pageSize: self.pageSize)
 
             // (2) Task has been cancelled
             if Task.isCancelled { return }
@@ -112,7 +115,7 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
             // (4) Publish our changes to SwiftUI by setting our items and state
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.source.addItems(items: nextPage.items)
+                self.source?.addItems(items: nextPage.items)
                 self.state = .loaded
             }
         } catch {
@@ -123,95 +126,5 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
                 self.state = .error(error: error)
             }
         }
-    }
-}
-
-public protocol PageableSource {
-
-    associatedtype TPage: Page
-
-    var items: [TPage.Item] { get }
-
-    func loadPage(pageInfo: PageInfo, pageSize: Int) async throws -> TPage
-
-    mutating func addItems(items: [TPage.Item])
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-struct TransactionHistory: PageableSource {
-
-    typealias Item = Transaction
-
-    var transactions: [Item] = []
-    var groupedTransactions: [Date: [Item]] = [:]
-
-    var items: [Item] { transactions }
-
-    private let address: String = "0x039fd69d03e3735490a86925612072c5612cbf7a0223678619a1b7f30f4bdc8f"
-
-    public func loadPage(pageInfo: PageInfo, pageSize: Int) async throws -> TransactionsPage {
-        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<TransactionsPage, any Error>) in
-            VaultService.shared.send(GetTransactionsHistory(address: self.address, first: pageSize, after: pageInfo.endCursor)) { result in
-                switch result {
-                case .success(let response):
-                    let pageInfo = PageInfo(hasNext: response.hasNext, endCursor: response.endCursor)
-                    let transactions = response.items.map { Item(address: self.address, transaction: $0) }
-
-                    continuation.resume(returning: TransactionsPage(info: pageInfo, items: transactions))
-
-                case .failure(let error):
-                    // TODO: Handle error
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    public mutating func addItems(items: [Transaction]) {
-        self.transactions = items
-
-        print(items)
-        print(self.transactions)
-
-        items.forEach { item in
-            let day = Calendar.current.startOfDay(for: item.date)
-
-            if self.groupedTransactions[day] == nil {
-                self.groupedTransactions[day] = [item]
-            } else {
-                self.groupedTransactions[day]! += [item]
-            }
-        }
-    }
-}
-
-class TransactionsPage: Page {
-
-    typealias Item = Transaction
-
-    var info: PageInfo
-    var items: [Item]
-
-    init(info: PageInfo, items: [Item]) {
-        self.info = info
-        self.items = items
     }
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9C09176C2C2466280068FAF5 /* PageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C09176B2C2466280068FAF5 /* PageInfo.swift */; };
+		9C09176F2C2573580068FAF5 /* Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C09176E2C2573580068FAF5 /* Transactions.swift */; };
+		9C0917712C25737C0068FAF5 /* PageableSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0917702C25737C0068FAF5 /* PageableSource.swift */; };
+		9C0917742C2573B00068FAF5 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0917732C2573B00068FAF5 /* Page.swift */; };
 		9C1C9D842C0D093F0028C8FD /* P256Signer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D832C0D093F0028C8FD /* P256Signer.swift */; };
 		9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D852C0D0F320028C8FD /* Uint256.swift */; };
 		9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */; };
@@ -130,6 +133,9 @@
 
 /* Begin PBXFileReference section */
 		9C09176B2C2466280068FAF5 /* PageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfo.swift; sourceTree = "<group>"; };
+		9C09176E2C2573580068FAF5 /* Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transactions.swift; sourceTree = "<group>"; };
+		9C0917702C25737C0068FAF5 /* PageableSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableSource.swift; sourceTree = "<group>"; };
+		9C0917732C2573B00068FAF5 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		9C1C9D832C0D093F0028C8FD /* P256Signer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P256Signer.swift; sourceTree = "<group>"; };
 		9C1C9D852C0D0F320028C8FD /* Uint256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uint256.swift; sourceTree = "<group>"; };
 		9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryData.swift; sourceTree = "<group>"; };
@@ -264,6 +270,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C09176D2C25734C0068FAF5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9C09176E2C2573580068FAF5 /* Transactions.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9C0917722C25739B0068FAF5 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9C0917702C25737C0068FAF5 /* PageableSource.swift */,
+				9C09176B2C2466280068FAF5 /* PageInfo.swift */,
+				9C0917732C2573B00068FAF5 /* Page.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		9C6259042BF78CF20039DE9C /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -553,8 +577,9 @@
 		9CE837E12C241DE9005A740A /* Pagination */ = {
 			isa = PBXGroup;
 			children = (
+				9C0917722C25739B0068FAF5 /* Utils */,
+				9C09176D2C25734C0068FAF5 /* Sources */,
 				9CE837E22C241DFA005A740A /* PaginationModel.swift */,
-				9C09176B2C2466280068FAF5 /* PageInfo.swift */,
 			);
 			path = Pagination;
 			sourceTree = "<group>";
@@ -712,8 +737,10 @@
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
 				9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */,
 				9C5CFDA82BC73DB0001776E1 /* SearchBar.swift in Sources */,
+				9C0917742C2573B00068FAF5 /* Page.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
 				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
+				9C09176F2C2573580068FAF5 /* Transactions.swift in Sources */,
 				9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */,
 				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
 				9C6259172BFB6A910039DE9C /* UIImage.swift in Sources */,
@@ -779,6 +806,7 @@
 				9C62590E2BFA7D260039DE9C /* Icon.swift in Sources */,
 				9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */,
 				9C5CFDB22BC82C57001776E1 /* Array+indexed.swift in Sources */,
+				9C0917712C25737C0068FAF5 /* PageableSource.swift in Sources */,
 				9CD778D42BC4426D00BA4677 /* View+placeholder.swift in Sources */,
 				9CDFD43A2BAC4561000466B9 /* AskSurnameView.swift in Sources */,
 				9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */,
