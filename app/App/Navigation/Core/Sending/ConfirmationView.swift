@@ -26,9 +26,7 @@ struct ConfirmationView: View {
 
             HStack {
                 VStack(spacing: 8) {
-                    Avatar(
-                        name: surname
-                    )
+                    Avatar(salt: self.model.address, name: self.surname)
 
                     Text("You")
                         .foregroundStyle(.neutral1)
@@ -60,8 +58,9 @@ struct ConfirmationView: View {
 
                 VStack(spacing: 8) {
                     Avatar(
-                        imageData: recipientConact.imageData,
-                        name: recipientConact.name
+                        salt: recipientConact.phone,
+                        name: recipientConact.name,
+                        data: recipientConact.imageData
                     )
 
                     Text(recipientConact.name)

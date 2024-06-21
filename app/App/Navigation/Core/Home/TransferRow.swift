@@ -23,25 +23,7 @@ struct TransferRow: View {
         let formattedDate = dateFormatter.string(from: transfer.date)
 
         HStack(spacing: 12) {
-            // TODO: use Avatar component
-            if let avatarUrl = displayedUser.avatarUrl {
-                AsyncImage(
-                    url: URL(string: avatarUrl),
-                    content: { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 42, height: 42)
-                            .scaledToFit()
-                    },
-                    placeholder: {
-                        ProgressView()
-                    }
-                )
-                .clipShape(Circle())
-            } else {
-                NoAvatar(name: displayedUser.address == nil ? "?" : displayedUser.nickname)
-            }
+            Avatar(salt: displayedUser.address, name: displayedUser.nickname, url: displayedUser.avatarUrl)
 
             VStack(alignment: .leading) {
                 Text(displayedUser.nickname).textTheme(.bodyPrimary)

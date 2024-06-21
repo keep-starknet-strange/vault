@@ -13,7 +13,7 @@ struct ContactRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Avatar(imageData: self.contact.imageData, name: self.contact.name)
+            Avatar(salt: self.contact.phone, name: self.contact.name, data: self.contact.imageData)
 
             VStack(alignment: .leading) {
                 Text(self.contact.name)
