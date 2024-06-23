@@ -9,6 +9,12 @@ use super::freeze::AdminComponent;
 use super::freeze_mock::{AdminMock, COMPONENT};
 use vault::components::AdminComponent::AdminTraitDispatcherTrait;
 use vault::tests::{utils, constants};
+use snforge_std::{declare, ContractClassTrait, CheatTarget, start_prank, stop_prank};
+
+const USER_ONE: felt252 = 'BOB';
+const USER_TWO: felt252 = 'ALICE';
+const USER_THREE: felt252 = 'ROB';
+
 
 /// Deploys the tx approval contract + approver.
 fn setup_contracts() -> (AdminTraitDispatcher, ERC20UpgradeableABIDispatcher, ContractAddress) {
@@ -24,7 +30,8 @@ fn setup_contracts() -> (AdminTraitDispatcher, ERC20UpgradeableABIDispatcher, Co
     ];
 
     // deploy manageable
-    let manageable_address = utils::deploy(AdminMock::TEST_CLASS_HASH, :calldata);
+    let manageable_address = utils::deploy_er20_upgradeable(calldata);
+
 
     // send SUPPLY tokens to manageable
     testing::set_contract_address(admin_address);
@@ -146,32 +153,41 @@ fn test_freeze_internal_not_admin() {
 #[test]
 fn test_freeze_internal_admin() {
     let mut component = COMPONENT();
+
     let address = contract_address_const::<0x123>();
+    let admin_address = utils::setup_signer().contract_address;
+   
+    start_prank(CheatTarget::One(admin_address), admin_address);
 
     // Init component to set admin address to 0x123.
-    component.initializer(address, address, address);
+    component.initializer(admin_address, address, address);
 
-    // Call with the right address.
-    testing::set_caller_address(address);
+   
     component.freeze_internal();
 
     assert!(component.is_frozen_internal());
+
+    stop_prank(CheatTarget::One(admin_address),);
+
 }
 
 #[test]
 fn test_freeze_internal_admin_already_frozen() {
     let mut component = COMPONENT();
     let address = contract_address_const::<0x123>();
-
+   
+    let admin_address = utils::setup_signer().contract_address;
+   start_prank(CheatTarget::One(admin_address), admin_address);
     // Init component to set admin address to 0x123.
-    component.initializer(address, address, address);
+   component.initializer(admin_address, address, address);
 
-    // Call with the right address.
-    testing::set_caller_address(address);
+  
     component.freeze_internal();
     component.freeze_internal();
 
     assert!(component.is_frozen_internal());
+
+    stop_prank(CheatTarget::One(admin_address),);
 }
 
 #[test]
@@ -267,11 +283,14 @@ fn test_assert_only_admin_admin() {
     let mut component = COMPONENT();
     let address = contract_address_const::<0x123>();
 
+    start_prank(CheatTarget::One(address), USER_ONE.try_into().unwrap());
     // Init component to set admin address to 0x123.
     component.initializer(address, address, address);
 
-    testing::set_caller_address(address);
-    component.assert_only_admin();
+   
+    let check_admin = component.assert_only_admin();
+     assert!(check_admin != (), "Only admin");
+    stop_prank(CheatTarget::One(address),);
 }
 
 #[test]
@@ -279,9 +298,14 @@ fn test_assert_only_admin_admin() {
 fn test_assert_only_admin_not_admin() {
     let mut component = COMPONENT();
     let address = contract_address_const::<0x123>();
+    let dispatch_user = contract_address_const::<1>();
 
+    start_prank(CheatTarget::One(dispatch_user), USER_ONE.try_into().unwrap());
     // Init component to set admin address to 0x123.
     component.initializer(address, address, address);
 
     component.assert_only_admin();
+
+    stop_prank(CheatTarget::One(dispatch_user),);
+
 }

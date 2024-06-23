@@ -32,7 +32,7 @@ fn setup_contracts() -> (TestExternalDispatcher, ContractAddress, ContractAddres
     // Deploy approval mock contract with approver address.
     let calldata: Array<felt252> = array![approver_address.into()];
 
-    let approval_address = utils::deploy(TransactionApprovalMock::TEST_CLASS_HASH, :calldata);
+    let approval_address = utils::deploy_er20_upgradeable(calldata);
 
     // Deploy ERC20
     let erc20_address = utils::setup_erc20(recipient: approval_address).contract_address;

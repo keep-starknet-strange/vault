@@ -6,9 +6,18 @@ version = "0.1.0"
 starknet = "2.6.0"
 openzeppelin = { git = "https://github.com/openzeppelin/cairo-contracts", branch = "main" }
 
+[dev-dependencies]
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.22.0" }
+
 [tool.fmt]
 sort-module-level-items = true
 
 [[target.starknet-contract]]
 sierra = true
 casm = true
+
+build-external-contracts = [
+"openzeppelin::account::account::Account",
+"openzeppelin::presets::account::AccountUpgradeable",
+"openzeppelin::presets::erc20::ERC20Upgradeable",
+]
