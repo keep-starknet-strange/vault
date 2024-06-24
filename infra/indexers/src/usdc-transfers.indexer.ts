@@ -22,7 +22,7 @@ export const config = {
 	streamUrl,
 	startingBlock,
 	network: 'starknet',
-	finality: 'DATA_STATUS_ACCEPTED',
+	finality: 'DATA_STATUS_PENDING',
 	filter,
 	sinkType: 'postgres',
 	sinkOptions: {
