@@ -7,131 +7,55 @@
 
 import SwiftUI
 
+// PreferenceKey to store the scroll offset
+struct ScrollOffsetKey: PreferenceKey {
+    typealias Value = CGFloat
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
+    }
+}
+
 struct HomeView: View {
 
     @EnvironmentObject private var model: Model
 
-    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 1, pageSize: 1)
+    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 7, pageSize: 15)
 
     @State private var showingAddFundsWebView = false
+    @State private var scrollOffset: CGFloat = 0
 
     var body: some View {
-        List {
+        ScrollView {
 
-            VStack {
+            // MARK: Balance
 
-                // MARK: Balance
-
-                VStack(spacing: 12) {
-                    Text("Account Balance")
-                        .foregroundStyle(.neutral2)
-                        .textTheme(.bodyPrimary)
-
-                    BalanceView(balance: self.$model.balance)
-                }
-                .padding(EdgeInsets(top: 32, leading: 0, bottom: 42, trailing: 0))
-
-                // MARK: Transfers
-
+            VStack(spacing: 48) {
                 HStack {
-                    Spacer(minLength: 8)
-
-                    IconButton(size: .large, priority: .primary) {
-                        self.model.showSendingView = true
-                    } icon: {
-                        Image(systemName: "arrow.up")
-                            .iconify()
-                            .fontWeight(.semibold)
-                    }
-                    .withText("Send")
-                    .frame(maxWidth: .infinity)
-
                     Spacer()
 
-                    IconButton(size: .large) {
-                        // TODO: Handle sending
-                    } icon: {
-                        Image(systemName: "arrow.down")
-                            .iconify()
-                            .fontWeight(.semibold)
+                    VStack(spacing: 12) {
+                        Text("Account Balance")
+                            .foregroundStyle(.neutral2)
+                            .textTheme(.bodyPrimary)
+
+                        BalanceView(balance: self.$model.balance)
                     }
-                    .withText("Request")
-                    .frame(maxWidth: .infinity)
 
                     Spacer()
-
-                    IconButton(size: .large) {
-                        self.showingAddFundsWebView = true
-                    } icon: {
-                        Image(systemName: "plus")
-                            .iconify()
-                            .fontWeight(.medium)
-                    }
-                    .withText("Add funds")
-                    .frame(maxWidth: .infinity)
-                    .sheet(isPresented: $showingAddFundsWebView) {
-                        WebView(url: URL(string: "https://app.fun.xyz")!)
-                    }
-
-                    Spacer(minLength: 8)
                 }
-            }
-            .padding(.bottom, 16)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(EmptyView())
-            .listRowSeparator(.hidden)
+                .padding(.top, 180)
+                .padding(.bottom, 58)
 
-            // MARK: History
+                ActionsView()
 
-            if let txHistory = self.txHistoryModel.source {
-                ForEach(
-                    txHistory.groupedTransactions.keys.sorted(by: >),
-                    id: \.self
-                ) { day in
-                    Section {
-                        ForEach(0..<txHistory.groupedTransactions[day]!.count, id: \.self) { index in
-                            let transfer = txHistory.groupedTransactions[day]![index]
-                            let isFirst = index == 0;
-                            let isLast = index == txHistory.groupedTransactions[day]!.count - 1
-
-                            TransferRow(transfer: transfer)
-                                .onAppear {
-                                    self.txHistoryModel.onItemAppear(transfer)
-                                }
-                                .padding(16)
-                                .background(.background2)
-                                .clipShape(
-                                    .rect(
-                                        topLeadingRadius: isFirst ? 16 : 0,
-                                        bottomLeadingRadius: isLast ? 16 : 0,
-                                        bottomTrailingRadius: isLast ? 16 : 0,
-                                        topTrailingRadius: isFirst ? 16 : 0
-                                    )
-                                )
-                        }
-                    } header: {
-                        Text(self.formatSectionHeader(for: day).uppercased())
-                            .textTheme(.headlineSmall)
-                            .listRowInsets(EdgeInsets(top: 32, leading: 8, bottom: 12, trailing: 0))
-                    }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(EmptyView())
-                }
+                HistoryView()
             }
         }
         .onAppear {
-            // dirty hack to remove the top padding of the list
-            UICollectionView.appearance().contentInset.top = -30
             self.txHistoryModel.start(withSource: TransactionHistory(address: self.model.address))
         }
-        .safeAreaInset(edge: .bottom) {
-            EmptyView().frame(height: 90)
-        }
-        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-        .scrollContentBackground(.hidden)
-        .listStyle(.grouped)
-        .scrollIndicators(.hidden)
         .defaultBackground()
         .navigationBarItems(
             trailing: IconButton(size: .custom(IconButtonSize.medium.buttonSize, 20)) {} icon: {
@@ -143,6 +67,7 @@ struct HomeView: View {
         .fullScreenCover(isPresented: self.$model.showSendingView) {
             SendingView()
         }
+        .edgesIgnoringSafeArea(.all)
     }
 
     private func formatSectionHeader(for date: Date) -> String {
@@ -157,6 +82,91 @@ struct HomeView: View {
             formatter.dateFormat = "EEEE d MMMM" // Day DD Month
             return formatter.string(from: date)
         }
+    }
+
+    // MARK: - Actions View
+
+    @ViewBuilder
+    func ActionsView() -> some View {
+        HStack {
+            Spacer(minLength: 24)
+
+            IconButton(size: .large, priority: .primary) {
+                self.model.showSendingView = true
+            } icon: {
+                Image(systemName: "arrow.up")
+                    .iconify()
+                    .fontWeight(.semibold)
+            }
+            .withText("Send")
+            .frame(maxWidth: .infinity)
+
+            Spacer()
+
+            IconButton(size: .large) {
+                // TODO: Handle sending
+            } icon: {
+                Image(systemName: "arrow.down")
+                    .iconify()
+                    .fontWeight(.semibold)
+            }
+            .withText("Request")
+            .frame(maxWidth: .infinity)
+
+            Spacer()
+
+            IconButton(size: .large) {
+                self.showingAddFundsWebView = true
+            } icon: {
+                Image(systemName: "plus")
+                    .iconify()
+                    .fontWeight(.medium)
+            }
+            .withText("Add funds")
+            .frame(maxWidth: .infinity)
+            .sheet(isPresented: $showingAddFundsWebView) {
+                WebView(url: URL(string: "https://app.fun.xyz")!)
+            }
+
+            Spacer(minLength: 24)
+        }
+    }
+
+    // MARK: - History View
+
+    @ViewBuilder
+    func HistoryView() -> some View {
+        LazyVStack(spacing: 48) {
+            if let txHistory = self.txHistoryModel.source {
+                ForEach(
+                    txHistory.groupedTransactions.keys.sorted(by: >),
+                    id: \.self
+                ) { day in
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(self.formatSectionHeader(for: day).uppercased())
+                            .textTheme(.headlineSmall)
+
+                        VStack(spacing: 32) {
+                            ForEach(0..<txHistory.groupedTransactions[day]!.count, id: \.self) { index in
+                                let transfer = txHistory.groupedTransactions[day]![index]
+
+                                TransferRow(transfer: transfer)
+                                    .onAppear {
+                                        self.txHistoryModel.onItemAppear(transfer)
+                                    }
+                            }
+                        }
+                        .padding(16)
+                        .background(.background2)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                }
+            }
+        }
+        .padding(.top, 32)
+        .padding(.bottom, 120)
+        .background(.background1)
     }
 }
 

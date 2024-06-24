@@ -16,25 +16,25 @@ enum NoAvatarSalt: Int, CaseIterable {
     case s5 = 4
     case s6 = 5
 
-    var colors: (Color, Color) {
+    var gradient: Gradient {
         switch self {
         case .s1:
-            return (.vPurple, .vPurpleA50)
+            return Gradient(colors: [.vPurple, .vPurpleDarker])
 
         case .s2:
-            return (.vGreen, .vGreenA50)
+            return Gradient(colors: [.vGreen, .vGreenDarker])
 
         case .s3:
-            return (.vLime, .vLimeA50)
+            return Gradient(colors: [.vLime, .vLimeDarker])
 
         case .s4:
-            return (.vPink, .vPinkA50)
+            return Gradient(colors: [.vPink, .vPinkDarker])
 
         case .s5:
-            return (.vOrange, .vOrangeA50)
+            return Gradient(colors: [.vOrange, .vOrangeDarker])
 
         case .s6:
-            return (.vBlue, .vBlueA50)
+            return Gradient(colors: [.vBlue, .vBlueDarker])
         }
     }
 
@@ -44,25 +44,30 @@ enum NoAvatarSalt: Int, CaseIterable {
 struct NoAvatar: View {
     let salt: NoAvatarSalt
     let name: String
+    let size: CGFloat
 
-    init(salt: String?, name: String) {
+    init(salt: String?, name: String, size: CGFloat = Avatar.defaultSize) {
         let saltInt = Int(salt?.bytes.last ?? 0) % NoAvatarSalt.allCases.count
         self.salt = NoAvatarSalt(rawValue: saltInt) ?? .s1
         self.name = name
+        self.size = size
     }
 
     var body: some View {
-        let (strokeColor, fillColor) = self.salt.colors
+        let linearGradient = LinearGradient(
+            gradient: self.salt.gradient,
+            startPoint: .top,
+            endPoint: .bottom
+        )
 
         Capsule()
-            .fill(fillColor)
-            .strokeBorder(strokeColor, lineWidth: 1)
-            .frame(width: 42, height: 42)
+            .fill(linearGradient)
+            .frame(width: self.size, height: self.size)
             .overlay() {
                 Text(name.initials.uppercased())
                     .font(.system(size: 18))
-                    .fontWeight(.semibold)
-                    .foregroundStyle(strokeColor)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.neutral1)
             }
     }
 }

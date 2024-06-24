@@ -14,6 +14,7 @@ struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .background(.accent)
             .clipShape(RoundedRectangle(cornerRadius: 10))
+            .shadow(color: .accent.opacity(0.2), radius: 15, y: 5)
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
@@ -96,7 +97,7 @@ enum IconButtonSize {
             return 36
 
         case .large:
-            return 64
+            return 54
 
         case .custom(let buttonSize, _):
             return buttonSize
@@ -109,7 +110,7 @@ enum IconButtonSize {
             return 12
 
         case .large:
-            return 20
+            return 16
 
         case .custom(_, let iconSize):
             return iconSize
@@ -139,6 +140,7 @@ struct IconButtonStyle: ButtonStyle {
         configuration.label
             .background(self.priority.background)
             .clipShape(Capsule())
+            .shadow(color: self.priority.background.opacity(0.2), radius: 8, y: 4)
             .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
@@ -188,7 +190,6 @@ struct IconButtonWithTextModifier: ViewModifier {
         VStack(spacing: 10) {
             content
                 .preferredColorScheme(.dark)
-                .background(.background1)
 
             Text(self.text).textTheme(.buttonIcon)
         }
@@ -238,7 +239,7 @@ struct NoopButtonStyle: ButtonStyle {
                 }
                 .withText("Settings")
 
-                IconButton(size: .large) {} icon: {
+                IconButton(size: .large, priority: .primary) {} icon: {
                     Image("FaceID").iconify()
                 }
                 .withText("Face ID")
