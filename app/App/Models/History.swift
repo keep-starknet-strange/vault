@@ -8,12 +8,12 @@
 import Foundation
 
 class User {
-    let nickname: String
+    let nickname: String?
     let avatarUrl: String? = nil
     let address: String?
 
     init(transactionUser: RawTransactionUser) {
-        self.nickname = transactionUser.nickname ?? transactionUser.phone_number ?? "UNKNOWN"
+        self.nickname = transactionUser.nickname ?? transactionUser.phone_number
         self.address = transactionUser.contract_address
     }
 }

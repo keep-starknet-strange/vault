@@ -18,21 +18,18 @@ struct NavigationBarModifier: UIViewControllerRepresentable {
                 let scrolledAppearance = UINavigationBarAppearance()
 
                 topAppearance.configureWithOpaqueBackground()
-                topAppearance.backgroundColor = .background1
+                topAppearance.backgroundColor = .clear
+                topAppearance.backgroundImage = UIImage()
+                topAppearance.shadowImage = UIImage()
                 topAppearance.shadowColor = .clear
 
                 scrolledAppearance.configureWithOpaqueBackground()
-                scrolledAppearance.backgroundColor = .background1
-                scrolledAppearance.shadowColor = .background2
-//                scrolledAppearance.shadowImage = UIImage.gradientImageWithBounds(
-//                    bounds: CGRect( x: 0, y: 0, width: UIScreen.main.scale, height: 16),
-//                    colors: [
-//                        UIColor.background2.withAlphaComponent(0.5).cgColor,
-//                        UIColor.background2.withAlphaComponent(0).cgColor,
-//                    ]
-//                )
+                scrolledAppearance.backgroundColor = .clear
+                scrolledAppearance.backgroundImage = UIImage()
+                scrolledAppearance.shadowImage = UIImage()
+                scrolledAppearance.shadowColor = .clear
 
-                navigationController.navigationBar.standardAppearance = scrolledAppearance
+//                navigationController.navigationBar.standardAppearance = scrolledAppearance
                 navigationController.navigationBar.scrollEdgeAppearance = topAppearance
             }
         }

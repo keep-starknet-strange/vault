@@ -79,10 +79,10 @@ struct SendingRecipientView: View {
 
                             Spacer()
                         }
+                        .padding(.vertical, 24)
+                        .padding(.horizontal, 16)
+                        .background(.background2)
                     }
-                    .padding(.vertical, 24)
-                    .padding(.horizontal, 16)
-                    .background(.background2)
                     .buttonStyle(PlainButtonStyle())
                     .clipShape(RoundedRectangle(cornerRadius: 16))
 

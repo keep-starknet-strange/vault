@@ -22,23 +22,20 @@ struct TransferRow: View {
         let _ = dateFormatter.timeZone = TimeZone.current // Use the user's current timezone
         let formattedDate = dateFormatter.string(from: transfer.date)
 
-        HStack(spacing: 12) {
-            Avatar(salt: displayedUser.address, name: displayedUser.nickname, url: displayedUser.avatarUrl)
+        HStack(alignment: .center, spacing: 12) {
+            Avatar(salt: displayedUser.address, name: displayedUser.nickname, size: 46, url: displayedUser.avatarUrl)
 
-            VStack(alignment: .leading) {
-                Text(displayedUser.nickname).textTheme(.bodyPrimary)
-
-                Spacer()
+            VStack(alignment: .leading, spacing: 4) {
+                Text(displayedUser.nickname ?? "UNKNOWN").textTheme(.bodyPrimary)
 
                 Text("\(formattedDate)").textTheme(.subtitle)
             }
-            .padding(.vertical, 6)
 
             Spacer()
 
             Text("\(self.transfer.isSending ? "-" : "")$\(self.transfer.amount.toFixed())")
                 .fontWeight(self.transfer.isSending ? .regular : .semibold)
-                .textTheme(.bodySecondary)
+                .textTheme(.bodyPrimary)
                 .padding(EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6))
                 .background(self.transfer.isSending ? .transparent : .accent)
                 .clipShape(RoundedRectangle(cornerRadius: 4))

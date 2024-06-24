@@ -21,17 +21,17 @@ struct Avatar: View {
 
     init(
         salt: String? = nil,
-        name: String = Self.defaultName,
+        name: String? = nil,
         size: CGFloat = Self.defaultSize
     ) {
-        self.name = name
+        self.name = name ?? Self.defaultName
         self.size = size
         self.salt = salt
     }
 
     init(
         salt: String? = nil,
-        name: String = Self.defaultName,
+        name: String? = nil,
         size: CGFloat = Self.defaultSize,
         url: String? = nil
     ) {
@@ -41,7 +41,7 @@ struct Avatar: View {
 
     init(
         salt: String? = nil,
-        name: String = Self.defaultName,
+        name: String? = nil,
         size: CGFloat = Self.defaultSize,
         data: Data? = nil
     ) {
@@ -57,7 +57,7 @@ struct Avatar: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 42, height: 42)
+                        .frame(width: self.size, height: self.size)
                         .scaledToFit()
                 },
                 placeholder: {
@@ -72,11 +72,11 @@ struct Avatar: View {
             Image(uiImage: uiImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: size, height: size)
+                .frame(width: self.size, height: self.size)
                 .scaledToFit()
                 .clipShape(Circle())
         } else {
-            NoAvatar(salt: self.salt, name: self.name)
+            NoAvatar(salt: self.salt, name: self.name, size: self.size)
         }
     }
 }

@@ -65,5 +65,15 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    struct ContentViewPreviews: View {
+
+        @StateObject var model = Model()
+
+        var body: some View {
+            ContentView()
+                .environmentObject(self.model)
+        }
+    }
+
+    return ContentViewPreviews()
 }
