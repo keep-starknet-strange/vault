@@ -18,16 +18,16 @@ struct SendingAmountView: View {
         VStack {
             Spacer()
 
-            FancyAmount(amount: self.$model.sendingAmount)
+            FancyAmount(amount: self.$model.amount)
 
             Spacer()
 
             VStack(spacing: 32) {
-                PrimaryButton("Send", disabled: self.model.parsedSendingAmount <= 0) {
+                PrimaryButton("Send", disabled: self.model.parsedAmount <= 0) {
                     self.model.showSendingConfirmation = true
                 }
 
-                NumPad(amount: self.$model.sendingAmount)
+                NumPad(amount: self.$model.amount)
             }
         }
         .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
