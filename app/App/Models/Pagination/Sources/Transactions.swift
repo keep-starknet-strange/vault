@@ -66,4 +66,18 @@ struct TransactionHistory: PageableSource {
             }
         }
     }
+
+    public mutating func addRecentItems(items: [Transaction]) {
+        self.transactions = items + self.transactions
+
+        items.forEach { item in
+            let day = Calendar.current.startOfDay(for: item.date)
+
+            if self.groupedTransactions[day] == nil {
+                self.groupedTransactions[day] = [item]
+            } else {
+                self.groupedTransactions[day] = [item] + self.groupedTransactions[day]!
+            }
+        }
+    }
 }
