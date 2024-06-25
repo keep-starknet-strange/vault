@@ -20,8 +20,7 @@ struct ScrollOffsetKey: PreferenceKey {
 struct HomeView: View {
 
     @EnvironmentObject private var model: Model
-
-    @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 7, pageSize: 15)
+    @EnvironmentObject private var txHistoryModel: PaginationModel<TransactionHistory>
 
     @State private var showingAddFundsWebView = false
     @State private var scrollOffset: CGFloat = 0
@@ -55,6 +54,12 @@ struct HomeView: View {
         }
         .onAppear {
             self.txHistoryModel.start(withSource: TransactionHistory(address: self.model.address))
+
+            // balance
+            self.model.getBalance()
+        }
+        .onDisappear {
+            self.model.stopPolling()
         }
         .defaultBackground()
         .navigationBarItems(

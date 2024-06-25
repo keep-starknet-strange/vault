@@ -63,6 +63,10 @@ class Model: ObservableObject {
     @Published var contacts: [Contact] = []
     @Published var contactsAuthorizationStatus: CNAuthorizationStatus = .notDetermined
 
+    // polling
+    private var pollingTimer: Timer?
+    private var pollingAction: (() -> Void)?
+
     var parsedSendingAmount: Double {
         // Replace the comma with a dot
         let amount = self.sendingAmount.replacingOccurrences(of: ",", with: ".")
@@ -92,9 +96,6 @@ class Model: ObservableObject {
 
         // Contacts
         self.checkContactsAuthorizationStatus()
-
-        // balance
-        self.getBalance()
     }
 }
 
@@ -162,18 +163,36 @@ extension Model {
     }
 
     func getBalance() {
-        VaultService.shared.send(GetBalance(address: self.address)) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self.balance = USDCAmount(from: response.balance)!
+        self.pollingAction = {
+            VaultService.shared.send(GetBalance(address: self.address)) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let response):
+                        self.balance = USDCAmount(from: response.balance)!
 
-                case .failure(let error):
-                    // TODO: Handle error
-                    print(error)
+                    case .failure(let error):
+                        // TODO: Handle error
+                        print(error)
+                    }
                 }
             }
         }
+
+        // execute a first time
+        self.pollingAction?()
+
+        self.pollingTimer = Timer.scheduledTimer(
+            withTimeInterval: 5.0, // 5s
+            repeats: true
+        ) { _ in
+            self.pollingAction?()
+        }
+    }
+
+    func stopPolling() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
+        pollingAction = nil
     }
 }
 
