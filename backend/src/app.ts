@@ -37,14 +37,21 @@ export async function buildApp(config: AppConfiguration) {
   if (!process.env.DEPLOYER_PK) {
     throw new Error('Deployer private key not set')
   }
+
   if (!process.env.TWILIO_ACCOUNT_SSID) {
     throw new Error('Twilio account ssid not set')
   }
+
   if (!process.env.TWILIO_AUTH_TOKEN) {
     throw new Error('Twilio auth token not set')
   }
+
   if (!process.env.TWILIO_SERVICE_ID) {
     throw new Error('Twilio service id not set')
+  }
+
+  if (!process.env.FUNKIT_API_KEY) {
+    throw new Error('Funkit API key not set')
   }
 
   const deployer = new Account({ nodeUrl: process.env.NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
