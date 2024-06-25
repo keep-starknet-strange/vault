@@ -11,7 +11,7 @@
 		9C09176F2C2573580068FAF5 /* Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C09176E2C2573580068FAF5 /* Transactions.swift */; };
 		9C0917712C25737C0068FAF5 /* PageableSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0917702C25737C0068FAF5 /* PageableSource.swift */; };
 		9C0917742C2573B00068FAF5 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0917732C2573B00068FAF5 /* Page.swift */; };
-		9C09177B2C25D2810068FAF5 /* RequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C09177A2C25D2810068FAF5 /* RequestView.swift */; };
+		9C09177B2C25D2810068FAF5 /* RequestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C09177A2C25D2810068FAF5 /* RequestingView.swift */; };
 		9C1C9D842C0D093F0028C8FD /* P256Signer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D832C0D093F0028C8FD /* P256Signer.swift */; };
 		9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D852C0D0F320028C8FD /* Uint256.swift */; };
 		9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */; };
@@ -49,6 +49,8 @@
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
 		9C6ABFCC2C21C9C9000227D2 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6ABFCB2C21C9C9000227D2 /* ErrorView.swift */; };
 		9C6ABFD02C21D21A000227D2 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6ABFCF2C21D21A000227D2 /* Configuration.swift */; };
+		9C9098772C2AC9FE002A5833 /* RequestingAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */; };
+		9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9098782C2AED57002A5833 /* ActivityView.swift */; };
 		9C9F9EEF2C22368200620AC6 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EDC2C22368200620AC6 /* APIRequest.swift */; };
 		9C9F9EF02C22368200620AC6 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EDD2C22368200620AC6 /* Balance.swift */; };
 		9C9F9EF12C22368200620AC6 /* Deployment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EDE2C22368200620AC6 /* Deployment.swift */; };
@@ -137,7 +139,7 @@
 		9C09176E2C2573580068FAF5 /* Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transactions.swift; sourceTree = "<group>"; };
 		9C0917702C25737C0068FAF5 /* PageableSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableSource.swift; sourceTree = "<group>"; };
 		9C0917732C2573B00068FAF5 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
-		9C09177A2C25D2810068FAF5 /* RequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestView.swift; sourceTree = "<group>"; };
+		9C09177A2C25D2810068FAF5 /* RequestingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestingView.swift; sourceTree = "<group>"; };
 		9C1C9D832C0D093F0028C8FD /* P256Signer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P256Signer.swift; sourceTree = "<group>"; };
 		9C1C9D852C0D0F320028C8FD /* Uint256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uint256.swift; sourceTree = "<group>"; };
 		9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryData.swift; sourceTree = "<group>"; };
@@ -177,6 +179,8 @@
 		9C6ABFCD2C21CF94000227D2 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		9C6ABFCE2C21D0CC000227D2 /* Prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Prod.xcconfig; sourceTree = "<group>"; };
 		9C6ABFCF2C21D21A000227D2 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestingAmountView.swift; sourceTree = "<group>"; };
+		9C9098782C2AED57002A5833 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		9C9F9EDC2C22368200620AC6 /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		9C9F9EDD2C22368200620AC6 /* Balance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
 		9C9F9EDE2C22368200620AC6 /* Deployment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deployment.swift; sourceTree = "<group>"; };
@@ -318,12 +322,13 @@
 			path = Avatar;
 			sourceTree = "<group>";
 		};
-		9C0917792C25D2700068FAF5 /* Request */ = {
+		9C0917792C25D2700068FAF5 /* Requesting */ = {
 			isa = PBXGroup;
 			children = (
-				9C09177A2C25D2810068FAF5 /* RequestView.swift */,
+				9C09177A2C25D2810068FAF5 /* RequestingView.swift */,
+				9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */,
 			);
-			path = Request;
+			path = Requesting;
 			sourceTree = "<group>";
 		};
 		9C6259042BF78CF20039DE9C /* Home */ = {
@@ -454,7 +459,7 @@
 		9CD778A92BBAF89F00BA4677 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				9C0917792C25D2700068FAF5 /* Request */,
+				9C0917792C25D2700068FAF5 /* Requesting */,
 				9C6259112BFB5A820039DE9C /* Sending */,
 				9C6259042BF78CF20039DE9C /* Home */,
 				9CD778B12BBC38B700BA4677 /* Budget */,
@@ -591,6 +596,7 @@
 				9C637CDA2BB09C4D005816B4 /* Notification.swift */,
 				9CDFD4372BAB8934000466B9 /* Buttons.swift */,
 				9CD778AD2BBC1A7300BA4677 /* GraphView.swift */,
+				9C9098782C2AED57002A5833 /* ActivityView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -787,7 +793,7 @@
 				9CD0988E2C22EBE500FDDD8F /* History.swift in Sources */,
 				9C9F9EF02C22368200620AC6 /* Balance.swift in Sources */,
 				9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */,
-				9C09177B2C25D2810068FAF5 /* RequestView.swift in Sources */,
+				9C09177B2C25D2810068FAF5 /* RequestingView.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9C1C9D902C0F5DE40028C8FD /* Popover.swift in Sources */,
 				9C1C9D942C0FBA900028C8FD /* Avatar.swift in Sources */,
@@ -806,6 +812,7 @@
 				9C9F9EF82C22368200620AC6 /* GetOTP.swift in Sources */,
 				9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */,
 				9C6ABFCC2C21C9C9000227D2 /* ErrorView.swift in Sources */,
+				9C9098772C2AC9FE002A5833 /* RequestingAmountView.swift in Sources */,
 				9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
 				9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */,
@@ -851,6 +858,7 @@
 				9C62591F2BFE56000039DE9C /* ContactRow.swift in Sources */,
 				9C5CFDAE2BC828C9001776E1 /* Model.swift in Sources */,
 				9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */,
+				9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */,
 				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
 				9C1C9D922C0FB4760028C8FD /* ConfirmationView.swift in Sources */,
 				9C9F9EFD2C22368200620AC6 /* VaultAPIClient.swift in Sources */,

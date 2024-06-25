@@ -35,10 +35,10 @@ class Model: ObservableObject {
     @Published var isLoading = false
     @Published var showMessage = false
     @Published var isProperlyConfigured: Bool
+    @Published var amount: String = ""
 
     // Sending USDC
     @Published var recipientContact: Contact?
-    @Published var sendingAmount: String = ""
     @Published var sendingStatus: Status = .none
     @Published var showSendingView = false {
         didSet {
@@ -50,6 +50,15 @@ class Model: ObservableObject {
         }
     }
     @Published var showSendingConfirmation = false
+
+    // Requesting USDC
+    @Published var showRequestingView = false {
+        didSet {
+            if self.showRequestingView {
+                self.initiateRequest()
+            }
+        }
+    }
 
     // Starknet
     @Published var outsideExecution: OutsideExecution?
@@ -67,9 +76,9 @@ class Model: ObservableObject {
     private var pollingTimer: Timer?
     private var pollingAction: (() -> Void)?
 
-    var parsedSendingAmount: Double {
+    var parsedAmount: Double {
         // Replace the comma with a dot
-        let amount = self.sendingAmount.replacingOccurrences(of: ",", with: ".")
+        let amount = self.amount.replacingOccurrences(of: ",", with: ".")
 
         // Check if the string ends with a dot and append a zero if true
         // Convert the final string to a Float
@@ -398,7 +407,7 @@ extension Model {
         guard
             let recipientContact = self.recipientContact,
             let recipientAddress = self.getAddress(from: recipientContact.phone),
-            let amount = USDCAmount(from: self.parsedSendingAmount)
+            let amount = USDCAmount(from: self.parsedAmount)
         else {
             self.sendingStatus = .error("Invalid request.")
             return
@@ -496,12 +505,16 @@ extension Model {
 
     private func initiateTransfer() {
         self.recipientContact = nil
-        self.sendingAmount = "0"
+        self.amount = "0"
         self.outsideExecution = nil
         self.outsideExecutionSignature = nil
     }
 
     private func dismissTransfer() {
         self.sendingStatus = .none
+    }
+
+    private func initiateRequest() {
+        self.amount = "0"
     }
 }

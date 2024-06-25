@@ -72,6 +72,9 @@ struct HomeView: View {
         .fullScreenCover(isPresented: self.$model.showSendingView) {
             SendingView()
         }
+        .fullScreenCover(isPresented: self.$model.showRequestingView) {
+            RequestingView()
+        }
         .edgesIgnoringSafeArea(.all)
     }
 
@@ -109,7 +112,7 @@ struct HomeView: View {
             Spacer()
 
             IconButton(size: .large) {
-                // TODO: Handle sending
+                self.model.showRequestingView = true
             } icon: {
                 Image(systemName: "arrow.down")
                     .iconify()
@@ -179,11 +182,13 @@ struct HomeView: View {
     struct HomeViewPreviews: View {
 
         @StateObject var model = Model()
+        @StateObject private var txHistoryModel: PaginationModel<TransactionHistory> = PaginationModel(threshold: 7, pageSize: 15)
 
         var body: some View {
             NavigationStack {
                 HomeView()
                     .environmentObject(self.model)
+                    .environmentObject(self.txHistoryModel)
             }
         }
     }
