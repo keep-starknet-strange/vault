@@ -37,12 +37,6 @@ fn setup_erc20(recipient: ContractAddress) -> ERC20UpgradeableABIDispatcher {
 }
 
 fn setup_vault_account() -> IVaultAccountDispatcher {
-    setup_custom_vault_account(
-        approver: contract_address_const::<0>(), limit: u256 { low: 2, high: 2 }
-    )
-}
-
-fn setup_custom_vault_account(approver: ContractAddress, limit: u256) -> IVaultAccountDispatcher {
     let calldata = array![];
 
     // deploy
@@ -52,7 +46,7 @@ fn setup_custom_vault_account(approver: ContractAddress, limit: u256) -> IVaultA
 
     let vault_account = IVaultAccountDispatcher { contract_address: address };
 
-    vault_account.initialize(:pub_key_x, :pub_key_y, :approver, :limit);
+    vault_account.initialize(:pub_key_x, :pub_key_y, admin_address: contract_address_const::<0>());
 
     vault_account
 }
