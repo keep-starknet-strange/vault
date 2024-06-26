@@ -58,9 +58,10 @@ export async function buildApp(config: AppConfiguration) {
   const twilio_services = twilio(process.env.TWILIO_ACCOUNT_SSID, process.env.TWILIO_AUTH_TOKEN).verify.v2.services(
     process.env.TWILIO_SERVICE_ID,
   )
+  const funkitApiKey = process.env.FUNKIT_API_KEY
 
   // Declare routes
-  declareRoutes(app, deployer, twilio_services)
+  declareRoutes(app, deployer, twilio_services, funkitApiKey)
 
   return app
 }

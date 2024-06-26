@@ -4,7 +4,6 @@ import { Address } from 'viem'
 
 import {
   FUNKIT_API_BASE_URL,
-  FUNKIT_API_KEY,
   FUNKIT_STARKNET_CHAIN_ID,
   FUNKIT_STRIPE_SOURCE_CURRENCY,
   POLYGON_CHAIN_ID,
@@ -34,7 +33,7 @@ interface CheckoutQuote {
   estCheckoutTimeMs: number
 }
 
-export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance) {
+export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApiKey: string) {
   fastify.get(
     '/get_funkit_stripe_checkout_quote',
 
@@ -57,6 +56,8 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance) {
         return reply.status(400).send({ message: 'isNy is a required boolean.' })
       }
 
+      console.log('>>funkitApiKey', funkitApiKey)
+
       try {
         // 1 - Generate the funkit checkout quote
         const toMultiplier = 10 ** TOKEN_INFO.STARKNET_USDC.decimals
@@ -75,7 +76,7 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance) {
         const searchParams = new URLSearchParams(queryParams)
         const fetchRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout/quote?${searchParams}`, {
           headers: {
-            'X-Api-Key': FUNKIT_API_KEY,
+            'X-Api-Key': funkitApiKey,
           },
         })
         const quoteRes = (await fetchRes.json()) as CheckoutQuote
@@ -100,18 +101,22 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance) {
           `${FUNKIT_API_BASE_URL}/on-ramp/stripe-buy-quote?${stripeQuoteSearchParams}`,
           {
             headers: {
-              'X-Api-Key': FUNKIT_API_KEY,
+              'X-Api-Key': funkitApiKey,
             },
           },
         )
         const stripeQuote = (await stripeQuoteRes.json()) as any
+        console.log('>stripeQuote', stripeQuote)
         const stripePolygonQuote = stripeQuote?.destination_network_quotes?.polygon?.[0]
+        console.log('>stripePolygonQuote', stripePolygonQuote)
         if (!stripePolygonQuote) {
           return reply.status(500).send({ message: 'Failed to get stripe quote.' })
         }
         const finalQuote = {
           quoteId: quoteRes.quoteId,
           estSubtotalUsd: quoteRes.estSubtotalUsd,
+          paymentTokenChain: POLYGON_CHAIN_ID,
+          paymentTokenSymbol: pickedSourceAsset.symbol,
           paymentTokenAmount: estTotalFromAmount,
           networkFees: (Number(stripePolygonQuote.fees.network_fee_monetary) + Number(quoteRes.estFeesUsd)).toFixed(2),
           cardFees: Number(stripePolygonQuote.fees.transaction_fee_monetary).toFixed(2),
@@ -133,7 +138,7 @@ interface InitCheckoutBody {
   isNy: boolean
 }
 
-export function createFunkitStripeCheckout(fastify: FastifyInstance): void {
+export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKey: string): void {
   fastify.post<{ Body: InitCheckoutBody }>('/create_funkit_stripe_checkout', async (request, reply) => {
     const { quoteId, paymentTokenAmount, estSubtotalUsd, isNy } = request.body as InitCheckoutBody
     if (!quoteId) {
@@ -165,7 +170,7 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance): void {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Api-Key': FUNKIT_API_KEY,
+          'X-Api-Key': funkitApiKey,
         },
         body: stringifyWithBigIntSanitization(body),
       })
@@ -191,7 +196,7 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance): void {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Api-Key': FUNKIT_API_KEY,
+          'X-Api-Key': funkitApiKey,
         },
         body: stringifyWithBigIntSanitization(stripeSessionBody),
       })
@@ -211,7 +216,7 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance): void {
   })
 }
 
-export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance) {
+export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance, funkitApiKey: string) {
   fastify.get(
     '/get_funkit_stripe_checkout_status',
 
@@ -226,7 +231,7 @@ export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance) {
       try {
         const checkoutRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout/${funkitDepositAddress}`, {
           headers: {
-            'X-Api-Key': FUNKIT_API_KEY,
+            'X-Api-Key': funkitApiKey,
           },
         })
         const checkoutItem = (await checkoutRes.json()) as any

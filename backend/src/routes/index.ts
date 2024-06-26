@@ -19,7 +19,12 @@ import { verifyOtp } from './verifyOtp'
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/
 
-export function declareRoutes(fastify: FastifyInstance, deployer: Account, twilio_services: ServiceContext) {
+export function declareRoutes(
+  fastify: FastifyInstance,
+  deployer: Account,
+  twilio_services: ServiceContext,
+  funkitApiKey: string,
+) {
   getStatusRoute(fastify)
   getBalanceRoute(fastify)
   getCurrentExpenseRoute(fastify)
@@ -31,9 +36,9 @@ export function declareRoutes(fastify: FastifyInstance, deployer: Account, twili
   getClaimRoute(fastify)
   getLimitRoute(fastify)
   getExecuteFromOutsideRoute(fastify, deployer)
-  getFunkitStripeCheckoutQuote(fastify)
-  createFunkitStripeCheckout(fastify)
-  getFunkitStripeCheckoutStatus(fastify)
+  getFunkitStripeCheckoutQuote(fastify, funkitApiKey)
+  createFunkitStripeCheckout(fastify, funkitApiKey)
+  getFunkitStripeCheckoutStatus(fastify, funkitApiKey)
 }
 
 function getStatusRoute(fastify: FastifyInstance) {
