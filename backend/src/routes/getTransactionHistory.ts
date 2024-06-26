@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, lt, or, sql } from 'drizzle-orm'
+import { and, desc, eq, lt, or, sql } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcTransfer } from '@/db/schema'
@@ -73,7 +73,7 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .leftJoin(sql`registration AS "to_user"`, eq(usdcTransfer.toAddress, sql`"to_user"."contract_address"`))
           .where(and(...afterQuery, or(eq(usdcTransfer.fromAddress, address), eq(usdcTransfer.toAddress, address))))
           .limit(Number(first) + 1)
-          .orderBy(desc(usdcTransfer.blockTimestamp), asc(usdcTransfer.transferId))
+          .orderBy(desc(usdcTransfer.blockTimestamp), desc(usdcTransfer.transferId))
           .execute()
 
         // get pagination infos
