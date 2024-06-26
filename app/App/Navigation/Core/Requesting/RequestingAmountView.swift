@@ -52,7 +52,7 @@ struct RequestingAmountView: View {
         .sheet(isPresented: self.$isShareSheetPresented) {
             ActivityView(
                 activityItems: [
-                    "Hello ! Please send me $\(self.model.amount) via https://www.vlt.finance/request/\(self.hexAmount)"
+                    "Hello ! Please send me $\(self.model.amount) via vltfinance://request?amount=\(self.hexAmount)&recipientAddress=\(self.model.address)"
                 ],
                 isPresented: self.$isShareSheetPresented
             )

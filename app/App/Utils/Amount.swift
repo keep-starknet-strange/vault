@@ -46,10 +46,10 @@ class Amount {
         self.value = Uint256(clamping: BigUInt(shiftedValue))
     }
 
-    public init?(from: String, decimals: UInt8) {
+    public init?<S: StringProtocol>(from: S, decimals: UInt8, radix: Int) {
         self.decimals = decimals
 
-        guard let value = BigUInt(from, radix: 10) else {
+        guard let value = BigUInt(from, radix: radix) else {
             print("Cannot convert to BigUint")
             return nil
         }
@@ -77,6 +77,12 @@ class USDCAmount: Amount {
     }
 
     init?(from: String) {
-        super.init(from: from, decimals: Constants.usdcDecimals)
+        super.init(from: from, decimals: Constants.usdcDecimals, radix: 10)
+    }
+
+    init?(fromHex hex: String) {
+        guard hex.hasPrefix("0x") else { return nil }
+
+        super.init(from: hex.dropFirst(2), decimals: Constants.usdcDecimals, radix: 16)
     }
 }

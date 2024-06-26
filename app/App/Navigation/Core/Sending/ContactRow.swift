@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContactRow: View {
 
-    let contact: Contact
+    let contact: Recipient
 
     var body: some View {
         HStack(spacing: 12) {
-            Avatar(salt: self.contact.phone, name: self.contact.name, data: self.contact.imageData)
+            Avatar(salt: self.contact.phoneNumber, name: self.contact.name, data: self.contact.imageData)
 
             VStack(alignment: .leading) {
                 Text(self.contact.name)
@@ -22,7 +22,7 @@ struct ContactRow: View {
 
                 Spacer()
 
-                Text(self.contact.phone).textTheme(.subtitle)
+                Text(self.contact.phoneNumber ?? "").textTheme(.subtitle)
             }
             .padding(.vertical, 6)
 
@@ -34,8 +34,8 @@ struct ContactRow: View {
 
 #Preview {
     VStack {
-        ContactRow(contact: Contact(name: "Kenny McCormick", phone: "+33612345678"))
-        ContactRow(contact: Contact(name: "Kenny McCormick But with a very long name", phone: "+33612345678"))
+        ContactRow(contact: Recipient(name: "Kenny McCormick", phoneNumber: "+33612345678"))
+        ContactRow(contact: Recipient(name: "Kenny McCormick But with a very long name", phoneNumber: "+33612345678"))
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .defaultBackground()
