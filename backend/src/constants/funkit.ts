@@ -1,5 +1,4 @@
-export const FUNKIT_API_KEY = process.env.FUNKIT_API_KEY
-export const FUNKIT_API_BASE_URL = 'https://api.fun.xyz/v1'
+export const FUNKIT_API_BASE_URL = 'https://api.fun.xyz/testing/v1' // TODO: Switch to prod once ready
 export const FUNKIT_STARKNET_CHAIN_ID = '23448594291968334'
 export const POLYGON_CHAIN_ID = '137'
 export const POLYGON_NETWORK_NAME = 'polygon'
