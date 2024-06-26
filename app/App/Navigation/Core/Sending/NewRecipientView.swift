@@ -39,7 +39,7 @@ struct NewRecipientView: View {
 
                 self.model.addContact(
                     name: self.parsedName,
-                    phone: parsedPhoneNumber.rawString()
+                    phoneNumber: parsedPhoneNumber.rawString()
                 ) { contact in
                     // TODO: handle this new contact
                     print(contact)

@@ -38,7 +38,7 @@ class Model: ObservableObject {
     @Published var amount: String = ""
 
     // Sending USDC
-    @Published var recipientContact: Contact?
+    @Published var recipient: Recipient?
     @Published var sendingStatus: Status = .none
     @Published var showSendingView = false {
         didSet {
@@ -59,6 +59,7 @@ class Model: ObservableObject {
             }
         }
     }
+    @Published var showRequestingConfirmation = false
 
     // Starknet
     @Published var outsideExecution: OutsideExecution?
@@ -69,7 +70,7 @@ class Model: ObservableObject {
     @Published var searchedCountry = ""
 
     // Contacts
-    @Published var contacts: [Contact] = []
+    @Published var contacts: [Recipient] = []
     @Published var contactsAuthorizationStatus: CNAuthorizationStatus = .notDetermined
 
     // polling
@@ -259,30 +260,6 @@ extension Model {
         print("MessageHash: \(self.outsideExecution!.getMessageHash(forSigner: feltAddress))")
         return try self.signer.sign(transactionHash: self.outsideExecution!.getMessageHash(forSigner: feltAddress))
     }
-
-    // addr utils
-
-    func getAddress(from phoneNumber: String) -> Felt? {
-        guard let phoneNumberFelt = Felt.fromShortString(phoneNumber) else {
-            return nil
-        }
-
-        // TODO: remove this extra step after nonce support
-        guard let phoneNumberHex = Felt.fromShortString(phoneNumberFelt.toHex())?.toHex().dropFirst(2) else {
-            return nil
-        }
-
-        guard let phoneNumberBytes = BigUInt(phoneNumberHex, radix: 16)?.serialize().bytes else {
-            return nil
-        }
-
-        return StarknetContractAddressCalculator.calculateFrom(
-            classHash: Constants.Starknet.blankAccountClassHash,
-            calldata: [],
-            salt: starknetKeccak(on: phoneNumberBytes),
-            deployerAddress: Constants.Starknet.vaultFactoryAddress
-        )
-    }
 }
 
 // MARK: - Contacts
@@ -323,7 +300,7 @@ extension Model {
         }
     }
 
-    func addContact(name: String, phone: String, completionHandler: @escaping (Contact) -> Void) {
+    func addContact(name: String, phoneNumber: String, completionHandler: @escaping (Recipient) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let newContact = CNMutableContact()
             let nameComponents = name.split(separator: " ")
@@ -336,7 +313,7 @@ extension Model {
                 newContact.familyName = nameComponents.dropFirst().joined(separator: " ")
             }
 
-            let phoneValue = CNLabeledValue(label: CNLabelPhoneNumberMain, value: CNPhoneNumber(stringValue: phone))
+            let phoneValue = CNLabeledValue(label: CNLabelPhoneNumberMain, value: CNPhoneNumber(stringValue: phoneNumber))
             newContact.phoneNumbers = [phoneValue]
 
             let saveRequest = CNSaveRequest()
@@ -347,7 +324,7 @@ extension Model {
 
                 DispatchQueue.main.async {
                     self?.fetchContacts() // Refresh the contacts list
-                    completionHandler(Contact(name: name, phone: phone))
+                    completionHandler(Recipient(name: name, phoneNumber: phoneNumber))
                 }
             } catch {
                 print("Failed to save contact: \(error)")
@@ -361,8 +338,8 @@ extension Model {
 
 extension Model {
 
-    func setRecipient(_ recipient: Contact) {
-        self.recipientContact = recipient
+    func setRecipient(_ recipient: Recipient) {
+        self.recipient = recipient
     }
 
     func executeTransfer() async {
@@ -405,8 +382,8 @@ extension Model {
 
     func signTransfer() async {
         guard
-            let recipientContact = self.recipientContact,
-            let recipientAddress = self.getAddress(from: recipientContact.phone),
+            let recipient = self.recipient,
+            let recipientAddress = recipient.address,
             let amount = USDCAmount(from: self.parsedAmount)
         else {
             self.sendingStatus = .error("Invalid request.")
@@ -437,6 +414,40 @@ extension Model {
             print(error)
 #endif
         }
+    }
+}
+
+// MARK: - Deeplinks
+
+extension Model {
+    public func handleDeepLink(_ url: URL) {
+        guard url.scheme == "vltfinance" else {
+            return
+        }
+
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            print("Invalid URL")
+            return
+        }
+
+        guard let action = components.host, action == "request" else {
+            print("Unknown URL, we can't handle this one!")
+            return
+        }
+
+        guard
+            let amount = components.queryItems?.first(where: { $0.name == "amount" })?.value,
+            let parsedAmount = USDCAmount(fromHex: amount),
+            let recipientAddress = components.queryItems?.first(where: { $0.name == "recipientAddress" })?.value
+        else {
+            print("Invalid payment request")
+            return
+        }
+
+        // TODO: get real user name/image
+        self.recipient = Recipient(name: "Chqrles", address: recipientAddress)
+        self.amount = parsedAmount.toFixed(2)
+        self.showRequestingConfirmation = true
     }
 }
 
@@ -477,7 +488,7 @@ extension Model {
             )
             request.sortOrder = CNContactSortOrder.givenName
 
-            var contacts: [Contact] = []
+            var contacts: [Recipient] = []
 
             do {
                 try self?.contactStore.enumerateContacts(with: request) { (cnContact, stop) in
@@ -489,7 +500,7 @@ extension Model {
 
                     // Only add contacts with a name AND a phone number
                     if !name.isEmpty && phoneNumber.hasPrefix("+") {
-                        let contact = Contact(name: name, phone: phoneNumber, imageData: imageData)
+                        let contact = Recipient(name: name, phoneNumber: phoneNumber, imageData: imageData)
                         contacts.append(contact)
                     }
                 }
@@ -504,7 +515,7 @@ extension Model {
     }
 
     private func initiateTransfer() {
-        self.recipientContact = nil
+        self.recipient = nil
         self.amount = "0"
         self.outsideExecution = nil
         self.outsideExecutionSignature = nil

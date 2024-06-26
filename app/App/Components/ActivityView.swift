@@ -20,6 +20,11 @@ struct ActivityView: UIViewControllerRepresentable {
             applicationActivities: self.applicationActivities
         )
 
+        // close view on completion
+        controller.completionWithItemsHandler = { _, _, _, _ in
+            self.isPresented = false
+        }
+
         return controller
     }
 

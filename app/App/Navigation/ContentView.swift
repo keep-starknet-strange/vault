@@ -56,6 +56,43 @@ struct ContentView: View {
 
                 CustomTabbar(selectedTab: $selectedTab)
             }
+            .onOpenURL { incomingURL in
+                #if DEBUG
+                print("App was opened via URL: \(incomingURL)")
+                #endif
+
+                self.model.handleDeepLink(incomingURL)
+            }
+            // TODO: avoid code duplication
+            .sheet(isPresented: self.$model.showRequestingConfirmation) {
+                if self.model.sendingStatus == .signed {
+                    Task {
+                        await self.model.executeTransfer()
+                    }
+                }
+            } content: {
+                ConfirmationView()
+            }
+            .sheetPopover(isPresented: .constant(self.model.sendingStatus == .loading || self.model.sendingStatus == .success)) {
+
+                Text("Executing your transfer").textTheme(.headlineSmall)
+
+                Spacer().frame(height: 32)
+
+                SpinnerView(isComplete: .constant(self.model.sendingStatus == .success))
+            }
+            .onChange(of: self.model.sendingStatus) {
+                // close confirmation sheet on signing
+                if self.model.sendingStatus == .signed {
+                    self.model.showRequestingConfirmation = false
+                } else if self.model.sendingStatus == .success {
+                    Task { @MainActor in
+                        try await Task.sleep(for: .seconds(1))
+
+                        self.model.sendingStatus = .none
+                    }
+                }
+            }
         } else {
             NavigationStack {
                 OnboardingView()
