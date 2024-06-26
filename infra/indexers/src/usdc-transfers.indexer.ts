@@ -39,6 +39,7 @@ export default function decodeUSDCTransfers({ header, events }: Block) {
 
 			const transactionHash = transaction.meta.hash
 			const transferId = `${transactionHash}_${event.index ?? 0}`
+			const IndexInBlock = (transaction.meta.transactionIndex ?? 0) * 1_000 + (event.index ?? 0)
 
 			const [fromAddress, toAddress, amountAddedLow, amountAddedHigh] =
 				event.data
@@ -58,6 +59,7 @@ export default function decodeUSDCTransfers({ header, events }: Block) {
 				from_address: fromAddress,
 				to_address: toAddress,
 				amount: amountBn.toString(),
+				index_in_block: IndexInBlock,
 				created_at: new Date().toISOString(),
 			}
 		})

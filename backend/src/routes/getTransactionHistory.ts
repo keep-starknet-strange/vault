@@ -9,13 +9,13 @@ import { addressRegex } from '.'
 const MAX_PAGE_SIZE = 20
 
 function getCursorQuery(cursor?: string): Parameters<typeof and> {
-  const [transferId, timestamp] = fromCursorHash(cursor)
+  const [indexInBlock, timestamp] = fromCursorHash(cursor)
 
   return [
     or(
       and(
         timestamp ? eq(usdcTransfer.blockTimestamp, new Date(Number(timestamp) * 1000)) : undefined,
-        transferId ? lt(usdcTransfer.transferId, transferId) : undefined,
+        indexInBlock ? lt(usdcTransfer.indexInBlock, +indexInBlock) : undefined,
       ),
       timestamp ? lt(usdcTransfer.blockTimestamp, new Date(Number(timestamp) * 1000)) : undefined,
     ),
@@ -56,7 +56,7 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .select({
             transaction_timestamp: usdcTransfer.blockTimestamp,
             amount: usdcTransfer.amount,
-            transfer_id: usdcTransfer.transferId,
+            index_in_block: usdcTransfer.indexInBlock,
             from: {
               nickname: sql`"from_user"."nickname"`,
               contract_address: sql`"from_user"."contract_address"`,
@@ -73,14 +73,14 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .leftJoin(sql`registration AS "to_user"`, eq(usdcTransfer.toAddress, sql`"to_user"."contract_address"`))
           .where(and(...afterQuery, or(eq(usdcTransfer.fromAddress, address), eq(usdcTransfer.toAddress, address))))
           .limit(Number(first) + 1)
-          .orderBy(desc(usdcTransfer.blockTimestamp), desc(usdcTransfer.transferId))
+          .orderBy(desc(usdcTransfer.blockTimestamp), desc(usdcTransfer.indexInBlock))
           .execute()
 
         // get pagination infos
         const lastTx = txs.length ? txs[Math.min(txs.length - 1, first - 1)] : null
 
         const endCursor = lastTx
-          ? toCursorHash(lastTx.transfer_id, (lastTx.transaction_timestamp!.getTime() / 1000).toString())
+          ? toCursorHash(lastTx.index_in_block, (lastTx.transaction_timestamp!.getTime() / 1000).toString())
           : null
 
         const hasNext = txs.length > first

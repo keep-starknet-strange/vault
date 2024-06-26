@@ -6,10 +6,12 @@ export const usdcTransfer = pgTable('transfer_usdc', {
   blockHash: text('block_hash'),
   blockNumber: bigint('block_number', { mode: 'number' }),
   blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
+  indexedAt: timestamp('indexed_at', { withTimezone: false }),
   transactionHash: text('transaction_hash'),
   fromAddress: text('from_address'),
   toAddress: text('to_address'),
   amount: text('amount'),
+  indexInBlock: bigint('index_in_block', { mode: 'number' }),
   createdAt: timestamp('created_at', { withTimezone: false }),
   cursor: bigint('_cursor', { mode: 'number' }),
 })
