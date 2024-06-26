@@ -73,7 +73,7 @@ struct ContentView: View {
             } content: {
                 ConfirmationView()
             }
-            .sheetPopover(isPresented: .constant(self.model.sendingStatus == .loading || self.model.sendingStatus == .success)) {
+            .sheetPopover(isPresented: .constant((self.model.sendingStatus == .loading || self.model.sendingStatus == .success) && !self.model.showSendingView)) {
 
                 Text("Executing your transfer").textTheme(.headlineSmall)
 
