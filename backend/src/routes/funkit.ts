@@ -56,8 +56,6 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApi
         return reply.status(400).send({ message: 'isNy is a required boolean.' })
       }
 
-      console.log('>>funkitApiKey', funkitApiKey)
-
       try {
         // 1 - Generate the funkit checkout quote
         const toMultiplier = 10 ** TOKEN_INFO.STARKNET_USDC.decimals
@@ -106,9 +104,7 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApi
           },
         )
         const stripeQuote = (await stripeQuoteRes.json()) as any
-        console.log('>stripeQuote', stripeQuote)
         const stripePolygonQuote = stripeQuote?.destination_network_quotes?.polygon?.[0]
-        console.log('>stripePolygonQuote', stripePolygonQuote)
         if (!stripePolygonQuote) {
           return reply.status(500).send({ message: 'Failed to get stripe quote.' })
         }
