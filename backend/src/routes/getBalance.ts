@@ -1,4 +1,4 @@
-import { desc } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
 
 import { usdcBalance } from '@/db/schema'
@@ -26,6 +26,7 @@ export function getBalanceRoute(fastify: FastifyInstance) {
         const balanceRecords = await fastify.db
           .select({ balance: usdcBalance.balance })
           .from(usdcBalance)
+          .where(eq(usdcBalance.address, address))
           .orderBy(desc(usdcBalance.cursor))
           .limit(1)
           .execute()
