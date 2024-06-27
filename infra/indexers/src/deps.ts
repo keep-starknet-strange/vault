@@ -1,4 +1,4 @@
-export { ec, hash, uint256 } from 'https://esm.sh/starknet@5.14'
+export { ec, hash, uint256, constants } from 'https://esm.sh/starknet@5.25'
 
 export type {
   Block,
