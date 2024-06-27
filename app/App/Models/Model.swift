@@ -134,7 +134,7 @@ extension Model {
         onSuccess: @escaping () -> Void
     ) {
         do {
-            guard let publicKey = try SecureEnclaveManager.shared.generateKeyPair() else {
+            guard let publicKey = try SecureEnclaveManager.shared.getOrGenerateKeyPair() else {
                 throw "Failed to generate public key."
             }
 
