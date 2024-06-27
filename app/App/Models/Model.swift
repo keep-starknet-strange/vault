@@ -27,6 +27,7 @@ class Model: ObservableObject {
 
     @AppStorage("starknetMainAddress") var address: String = ""
     @AppStorage("isOnboarded") var isOnboarded: Bool = false
+    @AppStorage("surname") var surname: String = ""
 
     // App
     @Published var isLoading = false
@@ -109,8 +110,7 @@ extension Model {
     func startRegistration(phoneNumber: PhoneNumber, onSuccess: @escaping () -> Void) {
         self.isLoading = true
 
-        // TODO: implement nickname support
-        VaultService.shared.send(GetOTP(phoneNumber: phoneNumber, nickname: "nickname")) { result in
+        VaultService.shared.send(GetOTP(phoneNumber: phoneNumber, nickname: self.surname)) { result in
             DispatchQueue.main.async {
                 self.isLoading = false
 
