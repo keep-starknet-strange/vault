@@ -12,6 +12,8 @@ export const usdcTransfer = pgTable('transfer_usdc', {
   toAddress: text('to_address'),
   amount: text('amount'),
   indexInBlock: bigint('index_in_block', { mode: 'number' }),
+  senderBalance: text('sender_balance'),
+  recipientBalance: text('recipient_balance'),
   createdAt: timestamp('created_at', { withTimezone: false }),
   cursor: bigint('_cursor', { mode: 'number' }),
 })

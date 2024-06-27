@@ -22,6 +22,13 @@
       "when": 1719409813957,
       "tag": "0002_early_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1719488756724,
+      "tag": "0003_misty_katie_power",
+      "breakpoints": true
     }
   ]
 }
