@@ -59,7 +59,6 @@
 		9C9F9EF42C22368200620AC6 /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE12C22368200620AC6 /* Execution.swift */; };
 		9C9F9EF52C22368200620AC6 /* VaultError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE22C22368200620AC6 /* VaultError.swift */; };
 		9C9F9EF62C22368200620AC6 /* ExecuteFromOutside.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE42C22368200620AC6 /* ExecuteFromOutside.swift */; };
-		9C9F9EF72C22368200620AC6 /* GetBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE52C22368200620AC6 /* GetBalance.swift */; };
 		9C9F9EF82C22368200620AC6 /* GetOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE62C22368200620AC6 /* GetOTP.swift */; };
 		9C9F9EF92C22368200620AC6 /* VerifyOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE72C22368200620AC6 /* VerifyOTP.swift */; };
 		9C9F9EFA2C22368200620AC6 /* BodyParamsEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EE92C22368200620AC6 /* BodyParamsEncoder.swift */; };
@@ -77,7 +76,6 @@
 		9CD390F52BE93A2400238FE9 /* Sofia Pro Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */; };
 		9CD390F72BEA3D2A00238FE9 /* EarnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390F62BEA3D2A00238FE9 /* EarnView.swift */; };
 		9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD390FA2BEAB6C600238FE9 /* WebView.swift */; };
-		9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */; };
 		9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD7789E2BB185C200BA4677 /* CelebrationView.swift */; };
 		9CD778A32BB1939200BA4677 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778A22BB1939200BA4677 /* ConfettiSwiftUI */; };
 		9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778AA2BBAF8BE00BA4677 /* HomeView.swift */; };
@@ -177,7 +175,7 @@
 		9C637CDF2BB0C0E5005816B4 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		9C6ABFCB2C21C9C9000227D2 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		9C6ABFCD2C21CF94000227D2 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
-		9C6ABFCE2C21D0CC000227D2 /* Prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Prod.xcconfig; sourceTree = "<group>"; };
+		9C6ABFCE2C21D0CC000227D2 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		9C6ABFCF2C21D21A000227D2 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestingAmountView.swift; sourceTree = "<group>"; };
 		9C9098782C2AED57002A5833 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 		9C9F9EE12C22368200620AC6 /* Execution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
 		9C9F9EE22C22368200620AC6 /* VaultError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultError.swift; sourceTree = "<group>"; };
 		9C9F9EE42C22368200620AC6 /* ExecuteFromOutside.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecuteFromOutside.swift; sourceTree = "<group>"; };
-		9C9F9EE52C22368200620AC6 /* GetBalance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetBalance.swift; sourceTree = "<group>"; };
 		9C9F9EE62C22368200620AC6 /* GetOTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetOTP.swift; sourceTree = "<group>"; };
 		9C9F9EE72C22368200620AC6 /* VerifyOTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyOTP.swift; sourceTree = "<group>"; };
 		9C9F9EE92C22368200620AC6 /* BodyParamsEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParamsEncoder.swift; sourceTree = "<group>"; };
@@ -207,7 +204,6 @@
 		9CD390F42BE93A2400238FE9 /* Sofia Pro Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sofia Pro Medium.otf"; sourceTree = "<group>"; };
 		9CD390F62BEA3D2A00238FE9 /* EarnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnView.swift; sourceTree = "<group>"; };
 		9CD390FA2BEAB6C600238FE9 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
-		9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessCodeView.swift; sourceTree = "<group>"; };
 		9CD7789E2BB185C200BA4677 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
 		9CD778AA2BBAF8BE00BA4677 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		9CD778AD2BBC1A7300BA4677 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
@@ -412,7 +408,6 @@
 			isa = PBXGroup;
 			children = (
 				9C9F9EE42C22368200620AC6 /* ExecuteFromOutside.swift */,
-				9C9F9EE52C22368200620AC6 /* GetBalance.swift */,
 				9C9F9EE62C22368200620AC6 /* GetOTP.swift */,
 				9C9F9EE72C22368200620AC6 /* VerifyOTP.swift */,
 				9CD098892C22E32300FDDD8F /* GetTransactionsHistory.swift */,
@@ -489,7 +484,7 @@
 		9CDFD3F22BAB3428000466B9 = {
 			isa = PBXGroup;
 			children = (
-				9C6ABFCE2C21D0CC000227D2 /* Prod.xcconfig */,
+				9C6ABFCE2C21D0CC000227D2 /* Staging.xcconfig */,
 				9C6ABFCD2C21CF94000227D2 /* Dev.xcconfig */,
 				9CDFD4352BAB80D5000466B9 /* Vault-Info.plist */,
 				9CDFD3FD2BAB3428000466B9 /* App */,
@@ -562,7 +557,6 @@
 				9CDFD42C2BAB4D1D000466B9 /* WelcomeView.swift */,
 				9CDFD42E2BAB7641000466B9 /* OnboardingView.swift */,
 				9CDFD4392BAC4561000466B9 /* AskSurnameView.swift */,
-				9CD7789C2BB1846600BA4677 /* AccessCodeView.swift */,
 				9CDFD43B2BAC8BE6000466B9 /* FaceIDView.swift */,
 				9CDFD43D2BAD7F12000466B9 /* Shared.swift */,
 				9C637CD52BB09334005816B4 /* NotificationsView.swift */,
@@ -816,7 +810,6 @@
 				9CD1BE8C2BCD5D790077A60B /* String+character.swift in Sources */,
 				9C637CD62BB09334005816B4 /* NotificationsView.swift in Sources */,
 				9CD778AB2BBAF8BE00BA4677 /* HomeView.swift in Sources */,
-				9C9F9EF72C22368200620AC6 /* GetBalance.swift in Sources */,
 				9CC82FFA2C1BB9A30089042C /* OutsideExecution.swift in Sources */,
 				9C6259102BFAADB90039DE9C /* NavigationBar.swift in Sources */,
 				9C9F9EF22C22368200620AC6 /* Empty.swift in Sources */,
@@ -824,7 +817,6 @@
 				9C5CFDB02BC828DE001776E1 /* Locale.swift in Sources */,
 				9C9F9EF62C22368200620AC6 /* ExecuteFromOutside.swift in Sources */,
 				9C09176C2C2466280068FAF5 /* PageInfo.swift in Sources */,
-				9CD7789D2BB1846600BA4677 /* AccessCodeView.swift in Sources */,
 				9CD778CB2BC3113A00BA4677 /* PhoneRequestView.swift in Sources */,
 				9CDFD42F2BAB7641000466B9 /* OnboardingView.swift in Sources */,
 				9CD390F72BEA3D2A00238FE9 /* EarnView.swift in Sources */,
@@ -903,7 +895,7 @@
 /* Begin XCBuildConfiguration section */
 		9CD1BE912BD563710077A60B /* Debug(Staging) */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6ABFCE2C21D0CC000227D2 /* Prod.xcconfig */;
+			baseConfigurationReference = 9C6ABFCE2C21D0CC000227D2 /* Staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1105,7 +1097,7 @@
 		};
 		9CDFD41E2BAB3429000466B9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C6ABFCE2C21D0CC000227D2 /* Prod.xcconfig */;
+			baseConfigurationReference = 9C6ABFCE2C21D0CC000227D2 /* Staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

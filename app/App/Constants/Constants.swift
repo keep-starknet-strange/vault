@@ -22,17 +22,6 @@ struct Constants {
 
     static let registrationCodeDigitsCount = 6
 
-    // MARK: ENV
-
-    static let vaultBaseURL: URL? = {
-        guard let urlString = ProcessInfo.processInfo.environment["VAULT_API_BASE_URL"],
-              let url = URL(string: urlString) else {
-            return nil
-        }
-
-        return url
-    }()
-
     // MARK: ICONS
 
     struct Icons {
@@ -51,8 +40,18 @@ struct Constants {
     // MARK: STARKNET
 
     struct Starknet {
-        static let blankAccountClassHash = Felt("0x022d51f548b95dda56852e1e3211ebdcc623637794baf768afff33807f8c4563");
-        static let vaultFactoryAddress = Felt("0x8dabd7ce1da04fada30dc43aa90dee1861d62f0575601b19feaf80f801938e");
-        static let usdcAddress = Felt("0x07ab0b8855a61f480b4423c46c32fa7c553f0aac3531bbddaa282d86244f7a23")
+        static private let vaultFactoryAddresses = [
+            StarknetChainId.main.value: Felt("0x410da9af28e654fa93354430841ce7c5f0c2c17cc92971fb23d3d4f826d9834"),
+            StarknetChainId.sepolia.value: Felt("0x33498f0d9e6ebef71b3d8dfa56501388cfe5ce96cba81503cd8572be92bd77c"),
+        ]
+        static let vaultFactoryAddress: Felt = Self.vaultFactoryAddresses[AppConfiguration.Starknet.starknetChainId.value]!
+
+        static private let usdcAddresses = [
+            StarknetChainId.main.value: Felt("0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8"),
+            StarknetChainId.sepolia.value: Felt("0x07ab0b8855a61f480b4423c46c32fa7c553f0aac3531bbddaa282d86244f7a23"),
+        ]
+        static let usdcAddress: Felt = Self.usdcAddresses[AppConfiguration.Starknet.starknetChainId.value]!
+
+        static let blankAccountClassHash = Felt("0x1fa186ff7ea06307ded0baa1eb7648afc43618b92084da1110a9c0bd2b6bf56");
     }
 }

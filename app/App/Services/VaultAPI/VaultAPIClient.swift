@@ -23,10 +23,6 @@ class VaultService {
 
     static let shared = VaultService()
 
-    var healthCheck: Bool {
-        return baseEndpointUrl != nil
-    }
-
     private let baseEndpointUrl = AppConfiguration.API.baseURL
     private let session = URLSession(configuration: .default)
 

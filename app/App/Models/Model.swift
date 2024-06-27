@@ -28,13 +28,9 @@ class Model: ObservableObject {
     @AppStorage("starknetMainAddress") var address: String = ""
     @AppStorage("isOnboarded") var isOnboarded: Bool = false
 
-    // API Data
-    @Published var balance: USDCAmount?
-
     // App
     @Published var isLoading = false
     @Published var showMessage = false
-    @Published var isProperlyConfigured: Bool
     @Published var amount: String = ""
 
     // Sending USDC
@@ -101,9 +97,6 @@ class Model: ObservableObject {
     private lazy var signer = P256Signer()
 
     init() {
-        // Vault API
-        self.isProperlyConfigured = VaultService.shared.healthCheck
-
         // Contacts
         self.checkContactsAuthorizationStatus()
     }
@@ -169,33 +162,6 @@ extension Model {
             #if DEBUG
             print(error)
             #endif
-        }
-    }
-
-    func getBalance() {
-        self.pollingAction = {
-            VaultService.shared.send(GetBalance(address: self.address)) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let response):
-                        self.balance = USDCAmount(from: response.balance)!
-
-                    case .failure(let error):
-                        // TODO: Handle error
-                        print(error)
-                    }
-                }
-            }
-        }
-
-        // execute a first time
-        self.pollingAction?()
-
-        self.pollingTimer = Timer.scheduledTimer(
-            withTimeInterval: 5.0, // 5s
-            repeats: true
-        ) { _ in
-            self.pollingAction?()
         }
     }
 

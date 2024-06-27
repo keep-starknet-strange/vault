@@ -17,8 +17,6 @@ class SecureEnclaveManager {
 
     static let shared = SecureEnclaveManager()
 
-    static let privateKeyLabel = "com.vault.keys.privateKey"
-
     // MARK: Public
 
     public func generateKeyPair() throws -> P256PublicKey? {
@@ -38,7 +36,7 @@ class SecureEnclaveManager {
             kSecPrivateKeyAttrs: [
                 kSecAttrIsPermanent: true,
                 kSecAttrAccessControl: access,
-                kSecAttrLabel: Self.privateKeyLabel,
+                kSecAttrLabel: AppConfiguration.Misc.privateKeyLabel,
             ],
         ]
 
@@ -87,7 +85,7 @@ class SecureEnclaveManager {
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
-            kSecAttrLabel as String: Self.privateKeyLabel,
+            kSecAttrLabel as String: AppConfiguration.Misc.privateKeyLabel,
             kSecMatchLimit as String: kSecMatchLimitAll,
             kSecReturnRef as String: true,
         ]

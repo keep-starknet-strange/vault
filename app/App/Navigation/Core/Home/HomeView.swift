@@ -39,7 +39,7 @@ struct HomeView: View {
                             .foregroundStyle(.neutral2)
                             .textTheme(.bodyPrimary)
 
-                        BalanceView(balance: self.$model.balance)
+                        BalanceView(balance: self.txHistoryModel.source?.items.first?.balance)
                     }
 
                     Spacer()
@@ -54,9 +54,6 @@ struct HomeView: View {
         }
         .onAppear {
             self.txHistoryModel.start(withSource: TransactionHistory(address: self.model.address))
-
-            // balance
-            self.model.getBalance()
         }
         .onDisappear {
             self.model.stopPolling()
