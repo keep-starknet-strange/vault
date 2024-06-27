@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify'
 import { type Account, uint256 } from 'starknet'
 import { VerificationCheckListInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck'
 
-import { Entrypoint, VAULT_FACTORY_ADDRESS } from '@/constants/contracts'
+import { Entrypoint, SN_CHAIN_ID, VAULT_FACTORY_ADDRESSES } from '@/constants/contracts'
 import { registration } from '@/db/schema'
 import { computeAddress } from '@/utils/address'
 import { hashPhoneNumber } from '@/utils/phoneNumber'
@@ -64,7 +64,7 @@ export function verifyOtp(
 
         // public key, approver, limit
         const { transaction_hash } = await deployer.execute({
-          contractAddress: VAULT_FACTORY_ADDRESS,
+          contractAddress: VAULT_FACTORY_ADDRESSES[SN_CHAIN_ID],
           calldata: [
             hashPhoneNumber(phone_number),
             uint256.bnToUint256(public_key_x),

@@ -13,7 +13,7 @@ export const USDC_ADDRESSES: AddressesMap = {
 
 const DEFAULT_NETWORK_NAME = constants.NetworkName.SN_SEPOLIA
 
-export const CHAIN_ID =
+export const SN_CHAIN_ID =
   (constants.StarknetChainId[(Deno.env.get('SN_NETWORK') ?? '') as constants.NetworkName] ??
   constants.StarknetChainId[DEFAULT_NETWORK_NAME]) as SupportedChainId
 

@@ -1,4 +1,4 @@
-import { CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK } from './constants.ts';
+import { SN_CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK } from './constants.ts';
 import { Block, hash, uint256 } from './deps.ts'
 import { getStorageLocation } from './utils.ts';
 
@@ -8,7 +8,7 @@ const filter = {
 	},
 	events: [
 		{
-			fromAddress: USDC_ADDRESSES[CHAIN_ID],
+			fromAddress: USDC_ADDRESSES[SN_CHAIN_ID],
 			keys: [hash.getSelectorFromName('Transfer')],
 			includeReceipt: false,
 		},
@@ -16,7 +16,7 @@ const filter = {
 }
 
 // TODO: multiple chains support
-const streamUrl = STREAM_URLS[CHAIN_ID]
+const streamUrl = STREAM_URLS[SN_CHAIN_ID]
 const startingBlock = STARTING_BLOCK
 
 export const config = {
