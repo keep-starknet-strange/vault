@@ -25,7 +25,7 @@ export const SN_CHAIN_ID = (constants.StarknetChainId[(process.env.SN_NETWORK ??
 const NODE_URLS = {
   [constants.StarknetChainId.SN_MAIN]: (apiKey: string) => `https://rpc.nethermind.io/mainnet-juno/?apikey=${apiKey}`,
   [constants.StarknetChainId.SN_SEPOLIA]: (apiKey: string) =>
-    `https://rpc.nethermind.io/mainnet-juno/?apikey=${apiKey}`,
+    `https://rpc.nethermind.io/sepolia-juno/?apikey=${apiKey}`,
 }
 
-export const NODE_URL = NODE_URLS[SN_CHAIN_ID](process.env.NODE_API_KEY)
+export const NODE_URL = NODE_URLS[SN_CHAIN_ID](process.env.NODE_API_KEY!)
