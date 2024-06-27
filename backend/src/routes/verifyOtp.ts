@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm/pg-core/expressions'
 import type { FastifyInstance } from 'fastify'
-import { type Account, uint256 } from 'starknet'
+import { type Account, addAddressPadding, uint256 } from 'starknet'
 import { VerificationCheckListInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck'
 
 import { Entrypoint, SN_CHAIN_ID, VAULT_FACTORY_ADDRESSES } from '@/constants/contracts'
@@ -76,7 +76,7 @@ export function verifyOtp(
           entrypoint: Entrypoint.DEPLOY_ACCOUNT,
         })
 
-        const contractAddress = computeAddress(phone_number)
+        const contractAddress = addAddressPadding(computeAddress(phone_number))
 
         fastify.log.info(
           'Deploying account: ',
