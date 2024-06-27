@@ -24,6 +24,7 @@ class Transaction: Identifiable {
     let amount: USDCAmount
     let date: Date
     let isSending: Bool
+    let balance: USDCAmount
 
     static let dateFormatter = {
         let dateFormatter = DateFormatter()
@@ -41,5 +42,6 @@ class Transaction: Identifiable {
         self.amount = USDCAmount(from: transaction.amount)!
         self.date = Self.dateFormatter.date(from: transaction.transaction_timestamp)!
         self.isSending = transaction.from.contract_address == address
+        self.balance = USDCAmount(from: self.isSending ? transaction.senderBalance : transaction.recipientBalance)!
     }
 }

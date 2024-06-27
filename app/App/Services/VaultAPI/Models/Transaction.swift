@@ -18,4 +18,6 @@ public struct RawTransaction: Decodable {
     public let amount: String
     public let from: RawTransactionUser
     public let to: RawTransactionUser
+    public let senderBalance: String
+    public let recipientBalance: String
 }

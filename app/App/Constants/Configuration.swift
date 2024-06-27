@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Starknet
 
 enum AppConfiguration {
     enum Error: Swift.Error {
@@ -29,14 +30,22 @@ enum AppConfiguration {
     }
 
     enum API {
-        static var baseURL: URL? {
-            do {
-                let base: String = try AppConfiguration.value(for: "API_BASE_URL")
+        static var baseURL: URL {
+            let base: String = try! AppConfiguration.value(for: "API_BASE_URL")
+            return URL(string: "https://" + base)!
+        }
+    }
 
-                return URL(string: "https://" + base)
-            } catch {
-                return nil
-            }
+    enum Misc {
+        static var privateKeyLabel: String {
+            try! AppConfiguration.value(for: "PRIVATE_KEY_LABEL")
+        }
+    }
+
+    enum Starknet {
+        static var starknetChainId: StarknetChainId {
+            let networkName: String = try! AppConfiguration.value(for: "SN_NETWORK")
+            return StarknetChainId(fromNetworkName: networkName)
         }
     }
 }

@@ -8,4 +8,6 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-API_BASE_URL = api-production-e1fe.up.railway.app
+API_BASE_URL = api-development-684f.up.railway.app
+PRIVATE_KEY_LABEL = com.vault.keys.privateKey.dev
+SN_NETWORK = SN_SEPOLIA

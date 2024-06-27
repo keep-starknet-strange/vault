@@ -40,7 +40,7 @@ struct WelcomeView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            AccessCodeView()
+            AskSurnameView()
         }
     }
 }
