@@ -69,9 +69,6 @@ export function verifyOtp(
             hashPhoneNumber(phone_number),
             uint256.bnToUint256(public_key_x),
             uint256.bnToUint256(public_key_y),
-            0,
-            1000000000,
-            0,
           ],
           entrypoint: Entrypoint.DEPLOY_ACCOUNT,
         })
