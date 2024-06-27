@@ -44,6 +44,18 @@ export function verifyOtp(
       try {
         const { phone_number, sent_otp, public_key_x, public_key_y } = request.body
 
+        // check if user is already registered
+        const user = (
+          await fastify.db.select().from(registration).where(eq(registration.phone_number, phone_number))
+        )[0]
+
+        // user is already registered
+        if (user.is_confirmed) {
+          return reply.code(200).send({
+            contract_address: user.contract_address,
+          })
+        }
+
         // Create a verification request to twilio
         const response = await twilio_verification
           .create({
