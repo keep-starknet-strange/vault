@@ -1,41 +1,23 @@
 #[starknet::contract(account)]
 mod VaultAccount {
-    use core::box::BoxTrait;
-    use core::hash::Hash;
-    use core::option::OptionTrait;
-    use core::result::ResultTrait;
-    use core::starknet::{get_tx_info, SyscallResultTrait};
-    use openzeppelin::account::AccountComponent;
-    use openzeppelin::account::interface::ISRC6;
-    use openzeppelin::introspection::src5::SRC5Component;
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use openzeppelin::upgrades::UpgradeableComponent;
-    use openzeppelin::upgrades::interface::IUpgradeable;
-    use openzeppelin::utils::cryptography::snip12::{
-        OffchainMessageHashImpl, StructHash, SNIP12Metadata
+    use core::{box::BoxTrait, hash::Hash, option::OptionTrait, result::ResultTrait,};
+    use openzeppelin::{
+        account::AccountComponent, account::interface::ISRC6, introspection::src5::SRC5Component,
+        token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait},
+        upgrades::UpgradeableComponent, upgrades::interface::IUpgradeable,
+        utils::cryptography::snip12::{OffchainMessageHashImpl, StructHash, SNIP12Metadata}
     };
-    use starknet::account::Call;
-    use starknet::secp256_trait::is_valid_signature;
-    use starknet::secp256r1::{Secp256r1Point, Secp256r1Impl};
-    use starknet::{ContractAddress, ClassHash};
-    use starknet::{get_caller_address, contract_address_const, get_contract_address};
-    use vault::components::spending_limit::weekly::interface::IWeeklyLimit;
-    use vault::components::{
-        WeeklyLimitComponent, WhitelistComponent, TransactionApprovalComponent,
-        OutsideExecutionComponent
+    use starknet::{
+        account::Call, get_tx_info, SyscallResultTrait, secp256_trait::is_valid_signature,
+        secp256r1::{Secp256r1Point, Secp256r1Impl}, {ContractAddress, ClassHash},
+        {get_caller_address, contract_address_const, get_contract_address}
     };
-    use vault::contracts::account::interface::{IVaultAccount, IClaimLink};
-    use vault::utils::claim::Claim;
+    use vault::{
+        components::OutsideExecutionComponent, contracts::account::interface::IVaultAccount,
+    };
 
     component!(path: AccountComponent, storage: account, event: AccountEvent);
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
-    component!(
-        path: TransactionApprovalComponent,
-        storage: transaction_approval,
-        event: TransactionApprovalEvent
-    );
-    component!(path: WeeklyLimitComponent, storage: weekly_limit, event: WeeklyLimitEvent);
-    component!(path: WhitelistComponent, storage: whitelist, event: WhitelistEvent);
     component!(
         path: OutsideExecutionComponent, storage: outside_execution, event: OutsideExecutionEvent
     );
@@ -56,23 +38,6 @@ mod VaultAccount {
         OutsideExecutionComponent::OutsideExecution_V2Impl<ContractState>;
     impl OutsideExecution_V2InternalImpl = OutsideExecutionComponent::InternalImpl<ContractState>;
 
-    // Weekly Limit
-    impl WeeklyLimitInternalImpl = WeeklyLimitComponent::InternalImpl<ContractState>;
-
-    // Whitelisting
-    impl WhitelistContractsInternalImpl = WhitelistComponent::WhitelistContractsImpl<ContractState>;
-    impl WhitelistClassHashesInternalImpl =
-        WhitelistComponent::WhitelistClassHashesImpl<ContractState>;
-    impl WhitelistEntrypointsInternalImpl =
-        WhitelistComponent::WhitelistEntrypointsImpl<ContractState>;
-    impl WhitelistContractEntrypointInternalImpl =
-        WhitelistComponent::WhitelistContractEntrypointImpl<ContractState>;
-    impl WhitelistClassHashEntrypointInternalImpl =
-        WhitelistComponent::WhitelistClassHashEntrypointImpl<ContractState>;
-
-    // Transaction approval
-    impl TransactionApprovalInternalImpl =
-        TransactionApprovalComponent::InternalImpl<ContractState>;
 
     // SRC5
     #[abi(embed_v0)]
@@ -90,14 +55,9 @@ mod VaultAccount {
         claims: LegacyMap<felt252, bool>,
         usdc_address: ContractAddress,
         public_key: (u256, u256),
+        admin_address: ContractAddress,
         #[substorage(v0)]
         src5: SRC5Component::Storage,
-        #[substorage(v0)]
-        transaction_approval: TransactionApprovalComponent::Storage,
-        #[substorage(v0)]
-        weekly_limit: WeeklyLimitComponent::Storage,
-        #[substorage(v0)]
-        whitelist: WhitelistComponent::Storage,
         #[substorage(v0)]
         account: AccountComponent::Storage,
         #[substorage(v0)]
@@ -118,11 +78,6 @@ mod VaultAccount {
         #[flat]
         SRC5Event: SRC5Component::Event,
         #[flat]
-        TransactionApprovalEvent: TransactionApprovalComponent::Event,
-        #[flat]
-        WeeklyLimitEvent: WeeklyLimitComponent::Event,
-        #[flat]
-        WhitelistEvent: WhitelistComponent::Event,
         #[flat]
         OutsideExecutionEvent: OutsideExecutionComponent::Event,
         #[flat]
@@ -150,12 +105,20 @@ mod VaultAccount {
             ref self: ContractState,
             pub_key_x: u256,
             pub_key_y: u256,
-            approver: ContractAddress,
-            limit: u256,
+            admin_address: ContractAddress
         ) {
+            let contract_admin_address = self.admin_address.read();
+            if contract_admin_address != contract_address_const::<0>() {
+                assert!(
+                    get_caller_address() == contract_admin_address, "Only admin can call initialize"
+                );
+            }
+            self.admin_address.write(admin_address);
+            // Verify public key validity
+            Secp256r1Impl::secp256_ec_new_syscall(pub_key_x, pub_key_y)
+                .unwrap()
+                .expect('Invalid public key');
             self.public_key.write((pub_key_x, pub_key_y));
-            self.transaction_approval.initializer(:approver);
-            self.weekly_limit.initializer(:limit);
             self.outside_execution.initializer();
             self
                 .usdc_address
@@ -164,38 +127,9 @@ mod VaultAccount {
                         0x053b40a647cedfca6ca84f542a0fe36736031905a9639a7f19a3c1e66bfd5080
                     >()
                 );
-
-            // Verify public key validity
-            let _ = Secp256r1Impl::secp256_ec_new_syscall(pub_key_x, pub_key_y).unwrap().unwrap();
         }
     }
 
-    //
-    // ClaimLink impl
-    //
-
-    #[abi(embed_v0)]
-    impl ClaimLink of IClaimLink<ContractState> {
-        fn claim(ref self: ContractState, claim: Claim, signature: Array<felt252>) {
-            let hash = claim.get_message_hash(get_contract_address());
-
-            assert!(!self.claims.read(hash), "Link already used");
-            assert!(
-                self.is_valid_signature(hash, signature) == starknet::VALIDATED,
-                "Invalid signature for claim"
-            );
-
-            self.claims.write(hash, true);
-
-            let usdc = IERC20Dispatcher { contract_address: self.usdc_address.read() };
-            usdc.transfer(get_caller_address(), claim.amount);
-        }
-
-        #[cfg(test)]
-        fn set_usdc_address(ref self: ContractState, usdc_address: ContractAddress) {
-            self.usdc_address.write(usdc_address);
-        }
-    }
 
     //
     // SRC6 impl
@@ -243,17 +177,6 @@ mod VaultAccount {
             } else {
                 'INVALID'
             }
-        }
-    }
-
-    //
-    // Weekly Limit impl
-    //
-
-    #[abi(embed_v0)]
-    impl WeeklyLimit of IWeeklyLimit<ContractState> {
-        fn get_weekly_limit(self: @ContractState) -> u256 {
-            self.weekly_limit.get_weekly_limit()
         }
     }
 

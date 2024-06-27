@@ -2,6 +2,7 @@
 mod VaultFactory {
     use core::starknet::SyscallResultTrait;
     use openzeppelin::access::ownable::OwnableComponent;
+    use openzeppelin::access::ownable::interface::OwnableABI;
     use openzeppelin::upgrades::UpgradeableComponent;
     use openzeppelin::upgrades::interface::{
         IUpgradeable, IUpgradeableDispatcher, IUpgradeableDispatcherTrait
@@ -100,12 +101,7 @@ mod VaultFactory {
         }
 
         fn deploy_account(
-            ref self: ContractState,
-            salt: felt252,
-            pub_key_x: u256,
-            pub_key_y: u256,
-            approver: ContractAddress,
-            limit: u256
+            ref self: ContractState, salt: felt252, pub_key_x: u256, pub_key_y: u256,
         ) {
             // Owner only
             self.ownable.assert_only_owner();
@@ -128,7 +124,7 @@ mod VaultFactory {
 
             // Step 3: Set up the account
             IVaultAccountDispatcher { contract_address: address }
-                .initialize(:pub_key_x, :pub_key_y, :approver, :limit);
+                .initialize(:pub_key_x, :pub_key_y, admin_address: self.owner());
 
             // Emit event
             self.emit(VaultAccountDeployed { address, salt });
