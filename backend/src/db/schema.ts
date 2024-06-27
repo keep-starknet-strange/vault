@@ -18,15 +18,6 @@ export const usdcTransfer = pgTable('transfer_usdc', {
   cursor: bigint('_cursor', { mode: 'number' }),
 })
 
-export const usdcBalance = pgTable('balance_usdc', {
-  network: text('network'),
-  blockNumber: bigint('block_number', { mode: 'number' }),
-  blockTimestamp: timestamp('block_timestamp', { withTimezone: false }),
-  address: text('address'),
-  balance: text('balance'),
-  cursor: bigint('_cursor', { mode: 'number' }),
-})
-
 export const registration = pgTable('registration', {
   phone_number: text('phone_number').primaryKey(),
   nickname: text('nickname'),

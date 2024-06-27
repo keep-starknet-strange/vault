@@ -57,6 +57,8 @@ export function getTransactionHistory(fastify: FastifyInstance) {
             transaction_timestamp: usdcTransfer.blockTimestamp,
             amount: usdcTransfer.amount,
             index_in_block: usdcTransfer.indexInBlock,
+            senderBalance: usdcTransfer.senderBalance,
+            recipientBalance: usdcTransfer.recipientBalance,
             from: {
               nickname: sql`"from_user"."nickname"`,
               contract_address: sql`"from_user"."contract_address"`,
@@ -80,7 +82,10 @@ export function getTransactionHistory(fastify: FastifyInstance) {
         const lastTx = txs.length ? txs[Math.min(txs.length - 1, first - 1)] : null
 
         const endCursor = lastTx
-          ? toCursorHash(lastTx.index_in_block, (lastTx.transaction_timestamp!.getTime() / 1000).toString())
+          ? toCursorHash(
+              (lastTx.index_in_block ?? 0).toString(),
+              (lastTx.transaction_timestamp!.getTime() / 1000).toString(),
+            )
           : null
 
         const hasNext = txs.length > first
