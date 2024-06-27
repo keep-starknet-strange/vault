@@ -19,6 +19,22 @@ class SecureEnclaveManager {
 
     // MARK: Public
 
+    public func getOrGenerateKeyPair() throws -> P256PublicKey? {
+        do {
+            let privateKey = try self.getPrivateKey();
+
+            // get public key from private key
+            guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+                throw "Error obtaining public key from private key."
+            }
+
+            // extract public key data
+            return self.parse(publicKey: publicKey)
+        } catch {
+            return try! self.generateKeyPair()
+        }
+    }
+
     public func generateKeyPair() throws -> P256PublicKey? {
         // compute private key access rights
         let access = SecAccessControlCreateWithFlags(
