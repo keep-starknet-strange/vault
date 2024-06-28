@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BalanceView: View {
 
-    @State var balance: USDCAmount?
+    @Binding var balance: Amount?
 
     var body: some View {
         let fixedBalance = self.balance?.toFixed() ?? "0.00"
@@ -38,5 +38,5 @@ struct BalanceView: View {
 }
 
 #Preview {
-    BalanceView(balance: USDCAmount(from: 456.18)).defaultBackground()
+    BalanceView(balance: .constant(Amount.usdc(from: 456.18))).defaultBackground()
 }

@@ -13,7 +13,9 @@ public protocol PageableSource {
 
     var items: [TPage.Item] { get }
 
-    func loadPage(pageInfo: PageInfo, pageSize: Int) async throws -> TPage
+    func loadNextPage(pageInfo: PageInfo, pageSize: Int?) async throws -> TPage
+    func loadPreviousPage(pageInfo: PageInfo, pageSize: Int?) async throws -> TPage
 
     mutating func addItems(items: [TPage.Item])
+    mutating func addPreviousItems(items: [TPage.Item])
 }

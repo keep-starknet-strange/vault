@@ -9,6 +9,7 @@ import Foundation
 
 public struct VaultPage<T: Decodable>: Decodable {
     public let hasNext: Bool
+    public let startCursor: String?
     public let endCursor: String?
     public let items: [T]
 }

@@ -39,7 +39,7 @@ struct HomeView: View {
                             .foregroundStyle(.neutral2)
                             .textTheme(.bodyPrimary)
 
-                        BalanceView(balance: self.txHistoryModel.source?.items.first?.balance)
+                        BalanceView(balance: .constant(self.txHistoryModel.source?.items.first?.balance))
                     }
 
                     Spacer()
@@ -54,9 +54,6 @@ struct HomeView: View {
         }
         .onAppear {
             self.txHistoryModel.start(withSource: TransactionHistory(address: self.model.address))
-        }
-        .onDisappear {
-            self.model.stopPolling()
         }
         .defaultBackground()
         .navigationBarItems(
@@ -152,8 +149,7 @@ struct HomeView: View {
                             .textTheme(.headlineSmall)
 
                         VStack(spacing: 32) {
-                            ForEach(0..<txHistory.groupedTransactions[day]!.count, id: \.self) { index in
-                                let transfer = txHistory.groupedTransactions[day]![index]
+                            ForEach(txHistory.groupedTransactions[day] ?? [], id: \.self.id) { transfer in
 
                                 TransferRow(transfer: transfer)
                                     .onAppear {

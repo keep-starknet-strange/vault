@@ -70,10 +70,6 @@ class Model: ObservableObject {
     @Published var contacts: [Recipient] = []
     @Published var contactsAuthorizationStatus: CNAuthorizationStatus = .notDetermined
 
-    // polling
-    private var pollingTimer: Timer?
-    private var pollingAction: (() -> Void)?
-
     var parsedAmount: Double {
         // Replace the comma with a dot
         let amount = self.amount.replacingOccurrences(of: ",", with: ".")
@@ -163,12 +159,6 @@ extension Model {
             print(error)
             #endif
         }
-    }
-
-    func stopPolling() {
-        pollingTimer?.invalidate()
-        pollingTimer = nil
-        pollingAction = nil
     }
 }
 
@@ -350,7 +340,7 @@ extension Model {
         guard
             let recipient = self.recipient,
             let recipientAddress = recipient.address,
-            let amount = USDCAmount(from: self.parsedAmount)
+            let amount = Amount.usdc(from: self.parsedAmount)
         else {
             self.sendingStatus = .error("Invalid request.")
             return
@@ -403,7 +393,7 @@ extension Model {
 
         guard
             let amount = components.queryItems?.first(where: { $0.name == "amount" })?.value,
-            let parsedAmount = USDCAmount(fromHex: amount),
+            let parsedAmount = Amount.usdc(fromHex: amount),
             let recipientAddress = components.queryItems?.first(where: { $0.name == "recipientAddress" })?.value
         else {
             print("Invalid payment request")
