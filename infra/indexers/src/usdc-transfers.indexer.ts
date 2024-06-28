@@ -52,8 +52,6 @@ export default function decodeUSDCTransfers({ header, events, stateUpdate }: Blo
 	const storageMap = new Map<bigint, bigint>()
 	const storageDiffs = stateUpdate?.stateDiff?.storageDiffs ?? []
 
-	console.log(storageDiffs)
-
 	for (const storageDiff of storageDiffs) {
 		for (const storageEntry of storageDiff.storageEntries ?? []) {
 			if (!storageEntry.key || !storageEntry.value) {
