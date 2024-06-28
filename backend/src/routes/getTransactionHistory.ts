@@ -110,13 +110,15 @@ export function getTransactionHistory(fastify: FastifyInstance) {
           .execute()
 
         // get pagination infos
+        const firstTx = txs[0] ?? null
         const lastTx = txs.length ? txs[Math.min(txs.length - 1, first - 1)] : null
 
+        const startCursor = firstTx ? getCursor(firstTx) : null
         const endCursor = lastTx ? getCursor(lastTx) : null
 
         const hasNext = txs.length > first
 
-        return reply.status(200).send({ items: txs.slice(0, first), endCursor, hasNext })
+        return reply.status(200).send({ items: txs.slice(0, first), startCursor, endCursor, hasNext })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ error: 'Internal server error' })
