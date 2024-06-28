@@ -75,7 +75,9 @@ export function getTransactionHistory(fastify: FastifyInstance) {
         return reply.status(400).send({ error: 'Invalid address format.' })
       }
 
-      const paginationQuery = getCursorQuery(after ?? before, !!before)
+      const isReversed = !!before
+
+      const paginationQuery = getCursorQuery(after ?? before, isReversed)
 
       try {
         const txs = await fastify.db
@@ -113,12 +115,17 @@ export function getTransactionHistory(fastify: FastifyInstance) {
         const firstTx = txs[0] ?? null
         const lastTx = txs.length ? txs[Math.min(txs.length - 1, first - 1)] : null
 
-        const startCursor = firstTx ? getCursor(firstTx) : null
-        const endCursor = lastTx ? getCursor(lastTx) : null
+        const firstCursor = firstTx ? getCursor(firstTx) : null
+        const lastCursor = lastTx ? getCursor(lastTx) : null
 
         const hasNext = txs.length > first
 
-        return reply.status(200).send({ items: txs.slice(0, first), startCursor, endCursor, hasNext })
+        return reply.status(200).send({
+          items: txs.slice(0, first),
+          startCursor: isReversed ? lastCursor : firstCursor,
+          endCursor: isReversed ? firstCursor : lastCursor,
+          hasNext,
+        })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ error: 'Internal server error' })
