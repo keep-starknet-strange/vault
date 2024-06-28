@@ -1,4 +1,4 @@
-import { SN_CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK } from './constants.ts';
+import { SN_CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK, BALANCES_VAR_NAMES } from './constants.ts';
 import { Block, hash, uint256 } from './deps.ts'
 import { getStorageLocation } from './utils.ts';
 
@@ -32,7 +32,9 @@ export const config = {
 }
 
 function getBalance(storageMap: Map<bigint, bigint>, address: string): bigint {
-	const addressBalanceLocation = getStorageLocation(address, 'balances')
+	const addressBalanceLocation = getStorageLocation(address, BALANCES_VAR_NAMES[SN_CHAIN_ID])
+
+	console.log(addressBalanceLocation)
 
 	const addressBalanceLow = storageMap.get(addressBalanceLocation)
 	const addressBalanceHigh = storageMap.get(addressBalanceLocation + 1n)
@@ -82,6 +84,9 @@ export default function decodeUSDCTransfers({ header, events, stateUpdate }: Blo
 
 			const senderBalance = getBalance(storageMap, fromAddress)
 			const recipientBalance = getBalance(storageMap, toAddress)
+
+			console.log('senderBalance', senderBalance)
+			console.log('recipientBalance', recipientBalance)
 
 			return {
 				network: 'starknet-sepolia',
