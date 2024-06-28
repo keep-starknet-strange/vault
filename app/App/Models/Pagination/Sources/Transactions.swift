@@ -35,12 +35,20 @@ struct TransactionHistory: PageableSource {
         self.address = address
     }
 
-    public func loadPage(pageInfo: PageInfo, pageSize: Int) async throws -> TransactionsPage {
+    public func loadNextPage(pageInfo: PageInfo, pageSize: Int?) async throws -> TransactionsPage {
+        return try await self.loadPage(request: GetTransactionsHistory(address: self.address, first: pageSize, after: pageInfo.endCursor))
+    }
+
+    public func loadPreviousPage(pageInfo: PageInfo, pageSize: Int?) async throws -> TransactionsPage {
+        return try await self.loadPage(request: GetTransactionsHistory(address: self.address, first: pageSize, before: pageInfo.startCursor))
+    }
+
+    private func loadPage(request: GetTransactionsHistory) async throws -> TransactionsPage {
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<TransactionsPage, any Error>) in
-            VaultService.shared.send(GetTransactionsHistory(address: self.address, first: pageSize, after: pageInfo.endCursor)) { result in
+            VaultService.shared.send(request) { result in
                 switch result {
                 case .success(let response):
-                    let pageInfo = PageInfo(hasNext: response.hasNext, endCursor: response.endCursor)
+                    let pageInfo = PageInfo(hasNext: response.hasNext, startCursor: response.startCursor, endCursor: response.endCursor)
                     let transactions = response.items.map { Item(address: self.address, transaction: $0) }
 
                     continuation.resume(returning: TransactionsPage(info: pageInfo, items: transactions))
@@ -62,21 +70,21 @@ struct TransactionHistory: PageableSource {
             if self.groupedTransactions[day] == nil {
                 self.groupedTransactions[day] = [item]
             } else {
-                self.groupedTransactions[day]! += [item]
+                self.groupedTransactions[day]?.append(item)
             }
         }
     }
 
-    public mutating func addRecentItems(items: [Transaction]) {
+    public mutating func addPreviousItems(items: [Transaction]) {
         self.transactions = items + self.transactions
 
-        items.forEach { item in
+        items.reversed().forEach { item in
             let day = Calendar.current.startOfDay(for: item.date)
 
             if self.groupedTransactions[day] == nil {
                 self.groupedTransactions[day] = [item]
             } else {
-                self.groupedTransactions[day] = [item] + self.groupedTransactions[day]!
+                self.groupedTransactions[day]?.insert(item, at: 0)
             }
         }
     }

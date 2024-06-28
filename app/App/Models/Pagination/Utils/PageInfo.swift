@@ -9,7 +9,8 @@ import Foundation
 
 public struct PageInfo {
     let hasNext: Bool
+    let startCursor: String?
     let endCursor: String?
 
-    public static let `default`: Self = Self(hasNext: true, endCursor: nil)
+    public static let `default`: Self = Self(hasNext: true, startCursor: nil, endCursor: nil)
 }

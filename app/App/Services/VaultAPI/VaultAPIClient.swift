@@ -30,15 +30,19 @@ class VaultService {
     public func send<T: APIRequest>(_ request: T, completion: @escaping ResultCallback<T.Response>) {
         let urlRequest = self.endpoint(for: request)
 
+//        #if DEBUG
+//        print(urlRequest.url?.absoluteURL)
+//        #endif
+
         let task = session.dataTask(with: urlRequest) { data, response, error in
             if
                 let data = data,
                 let httpResponse = response as? HTTPURLResponse
             {
 
-#if DEBUG
-                print(data.base64EncodedString())
-#endif
+//#if DEBUG
+//                print(data.base64EncodedString())
+//#endif
 
                 if httpResponse.isSuccessful {
                     // request is successful

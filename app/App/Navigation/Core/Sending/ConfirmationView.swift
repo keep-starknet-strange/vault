@@ -15,7 +15,7 @@ struct ConfirmationView: View {
 
     var body: some View {
         if let recipient = self.model.recipient,
-           let usdcAmount = USDCAmount(from: self.model.parsedAmount)
+           let usdcAmount = Amount.usdc(from: self.model.parsedAmount)
         {
             VStack {
                 Text("Finalize your transfer")

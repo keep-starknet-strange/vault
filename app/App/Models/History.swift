@@ -7,7 +7,7 @@
 
 import Foundation
 
-class User {
+struct User: Hashable {
     let nickname: String?
     let avatarUrl: String? = nil
     let address: String?
@@ -18,13 +18,21 @@ class User {
     }
 }
 
-class Transaction: Identifiable {
+struct Transaction: Identifiable, Hashable {
+
+    typealias ID = String
+
     let from: User
     let to: User
-    let amount: USDCAmount
+    let amount: Amount
     let date: Date
     let isSending: Bool
-    let balance: USDCAmount
+    let balance: Amount
+    let id: ID
+
+    static func == (lhs: Transaction, rhs: Transaction) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     static let dateFormatter = {
         let dateFormatter = DateFormatter()
@@ -39,9 +47,10 @@ class Transaction: Identifiable {
     init(address: String, transaction: RawTransaction) {
         self.from = User(transactionUser: transaction.from)
         self.to = User(transactionUser: transaction.to)
-        self.amount = USDCAmount(from: transaction.amount)!
+        self.amount = Amount.usdc(from: transaction.amount)!
         self.date = Self.dateFormatter.date(from: transaction.transaction_timestamp)!
         self.isSending = transaction.from.contract_address == address
-        self.balance = USDCAmount(from: self.isSending ? transaction.senderBalance : transaction.recipientBalance)!
+        self.balance = Amount.usdc(from: self.isSending ? transaction.from.balance : transaction.to.balance)!
+        self.id = transaction.transferId
     }
 }

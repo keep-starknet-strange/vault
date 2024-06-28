@@ -22,12 +22,21 @@ public struct GetTransactionsHistory: APIRequest {
 
     // Parameters
     public let address: String
-    public let first: Int
+    public let first: Int?
     public let after: String?
+    public let before: String?
 
-    public init(address: String, first: Int, after: String?) {
+    public init(address: String, first: Int?, after: String?) {
         self.address = address
         self.first = first
         self.after = after
+        self.before = nil
+    }
+
+    public init(address: String, first: Int?, before: String?) {
+        self.address = address
+        self.first = first
+        self.before = before
+        self.after = nil
     }
 }

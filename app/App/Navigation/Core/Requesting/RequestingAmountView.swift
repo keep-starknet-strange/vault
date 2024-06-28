@@ -16,7 +16,7 @@ struct RequestingAmountView: View {
     @State var isShareSheetPresented = false
 
     private var hexAmount: String {
-        USDCAmount(from: self.model.parsedAmount)?.value.toHex() ?? "0x0"
+        Amount.usdc(from: self.model.parsedAmount)?.value.toHex() ?? "0x0"
     }
 
     var body: some View {

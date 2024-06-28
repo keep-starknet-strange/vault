@@ -8,7 +8,7 @@
 import Foundation
 import BigInt
 
-class Amount {
+struct Amount: Hashable {
     var value = Uint256(clamping: 0)
     var decimals: UInt8
 
@@ -20,7 +20,7 @@ class Amount {
         return pow(10.0, Double(self.decimals))
     }
 
-    private lazy var formatter: NumberFormatter = {
+    static private let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = Locale(identifier: "en_US") // Set locale to US
@@ -60,8 +60,10 @@ class Amount {
     // MARK: - Formatters
 
     public func toFixed(_ digits: Int = 2) -> String {
-        self.formatter.maximumFractionDigits = digits
-        self.formatter.minimumFractionDigits = digits
+        let formatter = Self.formatter
+
+        formatter.maximumFractionDigits = digits
+        formatter.minimumFractionDigits = digits
 
         let (interger, decimals) = self.value.value.quotientAndRemainder(dividingBy: self.decimalPlaces)
 
@@ -71,18 +73,19 @@ class Amount {
     }
 }
 
-class USDCAmount: Amount {
-    init?(from: Double) {
-        super.init(from: from, decimals: Constants.usdcDecimals)
+extension Amount {
+
+    static func usdc(from: Double) -> Self? {
+        return Self(from: from, decimals: Constants.usdcDecimals)
     }
 
-    init?(from: String) {
-        super.init(from: from, decimals: Constants.usdcDecimals, radix: 10)
+    static func usdc(from: String) -> Self? {
+        return Self(from: from, decimals: Constants.usdcDecimals, radix: 10)
     }
 
-    init?(fromHex hex: String) {
+    static func usdc(fromHex hex: String) -> Self? {
         guard hex.hasPrefix("0x") else { return nil }
 
-        super.init(from: hex.dropFirst(2), decimals: Constants.usdcDecimals, radix: 16)
+        return Self(from: hex.dropFirst(2), decimals: Constants.usdcDecimals, radix: 16)
     }
 }
