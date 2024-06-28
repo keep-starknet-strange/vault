@@ -89,11 +89,13 @@ export function getTransactionHistory(fastify: FastifyInstance) {
               nickname: sql`"from_user"."nickname"`,
               contract_address: sql`"from_user"."contract_address"`,
               phone_number: sql`"from_user"."phone_number"`,
+              balance: usdcTransfer.senderBalance,
             },
             to: {
               nickname: sql`"to_user"."nickname"`,
               contract_address: sql`"to_user"."contract_address"`,
               phone_number: sql`"to_user"."phone_number"`,
+              balance: usdcTransfer.recipientBalance,
             },
           })
           .from(usdcTransfer)
