@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm/pg-core/expressions'
 import type { FastifyInstance } from 'fastify'
-import { type Account, uint256 } from 'starknet'
+import { type Account, addAddressPadding, uint256 } from 'starknet'
 import { VerificationCheckListInstance } from 'twilio/lib/rest/verify/v2/service/verificationCheck'
 
-import { Entrypoint, VAULT_FACTORY_ADDRESS } from '@/constants/contracts'
+import { Entrypoint, SN_CHAIN_ID, VAULT_FACTORY_ADDRESSES } from '@/constants/contracts'
 import { registration } from '@/db/schema'
 import { computeAddress } from '@/utils/address'
 import { hashPhoneNumber } from '@/utils/phoneNumber'
@@ -62,21 +62,30 @@ export function verifyOtp(
           })
         }
 
+        // check if user is already registered
+        const user = (
+          await fastify.db.select().from(registration).where(eq(registration.phone_number, phone_number))
+        )[0]
+
+        // user is already registered
+        if (user.is_confirmed) {
+          return reply.code(200).send({
+            contract_address: user.contract_address,
+          })
+        }
+
         // public key, approver, limit
         const { transaction_hash } = await deployer.execute({
-          contractAddress: VAULT_FACTORY_ADDRESS,
+          contractAddress: VAULT_FACTORY_ADDRESSES[SN_CHAIN_ID],
           calldata: [
             hashPhoneNumber(phone_number),
             uint256.bnToUint256(public_key_x),
             uint256.bnToUint256(public_key_y),
-            0,
-            1000000000,
-            0,
           ],
           entrypoint: Entrypoint.DEPLOY_ACCOUNT,
         })
 
-        const contractAddress = computeAddress(phone_number)
+        const contractAddress = addAddressPadding(computeAddress(phone_number))
 
         fastify.log.info(
           'Deploying account: ',

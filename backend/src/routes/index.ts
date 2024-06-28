@@ -9,14 +9,13 @@ import { getClaimRoute } from './claim'
 import { createFunkitStripeCheckout } from './createFunkitStripeCheckout'
 import { getExecuteFromOutsideRoute } from './executeFromOutside'
 import { getGenerateClaimLinkRoute } from './generateClaimLink'
-import { getBalanceRoute } from './getBalance'
 import { getCurrentExpenseRoute } from './getCurrentExpense'
 import { getFunkitStripeCheckoutQuote } from './getFunkitStripeCheckoutQuote'
 import { getFunkitStripeCheckoutStatus } from './getFunkitStripeCheckoutStatus'
-import { getHistoricalBalanceRoute } from './getHistoricalBalance'
 import { getLimitRoute } from './getLimit'
 import { getOtp } from './getOtp'
 import { getTransactionHistory } from './getTransactionHistory'
+import { getUserRoute } from './getUser'
 import { verifyOtp } from './verifyOtp'
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/
@@ -28,12 +27,10 @@ export function declareRoutes(
   funkitApiKey: string,
 ) {
   getStatusRoute(fastify)
-  getBalanceRoute(fastify)
   getCurrentExpenseRoute(fastify)
   getTransactionHistory(fastify)
   getOtp(fastify, twilio_services.verifications)
   verifyOtp(fastify, deployer, twilio_services.verificationChecks)
-  getHistoricalBalanceRoute(fastify)
   getGenerateClaimLinkRoute(fastify)
   getClaimRoute(fastify)
   getLimitRoute(fastify)
@@ -41,6 +38,7 @@ export function declareRoutes(
   getFunkitStripeCheckoutQuote(fastify, funkitApiKey)
   createFunkitStripeCheckout(fastify, funkitApiKey)
   getFunkitStripeCheckoutStatus(fastify, funkitApiKey)
+  getUserRoute(fastify)
 }
 
 function getStatusRoute(fastify: FastifyInstance) {

@@ -5,6 +5,7 @@ import twilio from 'twilio'
 
 import { fastifyDrizzle } from '@/db/plugin'
 
+import { DEFAULT_NETWORK_NAME, NODE_URL } from './constants/contracts'
 import { declareRoutes } from './routes'
 
 export type AppConfiguration = {
@@ -30,8 +31,12 @@ export async function buildApp(config: AppConfiguration) {
     throw new Error('Deployer address not set')
   }
 
-  if (!process.env.NODE_URL) {
-    throw new Error('Starknet node url not set')
+  if (!process.env.NODE_API_KEY) {
+    throw new Error('Starknet node api key not set')
+  }
+
+  if (!process.env.SN_NETWORK) {
+    console.log(`Starknet network not set, falling back to default network (${DEFAULT_NETWORK_NAME})`)
   }
 
   if (!process.env.DEPLOYER_PK) {
@@ -54,7 +59,7 @@ export async function buildApp(config: AppConfiguration) {
     throw new Error('Funkit API key not set')
   }
 
-  const deployer = new Account({ nodeUrl: process.env.NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
+  const deployer = new Account({ nodeUrl: NODE_URL }, process.env.DEPLOYER_ADDRESS, process.env.DEPLOYER_PK)
   const twilio_services = twilio(process.env.TWILIO_ACCOUNT_SSID, process.env.TWILIO_AUTH_TOKEN).verify.v2.services(
     process.env.TWILIO_SERVICE_ID,
   )
