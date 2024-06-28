@@ -1,4 +1,4 @@
-import { SN_CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK } from './constants.ts';
+import { SN_CHAIN_ID, STREAM_URLS, USDC_ADDRESSES, STARTING_BLOCK, BALANCES_VAR_NAMES } from './constants.ts';
 import { Block, hash, uint256 } from './deps.ts'
 import { getStorageLocation } from './utils.ts';
 
@@ -13,9 +13,11 @@ const filter = {
 			includeReceipt: false,
 		},
 	],
+	stateUpdate: {
+		storageDiffs: [{ contractAddress: USDC_ADDRESSES[SN_CHAIN_ID] }],
+	},
 }
 
-// TODO: multiple chains support
 const streamUrl = STREAM_URLS[SN_CHAIN_ID]
 const startingBlock = STARTING_BLOCK
 
@@ -32,7 +34,7 @@ export const config = {
 }
 
 function getBalance(storageMap: Map<bigint, bigint>, address: string): bigint {
-	const addressBalanceLocation = getStorageLocation(address, 'balances')
+	const addressBalanceLocation = getStorageLocation(address, BALANCES_VAR_NAMES[SN_CHAIN_ID])
 
 	const addressBalanceLow = storageMap.get(addressBalanceLocation)
 	const addressBalanceHigh = storageMap.get(addressBalanceLocation + 1n)

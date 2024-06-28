@@ -9,7 +9,6 @@ import { getClaimRoute } from './claim'
 import { getExecuteFromOutsideRoute } from './executeFromOutside'
 import { getGenerateClaimLinkRoute } from './generateClaimLink'
 import { getCurrentExpenseRoute } from './getCurrentExpense'
-import { getHistoricalBalanceRoute } from './getHistoricalBalance'
 import { getLimitRoute } from './getLimit'
 import { getOtp } from './getOtp'
 import { getTransactionHistory } from './getTransactionHistory'
@@ -23,7 +22,6 @@ export function declareRoutes(fastify: FastifyInstance, deployer: Account, twili
   getTransactionHistory(fastify)
   getOtp(fastify, twilio_services.verifications)
   verifyOtp(fastify, deployer, twilio_services.verificationChecks)
-  getHistoricalBalanceRoute(fastify)
   getGenerateClaimLinkRoute(fastify)
   getClaimRoute(fastify)
   getLimitRoute(fastify)

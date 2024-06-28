@@ -16,8 +16,16 @@ export const VAULT_FACTORY_ADDRESSES: AddressesMap = {
   [constants.StarknetChainId.SN_SEPOLIA]: '0x33498f0d9e6ebef71b3d8dfa56501388cfe5ce96cba81503cd8572be92bd77c',
 }
 
-const DEFAULT_NETWORK_NAME = constants.NetworkName.SN_SEPOLIA
+export const DEFAULT_NETWORK_NAME = constants.NetworkName.SN_SEPOLIA
 
 // eslint-disable-next-line import/no-unused-modules
 export const SN_CHAIN_ID = (constants.StarknetChainId[(process.env.SN_NETWORK ?? '') as constants.NetworkName] ??
   constants.StarknetChainId[DEFAULT_NETWORK_NAME]) as SupportedChainId
+
+const NODE_URLS = {
+  [constants.StarknetChainId.SN_MAIN]: (apiKey: string) => `https://rpc.nethermind.io/mainnet-juno/?apikey=${apiKey}`,
+  [constants.StarknetChainId.SN_SEPOLIA]: (apiKey: string) =>
+    `https://rpc.nethermind.io/sepolia-juno/?apikey=${apiKey}`,
+}
+
+export const NODE_URL = NODE_URLS[SN_CHAIN_ID](process.env.NODE_API_KEY!)
