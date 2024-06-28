@@ -8,16 +8,9 @@ import {
   FUNKIT_STRIPE_SOURCE_CURRENCY,
   POLYGON_CHAIN_ID,
   POLYGON_NETWORK_NAME,
-  SOURCE_OF_FUND_KEY,
   TOKEN_INFO,
 } from '@/constants/funkit'
-import {
-  generateClientMetadata,
-  generateRandomCheckoutSalt,
-  pickSourceAssetForCheckout,
-  roundUpToFiveDecimalPlaces,
-  stringifyWithBigIntSanitization,
-} from '@/utils/funkit'
+import { pickSourceAssetForCheckout, roundUpToFiveDecimalPlaces } from '@/utils/funkit'
 
 import { addressRegex } from '.'
 
@@ -119,124 +112,6 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApi
           totalUsd: Number(stripePolygonQuote.source_total_amount).toFixed(2),
         }
         return reply.send(finalQuote)
-      } catch (error) {
-        console.error(error)
-        return reply.status(500).send({ message: 'Internal server error' })
-      }
-    },
-  )
-}
-
-interface InitCheckoutBody {
-  quoteId: string
-  paymentTokenAmount: number
-  estSubtotalUsd: number
-  isNy: boolean
-}
-
-export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKey: string): void {
-  fastify.post<{ Body: InitCheckoutBody }>('/create_funkit_stripe_checkout', async (request, reply) => {
-    const { quoteId, paymentTokenAmount, estSubtotalUsd, isNy } = request.body as InitCheckoutBody
-    if (!quoteId) {
-      return reply.status(400).send({ message: 'quoteId is required.' })
-    }
-
-    if (!paymentTokenAmount) {
-      return reply.status(400).send({ message: 'paymentTokenAmount is required.' })
-    }
-
-    if (!estSubtotalUsd) {
-      return reply.status(400).send({ message: 'estSubtotalUsd is required.' })
-    }
-
-    if (isNy == null) {
-      return reply.status(400).send({ message: 'isNy is a required boolean.' })
-    }
-
-    try {
-      // 1 - Initialize the checkout and get a unique depositAddress
-      const pickedSourceAsset = pickSourceAssetForCheckout(isNy)
-      const body = {
-        quoteId,
-        sourceOfFund: SOURCE_OF_FUND_KEY,
-        salt: generateRandomCheckoutSalt(),
-        clientMetadata: generateClientMetadata({ pickedSourceAsset, estDollarValue: estSubtotalUsd }),
-      }
-      const fetchRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': funkitApiKey,
-        },
-        body: stringifyWithBigIntSanitization(body),
-      })
-      const res = (await fetchRes.json()) as any
-      const depositAddress = res?.depositAddr
-      if (!depositAddress) {
-        return reply.status(500).send({ message: 'Failed to start a funkit checkout.' })
-      }
-
-      // 2 - Generate stripe session
-      const stripeSessionBody = {
-        sourceCurrency: FUNKIT_STRIPE_SOURCE_CURRENCY,
-        destinationAmount: paymentTokenAmount,
-        destinationCurrencies: [pickedSourceAsset.symbol],
-        destinationCurrency: pickedSourceAsset.symbol,
-        destinationNetworks: [POLYGON_NETWORK_NAME],
-        destinationNetwork: POLYGON_NETWORK_NAME,
-        walletAddresses: {
-          [POLYGON_NETWORK_NAME]: depositAddress,
-        },
-      }
-      const generateStripeRes = await fetch(`${FUNKIT_API_BASE_URL}/on-ramp/stripe-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': funkitApiKey,
-        },
-        body: stringifyWithBigIntSanitization(stripeSessionBody),
-      })
-      const stripeSession = (await generateStripeRes.json()) as any
-      if (!stripeSession || !stripeSession.id || !stripeSession.redirect_url) {
-        return reply.status(500).send({ message: 'Failed to start a stripe checkout session.' })
-      }
-      return reply.send({
-        stripeCheckoutId: stripeSession.id,
-        stripeRedirectUrl: stripeSession.redirect_url,
-        funkitDepositAddress: depositAddress,
-      })
-    } catch (error) {
-      console.error('Failed to start a checkout:', error)
-      return reply.status(500).send({ message: 'Failed to start a checkout.' })
-    }
-  })
-}
-
-export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance, funkitApiKey: string) {
-  fastify.get(
-    '/get_funkit_stripe_checkout_status',
-
-    async (request, reply) => {
-      const { funkitDepositAddress } = request.query as {
-        funkitDepositAddress: string
-      }
-
-      if (!funkitDepositAddress) {
-        return reply.status(400).send({ message: 'funkitDepositAddress is required.' })
-      }
-      try {
-        const checkoutRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout/${funkitDepositAddress}`, {
-          headers: {
-            'X-Api-Key': funkitApiKey,
-          },
-        })
-        const checkoutItem = (await checkoutRes.json()) as any
-        if (!checkoutItem || checkoutItem?.errorMsg) {
-          return reply.status(500).send({ message: 'Failed to get a funkit checkout.' })
-        }
-        return reply.send({
-          state: checkoutItem.state,
-        })
       } catch (error) {
         console.error(error)
         return reply.status(500).send({ message: 'Internal server error' })
