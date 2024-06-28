@@ -85,6 +85,7 @@ export function getTransactionHistory(fastify: FastifyInstance) {
             transaction_timestamp: usdcTransfer.blockTimestamp,
             amount: usdcTransfer.amount,
             index_in_block: usdcTransfer.indexInBlock,
+            transferId: usdcTransfer.transferId,
             from: {
               nickname: sql`"from_user"."nickname"`,
               contract_address: sql`"from_user"."contract_address"`,
