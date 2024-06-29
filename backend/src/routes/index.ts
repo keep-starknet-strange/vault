@@ -6,9 +6,12 @@ import { ServiceContext } from 'twilio/lib/rest/verify/v2/service'
 import type { Database } from '@/db/drizzle'
 
 import { getClaimRoute } from './claim'
+import { createFunkitStripeCheckout } from './createFunkitStripeCheckout'
 import { getExecuteFromOutsideRoute } from './executeFromOutside'
 import { getGenerateClaimLinkRoute } from './generateClaimLink'
 import { getCurrentExpenseRoute } from './getCurrentExpense'
+import { getFunkitStripeCheckoutQuote } from './getFunkitStripeCheckoutQuote'
+import { getFunkitStripeCheckoutStatus } from './getFunkitStripeCheckoutStatus'
 import { getLimitRoute } from './getLimit'
 import { getOtp } from './getOtp'
 import { getTransactionHistory } from './getTransactionHistory'
@@ -17,7 +20,12 @@ import { verifyOtp } from './verifyOtp'
 
 export const addressRegex = /^0x0[0-9a-fA-F]{63}$/
 
-export function declareRoutes(fastify: FastifyInstance, deployer: Account, twilio_services: ServiceContext) {
+export function declareRoutes(
+  fastify: FastifyInstance,
+  deployer: Account,
+  twilio_services: ServiceContext,
+  funkitApiKey: string,
+) {
   getStatusRoute(fastify)
   getCurrentExpenseRoute(fastify)
   getTransactionHistory(fastify)
@@ -27,6 +35,9 @@ export function declareRoutes(fastify: FastifyInstance, deployer: Account, twili
   getClaimRoute(fastify)
   getLimitRoute(fastify)
   getExecuteFromOutsideRoute(fastify, deployer)
+  getFunkitStripeCheckoutQuote(fastify, funkitApiKey)
+  createFunkitStripeCheckout(fastify, funkitApiKey)
+  getFunkitStripeCheckoutStatus(fastify, funkitApiKey)
   getUserRoute(fastify)
 }
 
