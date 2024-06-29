@@ -400,8 +400,25 @@ extension Model {
             return
         }
 
-        // TODO: get real user name/image
-        self.recipient = Recipient(name: "Chqrles", address: recipientAddress)
+        VaultService.shared.send(GetUser(address: recipientAddress)) { result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+
+                switch result {
+                case .success(let response):
+                    self.recipient = Recipient(name: response.user, address: recipientAddress)
+
+                case .failure(let error):
+                    self.recipient = Recipient(name: "UNKNOWN", address: recipientAddress)
+
+                    // TODO: Handle error
+#if DEBUG
+                    print(error)
+#endif
+                }
+            }
+        }
+
         self.amount = parsedAmount.toFixed(2)
         self.showRequestingConfirmation = true
     }
