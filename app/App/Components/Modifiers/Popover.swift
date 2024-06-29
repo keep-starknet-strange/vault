@@ -22,7 +22,6 @@ struct PopoverModifier<PopoverContent>: ViewModifier where PopoverContent : View
 
     @Binding var isPresented: Bool
 
-    var onDismiss: (() -> Void)?
     var popoverContent: () -> PopoverContent
 
     func body(content: Content) -> some View {
@@ -56,13 +55,11 @@ struct PopoverModifier<PopoverContent>: ViewModifier where PopoverContent : View
 extension View {
     public func sheetPopover<Content>(
         isPresented: Binding<Bool>,
-        onDismiss: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View where Content : View {
         self.modifier(
             PopoverModifier(
                 isPresented: isPresented,
-                onDismiss: onDismiss,
                 popoverContent: content
             )
         )

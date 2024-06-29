@@ -45,37 +45,8 @@ struct SendingAmountView: View {
         )
         .removeNavigationBarBorder()
         .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: self.$model.showSendingConfirmation) {
-            if self.model.sendingStatus == .signed {
-                Task {
-                    await self.model.executeTransfer()
-                }
-            }
-        } content: {
-            ConfirmationView()
-        }
-        .sheetPopover(isPresented: .constant(self.model.sendingStatus == .loading || self.model.sendingStatus == .success)) {
-
-            Text("Executing your transfer").textTheme(.headlineSmall)
-                .onTapGesture {
-                    self.model.sendingStatus = .success
-                }
-
-            Spacer().frame(height: 32)
-
-            SpinnerView(isComplete: .constant(self.model.sendingStatus == .success))
-        }
-        .onChange(of: self.model.sendingStatus) {
-            // close confirmation sheet on signing
-            if self.model.sendingStatus == .signed {
-                self.model.showSendingConfirmation = false
-            } else if self.model.sendingStatus == .success {
-                Task { @MainActor in
-                    try await Task.sleep(for: .seconds(1))
-
-                    self.model.showSendingView = false
-                }
-            }
+        .addSendingConfirmation(isPresented: self.$model.showSendingConfirmation) {
+            self.model.showSendingView = false
         }
     }
 }
