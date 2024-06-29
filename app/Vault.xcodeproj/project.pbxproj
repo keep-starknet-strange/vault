@@ -16,7 +16,7 @@
 		9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D852C0D0F320028C8FD /* Uint256.swift */; };
 		9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */; };
 		9C1C9D902C0F5DE40028C8FD /* Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D8F2C0F5DE40028C8FD /* Popover.swift */; };
-		9C1C9D922C0FB4760028C8FD /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D912C0FB4760028C8FD /* ConfirmationView.swift */; };
+		9C1C9D922C0FB4760028C8FD /* SendingConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D912C0FB4760028C8FD /* SendingConfirmationView.swift */; };
 		9C1C9D942C0FBA900028C8FD /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D932C0FBA900028C8FD /* Avatar.swift */; };
 		9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D952C105E3D0028C8FD /* Amount.swift */; };
 		9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C22BF39635004FFFD1 /* BalanceView.swift */; };
@@ -49,6 +49,7 @@
 		9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C637CDF2BB0C0E5005816B4 /* Input.swift */; };
 		9C6ABFCC2C21C9C9000227D2 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6ABFCB2C21C9C9000227D2 /* ErrorView.swift */; };
 		9C6ABFD02C21D21A000227D2 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6ABFCF2C21D21A000227D2 /* Configuration.swift */; };
+		9C84F4172C2FF5E500196EA0 /* AddSendingConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C84F4162C2FF5E500196EA0 /* AddSendingConfirmation.swift */; };
 		9C9098772C2AC9FE002A5833 /* RequestingAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */; };
 		9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9098782C2AED57002A5833 /* ActivityView.swift */; };
 		9C9F9EEF2C22368200620AC6 /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9F9EDC2C22368200620AC6 /* APIRequest.swift */; };
@@ -142,7 +143,7 @@
 		9C1C9D852C0D0F320028C8FD /* Uint256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uint256.swift; sourceTree = "<group>"; };
 		9C1C9D8B2C0DEBAE0028C8FD /* CountryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryData.swift; sourceTree = "<group>"; };
 		9C1C9D8F2C0F5DE40028C8FD /* Popover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popover.swift; sourceTree = "<group>"; };
-		9C1C9D912C0FB4760028C8FD /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
+		9C1C9D912C0FB4760028C8FD /* SendingConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingConfirmationView.swift; sourceTree = "<group>"; };
 		9C1C9D932C0FBA900028C8FD /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		9C1C9D952C105E3D0028C8FD /* Amount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Amount.swift; sourceTree = "<group>"; };
 		9C2E73C22BF39635004FFFD1 /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
@@ -177,6 +178,7 @@
 		9C6ABFCD2C21CF94000227D2 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		9C6ABFCE2C21D0CC000227D2 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		9C6ABFCF2C21D21A000227D2 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		9C84F4162C2FF5E500196EA0 /* AddSendingConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSendingConfirmation.swift; sourceTree = "<group>"; };
 		9C9098762C2AC9FE002A5833 /* RequestingAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestingAmountView.swift; sourceTree = "<group>"; };
 		9C9098782C2AED57002A5833 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		9C9F9EDC2C22368200620AC6 /* APIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		9C0917752C25D1520068FAF5 /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				9C84F4152C2FF47200196EA0 /* Sending */,
 				9C1C9D8F2C0F5DE40028C8FD /* Popover.swift */,
 				9CDFD43F2BAD83E7000466B9 /* ThemedText.swift */,
 			);
@@ -345,7 +348,6 @@
 				9C6259142BFB5B9A0039DE9C /* SendingRecipientView.swift */,
 				9C62591A2BFCF0650039DE9C /* SendingView.swift */,
 				9C62591E2BFE56000039DE9C /* ContactRow.swift */,
-				9C1C9D912C0FB4760028C8FD /* ConfirmationView.swift */,
 			);
 			path = Sending;
 			sourceTree = "<group>";
@@ -386,6 +388,15 @@
 				9C1C9D952C105E3D0028C8FD /* Amount.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		9C84F4152C2FF47200196EA0 /* Sending */ = {
+			isa = PBXGroup;
+			children = (
+				9C1C9D912C0FB4760028C8FD /* SendingConfirmationView.swift */,
+				9C84F4162C2FF5E500196EA0 /* AddSendingConfirmation.swift */,
+			);
+			path = Sending;
 			sourceTree = "<group>";
 		};
 		9C9F9EE32C22368200620AC6 /* Models */ = {
@@ -837,6 +848,7 @@
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,
 				9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */,
 				9C6259212BFE56590039DE9C /* NoAvatar.swift in Sources */,
+				9C84F4172C2FF5E500196EA0 /* AddSendingConfirmation.swift in Sources */,
 				9C62591D2BFE20AF0039DE9C /* Contact.swift in Sources */,
 				9C62590E2BFA7D260039DE9C /* Icon.swift in Sources */,
 				9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */,
@@ -852,7 +864,7 @@
 				9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */,
 				9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */,
 				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
-				9C1C9D922C0FB4760028C8FD /* ConfirmationView.swift in Sources */,
+				9C1C9D922C0FB4760028C8FD /* SendingConfirmationView.swift in Sources */,
 				9C9F9EFD2C22368200620AC6 /* VaultAPIClient.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,
 				9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */,

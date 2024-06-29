@@ -1,5 +1,5 @@
 //
-//  ConfirmationView.swift
+//  SendingConfirmationView.swift
 //  Vault
 //
 //  Created by Charles Lanier on 04/06/2024.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct ConfirmationView: View {
+struct SendingConfirmationView: View {
 
     @EnvironmentObject var model: Model
 
-    @AppStorage("surname") var surname: String = "Chqrles"
+    @AppStorage("surname") var surname: String = ""
 
     var body: some View {
         if let recipient = self.model.recipient,
@@ -125,7 +125,7 @@ struct ConfirmationView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .defaultBackground()
                 .sheet(isPresented: .constant(true)) {
-                    ConfirmationView()
+                    SendingConfirmationView()
                         .environmentObject(model)
                 }
         }
