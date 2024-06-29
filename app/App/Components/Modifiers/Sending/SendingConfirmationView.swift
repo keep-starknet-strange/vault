@@ -14,9 +14,7 @@ struct SendingConfirmationView: View {
     @AppStorage("surname") var surname: String = ""
 
     var body: some View {
-        if let recipient = self.model.recipient,
-           let usdcAmount = Amount.usdc(from: self.model.parsedAmount)
-        {
+        if let usdcAmount = Amount.usdc(from: self.model.parsedAmount) {
             VStack {
                 Text("Finalize your transfer")
                     .textTheme(.headlineSmall)
@@ -57,17 +55,22 @@ struct SendingConfirmationView: View {
                     Spacer(minLength: 24)
 
                     VStack(spacing: 8) {
-                        Avatar(
-                            salt: recipient.phoneNumber ?? recipient.address?.toHex(),
-                            name: recipient.name,
-                            data: recipient.imageData
-                        )
+                        if let recipient = self.model.recipient {
+                            Avatar(
+                                salt: recipient.phoneNumber ?? recipient.address?.toHex(),
+                                name: recipient.name,
+                                data: recipient.imageData
+                            )
 
-                        Text(recipient.name)
-                            .foregroundStyle(.neutral1)
-                            .fontWeight(.semibold)
-                            .textTheme(.subtitle)
-                            .lineLimit(1)
+                            Text(recipient.name)
+                                .foregroundStyle(.neutral1)
+                                .fontWeight(.semibold)
+                                .textTheme(.subtitle)
+                                .lineLimit(1)
+                        } else {
+                            // TODO: placeholder
+                            EmptyView()
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
