@@ -10,7 +10,9 @@ import PhoneNumberKit
 
 struct PhoneValidationView: View {
 
-    @EnvironmentObject private var registrationModel: RegistrationModel
+    @EnvironmentObject private var model: Model
+
+    @AppStorage("starknetMainAddress") private var address: String = "0xdead"
 
     @State private var presentingNextView = false
     @State private var otp = "" {
@@ -22,7 +24,7 @@ struct PhoneValidationView: View {
     let phoneNumber: PhoneNumber!
 
     var body: some View {
-        OnboardingPage(isLoading: $registrationModel.isLoading) {
+        OnboardingPage(isLoading: $model.isLoading) {
             VStack(alignment: .center, spacing: 64) {
                 VStack(alignment: .center, spacing: 24) {
                     Text("6-digits code").textTheme(.headlineLarge)
@@ -36,24 +38,9 @@ struct PhoneValidationView: View {
                     OTPInput(otp: $otp, numberOfFields: Constants.registrationCodeDigitsCount)
                         .onChange(of: otp, initial: false) { (_, newValue) in
                             if newValue.count == Constants.registrationCodeDigitsCount {
-                                do {
-                                    guard let publicKey = try SecureEnclaveManager.shared.generateKeyPair() else {
-                                        throw "Failed to generate public key"
-                                    }
-
-                                    registrationModel.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue, publicKey: publicKey) { result in
-                                        switch result {
-                                        case .success(let address):
-                                            print(address)
-                                            presentingNextView = true
-
-                                        case .failure(let error):
-                                            print(error)
-                                            // TODO: handle error
-                                        }
-                                    }
-                                } catch {
-                                    // TODO: Handle errors
+                                self.model.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue) {
+                                    // next view
+                                    presentingNextView = true
                                 }
                             }
                         }
@@ -75,7 +62,7 @@ struct PhoneValidationView: View {
 #if DEBUG
 struct PhoneValidationViewPreviews : PreviewProvider {
 
-    @StateObject static var registrationModel = RegistrationModel(vaultService: VaultService())
+    @StateObject static var model = Model()
 
     static let phoneNumberKit = PhoneNumberKit()
 
@@ -90,7 +77,7 @@ struct PhoneValidationViewPreviews : PreviewProvider {
     static var previews: some View {
         NavigationStack {
             PhoneValidationView(phoneNumber: self.phoneNumber)
-                .environmentObject(self.registrationModel)
+                .environmentObject(self.model)
         }
     }
 }

@@ -9,7 +9,8 @@ import SwiftUI
 import ConfettiSwiftUI
 
 struct CelebrationView: View {
-    @EnvironmentObject private var settingsModel: SettingsModel
+
+    @EnvironmentObject var model: Model
 
     @State private var presentingNextView = false
     @State private var confetti = 0
@@ -42,7 +43,7 @@ struct CelebrationView: View {
                 }
 
                 PrimaryButton("Start exploring") {
-                    settingsModel.isOnboarded = true
+                    self.model.isOnboarded = true
                 }
             }
         }

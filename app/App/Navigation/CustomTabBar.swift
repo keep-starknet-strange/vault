@@ -53,7 +53,6 @@ struct CustomTabbar: View {
                 .tag(2)
         }
         .toolbarBackground(.hidden, for: .navigationBar)
-        .preferredColorScheme(.dark)
 
         CustomTabbar(selectedTab: .constant(.payments))
     }
