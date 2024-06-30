@@ -38,13 +38,13 @@ struct AddSendingConfirmationModifier: ViewModifier {
 
                 SpinnerView(isComplete: .constant(self.model.sendingStatus == .success))
             }
-            .onChange(of: self.model.sendingStatus) {
+            .onChange(of: self.model.sendingStatus) { newValue in
                 if !self.isPresented && !self.isConfirming { return }
 
                 // close confirmation sheet on signing
-                if self.model.sendingStatus == .signed {
+                if newValue == .signed {
                     self.isPresented = false
-                } else if self.model.sendingStatus == .success {
+                } else if newValue == .success {
                     Task {
                         try await Task.sleep(for: .seconds(1))
 

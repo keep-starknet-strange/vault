@@ -75,7 +75,7 @@ struct PhoneInput: View {
                         }
                 })
                 .keyboardType(.numberPad)
-                .onChange(of: self.phoneNumber, initial: false) { (_, newValue) in
+                .onChange(of: self.phoneNumber) { newValue in
                     self.phoneNumber = self.model.format(phoneNumber: newValue)
                 }
         }

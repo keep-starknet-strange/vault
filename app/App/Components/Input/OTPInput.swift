@@ -27,10 +27,10 @@ struct OTPInput: View {
         ZStack {
             TextField("", text: $otp)
                 .focused($focused)
-                .onChange(of: self.otp, initial: false) { (_, newValue) in
+                .onChange(of: self.otp) { newValue in
                     // remove non digit chars
                     self.otp = String(
-                        self.otp.filter { $0.isWholeNumber }.prefix(self.numberOfFields)
+                        newValue.filter { $0.isWholeNumber }.prefix(self.numberOfFields)
                     )
                 }
                 .keyboardType(.numberPad)

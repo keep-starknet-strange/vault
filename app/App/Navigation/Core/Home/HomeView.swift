@@ -180,8 +180,8 @@ struct HomeView: View {
         .padding(.top, 32)
         .padding(.bottom, 120)
         .background(.background1)
-        .onChange(of: self.model.pendingTransaction) {
-            if let pendingTransaction = self.model.pendingTransaction {
+        .onChange(of: self.model.pendingTransaction) { newValue in
+            if let pendingTransaction = newValue {
                 self.txHistoryModel.pushOptimisticUpdate(items: [pendingTransaction])
             }
         }

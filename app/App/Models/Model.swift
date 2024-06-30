@@ -69,6 +69,7 @@ class Model: ObservableObject {
 
     // Contacts
     @Published var contacts: [Recipient] = []
+    @Published var contactsMapping: [String: [Recipient]] = [:]
     @Published var contactsAuthorizationStatus: CNAuthorizationStatus = .notDetermined
 
     var parsedAmount: Double {
@@ -492,6 +493,7 @@ extension Model {
 
                 DispatchQueue.main.async {
                     self?.contacts = contacts
+                    self?.contactsMapping = Dictionary(grouping: contacts, by: { $0.phoneNumber! })
                 }
             } catch {
                 print("Failed to fetch contacts: \(error)")

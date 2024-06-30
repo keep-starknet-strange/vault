@@ -11,10 +11,12 @@ struct User: Hashable {
     let nickname: String?
     let avatarUrl: String? = nil
     let address: String?
+    let phoneNumber: String?
 
     init(transactionUser: RawTransactionUser) {
         self.nickname = transactionUser.nickname ?? transactionUser.phone_number
         self.address = transactionUser.contract_address
+        self.phoneNumber = transactionUser.phone_number
     }
 }
 

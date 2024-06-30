@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TransferRow: View {
+
+    @EnvironmentObject var model: Model
+
     @State private var transfer: Transaction
 
     init(transfer: Transaction) {
@@ -16,6 +19,7 @@ struct TransferRow: View {
 
     var body: some View {
         let displayedUser = self.transfer.isSending ? transfer.to : transfer.from
+        let displayedContact = displayedUser.phoneNumber == nil ?  nil : self.model.contactsMapping[displayedUser.phoneNumber!]?.first
 
         let dateFormatter = DateFormatter()
         let _ = dateFormatter.dateFormat = "HH:mm"
@@ -23,7 +27,7 @@ struct TransferRow: View {
         let formattedDate = dateFormatter.string(from: transfer.date)
 
         HStack(alignment: .center, spacing: 12) {
-            Avatar(salt: displayedUser.address, name: displayedUser.nickname, size: 46, url: displayedUser.avatarUrl)
+            Avatar(salt: displayedUser.address, name: displayedUser.nickname, size: 46, data: displayedContact?.imageData)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(displayedUser.nickname ?? "UNKNOWN").textTheme(.bodyPrimary)

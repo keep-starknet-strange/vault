@@ -36,7 +36,7 @@ struct PhoneValidationView: View {
 
                 VStack(alignment: .leading, spacing: 32) {
                     OTPInput(otp: $otp, numberOfFields: Constants.registrationCodeDigitsCount)
-                        .onChange(of: otp, initial: false) { (_, newValue) in
+                        .onChange(of: self.otp) { newValue in
                             if newValue.count == Constants.registrationCodeDigitsCount {
                                 self.model.confirmRegistration(phoneNumber: self.phoneNumber, otp: newValue) {
                                     // next view
