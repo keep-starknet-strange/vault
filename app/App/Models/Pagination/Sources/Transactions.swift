@@ -26,6 +26,8 @@ struct TransactionHistory: PageableSource {
 
     var transactions: [Item] = []
     var groupedTransactions: [Date: [Item]] = [:]
+    var groupedPendingTransactions: [Date: [Item]] = [:]
+    var days: [Date] = []
 
     var items: [Item] { transactions }
 
@@ -73,6 +75,7 @@ struct TransactionHistory: PageableSource {
                 self.groupedTransactions[day]?.append(item)
             }
         }
+        self.updateDays()
     }
 
     public mutating func addPreviousItems(items: [Transaction]) {
@@ -81,11 +84,37 @@ struct TransactionHistory: PageableSource {
         items.reversed().forEach { item in
             let day = Calendar.current.startOfDay(for: item.date)
 
+            // remove from pending if needed
+            self.groupedPendingTransactions[day]?.removeAll { pendingItem in
+                return pendingItem.id == item.id
+            }
+
             if self.groupedTransactions[day] == nil {
                 self.groupedTransactions[day] = [item]
             } else {
                 self.groupedTransactions[day]?.insert(item, at: 0)
             }
         }
+        self.updateDays()
+    }
+
+    public mutating func addPendingItems(items: [Transaction]) {
+        items.reversed().forEach { item in
+            let day = Calendar.current.startOfDay(for: item.date)
+
+            if self.groupedPendingTransactions[day] == nil {
+                self.groupedPendingTransactions[day] = [item]
+            } else {
+                self.groupedPendingTransactions[day]?.insert(item, at: 0)
+            }
+        }
+        self.updateDays()
+    }
+
+    public mutating func updateDays() {
+        let confirmedDays = self.groupedTransactions.keys
+        let pendingDays = self.groupedPendingTransactions.keys
+
+        self.days = Array(Set(confirmedDays).union(pendingDays)).sorted(by: >)
     }
 }

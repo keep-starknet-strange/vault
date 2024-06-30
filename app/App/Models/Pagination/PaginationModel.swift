@@ -203,4 +203,8 @@ public final class PaginationModel<TPageable: PageableSource>: ObservableObject 
         pollingTimer = nil
         pollingAction = nil
     }
+
+    func pushOptimisticUpdate(items: [Item]) {
+        self.source?.addPendingItems(items: items)
+    }
 }

@@ -53,4 +53,21 @@ struct Transaction: Identifiable, Hashable {
         self.balance = Amount.usdc(from: self.isSending ? transaction.from.balance : transaction.to.balance)!
         self.id = transaction.transferId
     }
+
+    init(
+        address: String,
+        from: RawTransactionUser,
+        to: RawTransactionUser,
+        amount: Amount,
+        date: Date,
+        transferId: ID
+    ) {
+        self.from = User(transactionUser: from)
+        self.to = User(transactionUser: to)
+        self.amount = amount
+        self.date = date
+        self.isSending = from.contract_address == address
+        self.balance = Amount.usdc(from: 0)!
+        self.id = transferId
+    }
 }
