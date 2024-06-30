@@ -140,13 +140,25 @@ struct HomeView: View {
     func HistoryView() -> some View {
         LazyVStack(spacing: 48) {
             if let txHistory = self.txHistoryModel.source {
-                ForEach(
-                    txHistory.groupedTransactions.keys.sorted(by: >),
-                    id: \.self
-                ) { day in
+                ForEach(txHistory.days, id: \.self) { day in
                     VStack(alignment: .leading, spacing: 12) {
                         Text(self.formatSectionHeader(for: day).uppercased())
                             .textTheme(.headlineSmall)
+
+                        // PENDING
+
+                        VStack(spacing: 32) {
+                            ForEach(txHistory.groupedPendingTransactions[day] ?? [], id: \.self.id) { transfer in
+
+                                TransferRow(transfer: transfer)
+                            }
+                            .padding(16)
+                            .background(.accent.opacity(0.2))
+                        }
+                        .background(.background2)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                        // CONFIRMED
 
                         VStack(spacing: 32) {
                             ForEach(txHistory.groupedTransactions[day] ?? [], id: \.self.id) { transfer in
@@ -161,13 +173,18 @@ struct HomeView: View {
                         .background(.background2)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    .padding(.horizontal, 16)
                 }
             }
         }
         .padding(.top, 32)
         .padding(.bottom, 120)
         .background(.background1)
+        .onChange(of: self.model.pendingTransaction) {
+            if let pendingTransaction = self.model.pendingTransaction {
+                self.txHistoryModel.pushOptimisticUpdate(items: [pendingTransaction])
+            }
+        }
     }
 }
 

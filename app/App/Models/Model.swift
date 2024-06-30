@@ -47,6 +47,7 @@ class Model: ObservableObject {
         }
     }
     @Published var showSendingConfirmation = false
+    @Published var pendingTransaction: Transaction? = nil
 
     // Requesting USDC
     @Published var showRequestingView = false {
@@ -319,6 +320,17 @@ extension Model {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
+                    let recipient = self.recipient!
+                    let amount = Amount.usdc(from: self.parsedAmount)!
+
+                    self.pendingTransaction = Transaction(
+                        address: self.address,
+                        from: RawTransactionUser(nickname: self.surname, contract_address: self.address, phone_number: nil, balance: ""),
+                        to: RawTransactionUser(nickname: recipient.name, contract_address: nil, phone_number: recipient.phoneNumber, balance: ""),
+                        amount: amount,
+                        date: Date(),
+                        transferId: "\(response.transaction_hash)_0"
+                    )
                     self.sendingStatus = .success
 #if DEBUG
                     print("tx: \(response.transaction_hash)")

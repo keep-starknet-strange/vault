@@ -18,4 +18,5 @@ public protocol PageableSource {
 
     mutating func addItems(items: [TPage.Item])
     mutating func addPreviousItems(items: [TPage.Item])
+    mutating func addPendingItems(items: [TPage.Item])
 }
