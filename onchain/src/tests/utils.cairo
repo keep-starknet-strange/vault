@@ -8,7 +8,9 @@ use openzeppelin::presets::{ERC20Upgradeable, AccountUpgradeable};
 use openzeppelin::token::erc20::dual20::DualCaseERC20Trait;
 use openzeppelin::utils::serde::SerializedAppend;
 use snforge_std as snf;
-use snforge_std::{declare, CheatTarget, ContractClassTrait};
+use snforge_std::{declare, ContractClassTrait};
+
+
 use starknet::{testing, ContractAddress, contract_address_const};
 use super::constants;
 use vault::contracts::VaultAccount;
