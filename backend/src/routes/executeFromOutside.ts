@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { type Account } from 'starknet'
+import { type Account, addAddressPadding } from 'starknet'
 
 import { Entrypoint } from '@/constants/contracts'
 
@@ -54,7 +54,7 @@ export function getExecuteFromOutsideRoute(fastify: FastifyInstance, deployer: A
         }
 
         return reply.code(200).send({
-          transaction_hash,
+          transaction_hash: addAddressPadding(transaction_hash),
         })
       } catch (error) {
         fastify.log.error(error)

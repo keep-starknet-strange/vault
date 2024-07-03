@@ -33,8 +33,8 @@ export function verifyOtp(
           properties: {
             phone_number: { type: 'string', pattern: '^\\+[1-9]\\d{1,14}$' },
             sent_otp: { type: 'string', pattern: '^[0-9]{6}$' },
-            public_key_x: { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' },
-            public_key_y: { type: 'string', pattern: '^0x[0-9a-fA-F]{64}$' },
+            public_key_x: { type: 'string', pattern: '^0x[0-9a-fA-F]+$' },
+            public_key_y: { type: 'string', pattern: '^0x[0-9a-fA-F]+$' },
           },
         },
       },
