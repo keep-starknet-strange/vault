@@ -44,6 +44,8 @@ class Model: ObservableObject {
     }
     @Published var onRampQuoteId: String?
     @Published var onRampTotalUsd: String?
+    @Published var estSubtotalUsd: Double = 0
+    @Published var stripeRedirectUrl: URL? = nil
 
     // Sending USDC
     @Published var recipient: Recipient?
@@ -108,10 +110,8 @@ class Model: ObservableObject {
 
     private var currentTask: Task<Void, Never>? {
         willSet {
-            print("Setting new task")
             if let task = currentTask {
                 if task.isCancelled { return }
-                print("Cancelling currnet task")
                 task.cancel()
                 // Setting a new task cancelling the current task
             }
@@ -475,13 +475,10 @@ extension Model {
         self.currentTask = Task {
             let response = try! await withCheckedThrowingContinuation { (continuation: CheckedContinuation<FunkitStripeCheckoutQuote, any Error>) in
                 VaultService.shared.send(GetFunkitStripeCheckoutQuote(address: self.address, amount: self.amount)) { result in
-
                     DispatchQueue.main.async {
-
                         switch result {
                         case .success(let response):
                             continuation.resume(returning: response)
-                            print(response.quoteId)
 
                         case .failure(let error):
                             // TODO: Handle error
@@ -492,15 +489,36 @@ extension Model {
             }
 
             // task has been cancelled
-            if Task.isCancelled {
-                print("Task has been cancelled, do nothing")
-                return
-            }
+            if Task.isCancelled { return }
 
             self.isLoading = false
 
             self.onRampQuoteId = response.quoteId
             self.onRampTotalUsd = response.totalUsd
+            self.estSubtotalUsd = response.estSubtotalUsd
+        }
+    }
+
+    public func createOnrampCheckout() {
+        guard let quoteId = self.onRampQuoteId else { return }
+
+        VaultService.shared.send(
+            CreateFunkitStripeCheckout(
+                quoteId: quoteId,
+                parsedAmount: self.parsedAmount,
+                estSubtotalUsd: self.estSubtotalUsd
+            )
+        ) {  result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    self.stripeRedirectUrl = URL(string: response.stripeRedirectUrl)
+
+                case .failure(let error):
+                    // TODO: Handle error
+                    print(error)
+                }
+            }
         }
     }
 }
@@ -587,5 +605,8 @@ extension Model {
     private func initiateOnramp() {
         self.amount = "0"
         self.onRampQuoteId = nil
+        self.onRampTotalUsd = nil
+        self.estSubtotalUsd = 0
+        self.stripeRedirectUrl = nil
     }
 }

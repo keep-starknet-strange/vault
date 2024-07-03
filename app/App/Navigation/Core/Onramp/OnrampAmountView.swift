@@ -66,7 +66,7 @@ struct OnrampAmountView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Select Amount")
         .navigationDestination(isPresented: $presentingNextView) {
-            AskEmailView()
+            OnrampStripeView()
         }
         .onChange(of: self.model.amount) {
             self.model.getOnrampQuote()
