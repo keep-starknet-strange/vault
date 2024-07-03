@@ -45,6 +45,7 @@ struct SendingAmountView: View {
         )
         .removeNavigationBarBorder()
         .navigationBarBackButtonHidden(true)
+        .navigationTitle("Select Amount")
         .addSendingConfirmation(isPresented: self.$model.showSendingConfirmation) {
             self.model.showSendingView = false
         }

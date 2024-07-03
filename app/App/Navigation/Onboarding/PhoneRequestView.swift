@@ -25,6 +25,7 @@ struct PhoneRequestView: View {
                     Text("Enter your phone number. We will send you a confirmation code.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .center, spacing: 32) {

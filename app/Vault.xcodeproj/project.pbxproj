@@ -19,6 +19,8 @@
 		9C1C9D922C0FB4760028C8FD /* SendingConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D912C0FB4760028C8FD /* SendingConfirmationView.swift */; };
 		9C1C9D942C0FBA900028C8FD /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D932C0FBA900028C8FD /* Avatar.swift */; };
 		9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D952C105E3D0028C8FD /* Amount.swift */; };
+		9C286B562C32E84200D27A9D /* OnrampAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C286B552C32E84200D27A9D /* OnrampAmountView.swift */; };
+		9C286B582C32EB9B00D27A9D /* OnrampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C286B572C32EB9B00D27A9D /* OnrampView.swift */; };
 		9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C22BF39635004FFFD1 /* BalanceView.swift */; };
 		9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C42BF3CB86004FFFD1 /* Background.swift */; };
 		9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */; };
@@ -97,6 +99,11 @@
 		9CD778D02BC43F7400BA4677 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9CD778CF2BC43F7400BA4677 /* PhoneNumberKit */; };
 		9CD778D22BC4423C00BA4677 /* PhoneInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778D12BC4423C00BA4677 /* PhoneInput.swift */; };
 		9CD778D42BC4426D00BA4677 /* View+placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD778D32BC4426D00BA4677 /* View+placeholder.swift */; };
+		9CDAF8362C32F98600BCFEDF /* AskEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF8352C32F98600BCFEDF /* AskEmailView.swift */; };
+		9CDAF8382C32FAFD00BCFEDF /* AskFullNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF8372C32FAFD00BCFEDF /* AskFullNameView.swift */; };
+		9CDAF83A2C32FE1E00BCFEDF /* AskBirthDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF8392C32FE1E00BCFEDF /* AskBirthDateView.swift */; };
+		9CDAF83C2C346D7C00BCFEDF /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF83B2C346D7C00BCFEDF /* String+Email.swift */; };
+		9CDAF83E2C34AF8F00BCFEDF /* AskHomeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF83D2C34AF8F00BCFEDF /* AskHomeAddress.swift */; };
 		9CDD91B92C24129E00EA20CC /* VaultPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDD91B82C24129E00EA20CC /* VaultPage.swift */; };
 		9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */; };
 		9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4002BAB3428000466B9 /* ContentView.swift */; };
@@ -148,6 +155,8 @@
 		9C1C9D912C0FB4760028C8FD /* SendingConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingConfirmationView.swift; sourceTree = "<group>"; };
 		9C1C9D932C0FBA900028C8FD /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		9C1C9D952C105E3D0028C8FD /* Amount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Amount.swift; sourceTree = "<group>"; };
+		9C286B552C32E84200D27A9D /* OnrampAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampAmountView.swift; sourceTree = "<group>"; };
+		9C286B572C32EB9B00D27A9D /* OnrampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampView.swift; sourceTree = "<group>"; };
 		9C2E73C22BF39635004FFFD1 /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		9C2E73C42BF3CB86004FFFD1 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureEnclaveManager.swift; sourceTree = "<group>"; };
@@ -226,6 +235,11 @@
 		9CD778CC2BC3115E00BA4677 /* PhoneValidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidationView.swift; sourceTree = "<group>"; };
 		9CD778D12BC4423C00BA4677 /* PhoneInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneInput.swift; sourceTree = "<group>"; };
 		9CD778D32BC4426D00BA4677 /* View+placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+placeholder.swift"; sourceTree = "<group>"; };
+		9CDAF8352C32F98600BCFEDF /* AskEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskEmailView.swift; sourceTree = "<group>"; };
+		9CDAF8372C32FAFD00BCFEDF /* AskFullNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskFullNameView.swift; sourceTree = "<group>"; };
+		9CDAF8392C32FE1E00BCFEDF /* AskBirthDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskBirthDateView.swift; sourceTree = "<group>"; };
+		9CDAF83B2C346D7C00BCFEDF /* String+Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
+		9CDAF83D2C34AF8F00BCFEDF /* AskHomeAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskHomeAddress.swift; sourceTree = "<group>"; };
 		9CDD91B82C24129E00EA20CC /* VaultPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultPage.swift; sourceTree = "<group>"; };
 		9CDFD3FB2BAB3428000466B9 /* Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultApp.swift; sourceTree = "<group>"; };
@@ -334,6 +348,19 @@
 			path = Requesting;
 			sourceTree = "<group>";
 		};
+		9C286B542C32E67700D27A9D /* Onramp */ = {
+			isa = PBXGroup;
+			children = (
+				9C286B552C32E84200D27A9D /* OnrampAmountView.swift */,
+				9C286B572C32EB9B00D27A9D /* OnrampView.swift */,
+				9CDAF8352C32F98600BCFEDF /* AskEmailView.swift */,
+				9CDAF8372C32FAFD00BCFEDF /* AskFullNameView.swift */,
+				9CDAF8392C32FE1E00BCFEDF /* AskBirthDateView.swift */,
+				9CDAF83D2C34AF8F00BCFEDF /* AskHomeAddress.swift */,
+			);
+			path = Onramp;
+			sourceTree = "<group>";
+		};
 		9C6259042BF78CF20039DE9C /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,6 +417,7 @@
 				9C1C9D832C0D093F0028C8FD /* P256Signer.swift */,
 				9C1C9D852C0D0F320028C8FD /* Uint256.swift */,
 				9C1C9D952C105E3D0028C8FD /* Amount.swift */,
+				9CDAF83B2C346D7C00BCFEDF /* String+Email.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -471,6 +499,7 @@
 		9CD778A92BBAF89F00BA4677 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				9C286B542C32E67700D27A9D /* Onramp */,
 				9C0917792C25D2700068FAF5 /* Requesting */,
 				9C6259112BFB5A820039DE9C /* Sending */,
 				9C6259042BF78CF20039DE9C /* Home */,
@@ -785,6 +814,7 @@
 				9C62590A2BF79F8C0039DE9C /* NumPad.swift in Sources */,
 				9CE7A75B2BE12CBC008509FE /* Data+Hex.swift in Sources */,
 				9CD778BC2BBED06700BA4677 /* CustomTabBar.swift in Sources */,
+				9CDAF83E2C34AF8F00BCFEDF /* AskHomeAddress.swift in Sources */,
 				9C637CE02BB0C0E5005816B4 /* Input.swift in Sources */,
 				9CD778B02BBC1A9C00BA4677 /* View+if.swift in Sources */,
 				9C1C9D862C0D0F320028C8FD /* Uint256.swift in Sources */,
@@ -792,6 +822,8 @@
 				9C0917742C2573B00068FAF5 /* Page.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
 				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
+				9CDAF83A2C32FE1E00BCFEDF /* AskBirthDateView.swift in Sources */,
+				9CDAF83C2C346D7C00BCFEDF /* String+Email.swift in Sources */,
 				9C09176F2C2573580068FAF5 /* Transactions.swift in Sources */,
 				9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */,
 				9CD778C22BBF1E9200BA4677 /* View+border.swift in Sources */,
@@ -806,6 +838,7 @@
 				9C9F9EF02C22368200620AC6 /* Balance.swift in Sources */,
 				9C1C9D8C2C0DEBAE0028C8FD /* CountryData.swift in Sources */,
 				9C09177B2C25D2810068FAF5 /* RequestingView.swift in Sources */,
+				9C286B562C32E84200D27A9D /* OnrampAmountView.swift in Sources */,
 				9CDFD4382BAB8934000466B9 /* Buttons.swift in Sources */,
 				9C1C9D902C0F5DE40028C8FD /* Popover.swift in Sources */,
 				9C1C9D942C0FBA900028C8FD /* Avatar.swift in Sources */,
@@ -822,6 +855,7 @@
 				9CD778D22BC4423C00BA4677 /* PhoneInput.swift in Sources */,
 				9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */,
 				9CD778B32BBC38F400BA4677 /* HistoricalGraph.swift in Sources */,
+				9C286B582C32EB9B00D27A9D /* OnrampView.swift in Sources */,
 				9C9F9EF82C22368200620AC6 /* GetOTP.swift in Sources */,
 				9C637CDE2BB0A564005816B4 /* AppIcon.swift in Sources */,
 				9C6ABFCC2C21C9C9000227D2 /* ErrorView.swift in Sources */,
@@ -851,6 +885,7 @@
 				9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */,
 				9CDFD4402BAD83E7000466B9 /* ThemedText.swift in Sources */,
 				9CD1BE8A2BCD4F5B0077A60B /* OTPInput.swift in Sources */,
+				9CDAF8382C32FAFD00BCFEDF /* AskFullNameView.swift in Sources */,
 				9CD778AE2BBC1A7300BA4677 /* GraphView.swift in Sources */,
 				9CD778C02BBF1E5C00BA4677 /* EdgeBorder.swift in Sources */,
 				9CDFD43C2BAC8BE6000466B9 /* FaceIDView.swift in Sources */,
@@ -869,6 +904,7 @@
 				9C6259082BF79F140039DE9C /* FancyAmount.swift in Sources */,
 				9C62591F2BFE56000039DE9C /* ContactRow.swift in Sources */,
 				9C5CFDAE2BC828C9001776E1 /* Model.swift in Sources */,
+				9CDAF8362C32F98600BCFEDF /* AskEmailView.swift in Sources */,
 				9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */,
 				9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */,
 				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
@@ -999,7 +1035,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1194,7 +1230,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1230,7 +1266,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

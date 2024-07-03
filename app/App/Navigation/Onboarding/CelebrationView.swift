@@ -36,10 +36,12 @@ struct CelebrationView: View {
                     Text("That’s it ! You are all set")
                         .textTheme(.headlineLarge)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text("You're now part of a 100% mobile, flexible banking revolution. Enjoy the instant transactions, sub-accounts for easier saving, and much more.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 PrimaryButton("Start exploring") {

@@ -51,6 +51,7 @@ struct NewRecipientView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultBackground()
         .navigationBarBackButtonHidden(true)
+        .navigationTitle("New Recipient")
         .navigationBarItems(
             leading: IconButton {
                 self.dismiss()
@@ -64,8 +65,16 @@ struct NewRecipientView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        NewRecipientView()
+#if DEBUG
+struct NewRecipientViewPreviews : PreviewProvider {
+
+    @StateObject static var model = Model()
+
+    static var previews: some View {
+        NavigationStack {
+            NewRecipientView()
+                .environmentObject(self.model)
+        }
     }
 }
+#endif

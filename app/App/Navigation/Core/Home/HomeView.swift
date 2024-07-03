@@ -22,7 +22,6 @@ struct HomeView: View {
     @EnvironmentObject private var model: Model
     @EnvironmentObject private var txHistoryModel: PaginationModel<TransactionHistory>
 
-    @State private var showingAddFundsWebView = false
     @State private var scrollOffset: CGFloat = 0
 
     var body: some View {
@@ -68,6 +67,9 @@ struct HomeView: View {
         }
         .fullScreenCover(isPresented: self.$model.showRequestingView) {
             RequestingView()
+        }
+        .fullScreenCover(isPresented: self.$model.showOnrampView) {
+            OnrampView()
         }
         .edgesIgnoringSafeArea(.all)
     }
@@ -118,7 +120,7 @@ struct HomeView: View {
             Spacer()
 
             IconButton(size: .large) {
-                self.showingAddFundsWebView = true
+                self.model.showOnrampView = true
             } icon: {
                 Image(systemName: "plus")
                     .iconify()
@@ -126,9 +128,6 @@ struct HomeView: View {
             }
             .withText("Add funds")
             .frame(maxWidth: .infinity)
-            .sheet(isPresented: $showingAddFundsWebView) {
-                WebView(url: URL(string: "https://app.fun.xyz")!)
-            }
 
             Spacer(minLength: 24)
         }

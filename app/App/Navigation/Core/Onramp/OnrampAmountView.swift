@@ -1,19 +1,19 @@
 //
-//  RequestingAmountView.swift
+//  OnrampAmountView.swift
 //  Vault
 //
-//  Created by Charles Lanier on 25/06/2024.
+//  Created by Charles Lanier on 01/07/2024.
 //
 
 import SwiftUI
 
-struct RequestingAmountView: View {
+struct OnrampAmountView: View {
 
     @Environment(\.dismiss) var dismiss
 
     @EnvironmentObject private var model: Model
 
-    @State var isShareSheetPresented = false
+    @State private var presentingNextView = false
 
     private var hexAmount: String {
         Amount.usdc(from: self.model.parsedAmount)?.value.toHex() ?? "0x0"
@@ -28,8 +28,8 @@ struct RequestingAmountView: View {
             Spacer()
 
             VStack(spacing: 32) {
-                PrimaryButton("Request", disabled: self.model.parsedAmount <= 0) {
-                    self.isShareSheetPresented = true
+                PrimaryButton("Next", disabled: self.model.parsedAmount <= 0) {
+                    self.presentingNextView = true
                 }
 
                 NumPad(amount: self.$model.amount)
@@ -51,27 +51,19 @@ struct RequestingAmountView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Select Amount")
-        .sheet(isPresented: self.$isShareSheetPresented) {
-            ActivityView(
-                activityItems: [
-                    "Hello ! Please send me $\(self.model.amount) via vltfinance://request?amount=\(self.hexAmount)&recipientAddress=\(self.model.address)"
-                ],
-                isPresented: self.$isShareSheetPresented
-            )
-            .ignoresSafeArea()
-            .presentationDragIndicator(.hidden)
-            .presentationDetents([.medium, .large])
+        .navigationDestination(isPresented: $presentingNextView) {
+            AskEmailView()
         }
     }
 }
 
 #if DEBUG
-struct RequestingAmountViewPreviews : PreviewProvider {
+struct OnrampAmountViewPreviews : PreviewProvider {
 
     @StateObject static var model = Model()
 
     static var previews: some View {
-        RequestingAmountView()
+        OnrampAmountView()
             .environmentObject(self.model)
     }
 }

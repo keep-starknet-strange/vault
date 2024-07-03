@@ -25,10 +25,12 @@ struct NotificationView: View {
                     Text("Stay Updated Instantly")
                         .textTheme(.headlineLarge)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text("Notifications to keep track of your account activity effortlessly.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .center, spacing: 16) {

@@ -32,6 +32,7 @@ struct PhoneValidationView: View {
                     Text("A code has been sent to +\(phoneNumber.countryCode)\(phoneNumber.numberString.filter { !$0.isWhitespace })")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .leading, spacing: 32) {

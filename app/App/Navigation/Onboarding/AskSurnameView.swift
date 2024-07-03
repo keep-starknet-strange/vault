@@ -22,6 +22,7 @@ struct AskSurnameView: View {
                     Text("Introduce yourself with your surname. Change it anytime.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .center, spacing: 32) {

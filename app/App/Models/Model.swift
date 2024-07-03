@@ -34,6 +34,15 @@ class Model: ObservableObject {
     @Published var showMessage = false
     @Published var amount: String = ""
 
+    // Onramp
+    @Published var showOnrampView = false {
+        didSet {
+            if self.showOnrampView {
+                self.initiateOnramp()
+            }
+        }
+    }
+
     // Sending USDC
     @Published var recipient: Recipient?
     @Published var sendingStatus: Status = .none
@@ -513,6 +522,10 @@ extension Model {
     }
 
     private func initiateRequest() {
+        self.amount = "0"
+    }
+
+    private func initiateOnramp() {
         self.amount = "0"
     }
 }
