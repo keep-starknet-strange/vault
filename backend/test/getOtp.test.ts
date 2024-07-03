@@ -12,7 +12,6 @@ dotenv.config()
 describe('Get OTP test', () => {
   let container: StartedPostgreSqlContainer
   let app: FastifyInstance
-  const testAddress = '0x004babd76a282efdd30b97c8a98b0f2e4ebb91e81b3542bfd124c086648a07af'
   const testPhoneNumber = process.env.TEST_PHONE_NUMBER as string
   const testNickname = 'Jean'
 
@@ -32,9 +31,6 @@ describe('Get OTP test', () => {
 
     // reset db
     await app.db.delete(schema.registration)
-
-    // Insert balance to mock address
-    await app.db.insert(schema.usdcBalance).values({ address: testAddress, balance: '1000' })
   })
 
   afterAll(async () => {
