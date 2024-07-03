@@ -21,6 +21,7 @@
 		9C1C9D962C105E3D0028C8FD /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1C9D952C105E3D0028C8FD /* Amount.swift */; };
 		9C286B562C32E84200D27A9D /* OnrampAmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C286B552C32E84200D27A9D /* OnrampAmountView.swift */; };
 		9C286B582C32EB9B00D27A9D /* OnrampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C286B572C32EB9B00D27A9D /* OnrampView.swift */; };
+		9C2D8D522C35887E008D6174 /* Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2D8D512C35887E008D6174 /* Placeholder.swift */; };
 		9C2E73C32BF39635004FFFD1 /* BalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C22BF39635004FFFD1 /* BalanceView.swift */; };
 		9C2E73C52BF3CB86004FFFD1 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2E73C42BF3CB86004FFFD1 /* Background.swift */; };
 		9C4F45192BDE949D00D44CBE /* SecureEnclaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */; };
@@ -104,6 +105,8 @@
 		9CDAF83A2C32FE1E00BCFEDF /* AskBirthDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF8392C32FE1E00BCFEDF /* AskBirthDateView.swift */; };
 		9CDAF83C2C346D7C00BCFEDF /* String+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF83B2C346D7C00BCFEDF /* String+Email.swift */; };
 		9CDAF83E2C34AF8F00BCFEDF /* AskHomeAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF83D2C34AF8F00BCFEDF /* AskHomeAddress.swift */; };
+		9CDAF8402C355CA100BCFEDF /* GetFunkitStripeCheckoutQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF83F2C355CA100BCFEDF /* GetFunkitStripeCheckoutQuote.swift */; };
+		9CDAF8422C355E4100BCFEDF /* FunkitStripeCheckoutQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDAF8412C355E4100BCFEDF /* FunkitStripeCheckoutQuote.swift */; };
 		9CDD91B92C24129E00EA20CC /* VaultPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDD91B82C24129E00EA20CC /* VaultPage.swift */; };
 		9CDFD3FF2BAB3428000466B9 /* VaultApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */; };
 		9CDFD4012BAB3428000466B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDFD4002BAB3428000466B9 /* ContentView.swift */; };
@@ -157,6 +160,7 @@
 		9C1C9D952C105E3D0028C8FD /* Amount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Amount.swift; sourceTree = "<group>"; };
 		9C286B552C32E84200D27A9D /* OnrampAmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampAmountView.swift; sourceTree = "<group>"; };
 		9C286B572C32EB9B00D27A9D /* OnrampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampView.swift; sourceTree = "<group>"; };
+		9C2D8D512C35887E008D6174 /* Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Placeholder.swift; sourceTree = "<group>"; };
 		9C2E73C22BF39635004FFFD1 /* BalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceView.swift; sourceTree = "<group>"; };
 		9C2E73C42BF3CB86004FFFD1 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		9C4F45182BDE949D00D44CBE /* SecureEnclaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureEnclaveManager.swift; sourceTree = "<group>"; };
@@ -240,6 +244,8 @@
 		9CDAF8392C32FE1E00BCFEDF /* AskBirthDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskBirthDateView.swift; sourceTree = "<group>"; };
 		9CDAF83B2C346D7C00BCFEDF /* String+Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Email.swift"; sourceTree = "<group>"; };
 		9CDAF83D2C34AF8F00BCFEDF /* AskHomeAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskHomeAddress.swift; sourceTree = "<group>"; };
+		9CDAF83F2C355CA100BCFEDF /* GetFunkitStripeCheckoutQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFunkitStripeCheckoutQuote.swift; sourceTree = "<group>"; };
+		9CDAF8412C355E4100BCFEDF /* FunkitStripeCheckoutQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunkitStripeCheckoutQuote.swift; sourceTree = "<group>"; };
 		9CDD91B82C24129E00EA20CC /* VaultPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultPage.swift; sourceTree = "<group>"; };
 		9CDFD3FB2BAB3428000466B9 /* Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CDFD3FE2BAB3428000466B9 /* VaultApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultApp.swift; sourceTree = "<group>"; };
@@ -316,6 +322,7 @@
 				9C84F4152C2FF47200196EA0 /* Sending */,
 				9C1C9D8F2C0F5DE40028C8FD /* Popover.swift */,
 				9CDFD43F2BAD83E7000466B9 /* ThemedText.swift */,
+				9C2D8D512C35887E008D6174 /* Placeholder.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -444,6 +451,7 @@
 				9C9F9EE22C22368200620AC6 /* VaultError.swift */,
 				9CD0988B2C22E33800FDDD8F /* Transaction.swift */,
 				9C59C9452C30B35D0074F23B /* User.swift */,
+				9CDAF8412C355E4100BCFEDF /* FunkitStripeCheckoutQuote.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -456,6 +464,7 @@
 				9C9F9EE72C22368200620AC6 /* VerifyOTP.swift */,
 				9CD098892C22E32300FDDD8F /* GetTransactionsHistory.swift */,
 				9C59C9432C30B2790074F23B /* GetUser.swift */,
+				9CDAF83F2C355CA100BCFEDF /* GetFunkitStripeCheckoutQuote.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -821,6 +830,7 @@
 				9C5CFDA82BC73DB0001776E1 /* SearchBar.swift in Sources */,
 				9C0917742C2573B00068FAF5 /* Page.swift in Sources */,
 				9CD7789F2BB185C200BA4677 /* CelebrationView.swift in Sources */,
+				9CDAF8402C355CA100BCFEDF /* GetFunkitStripeCheckoutQuote.swift in Sources */,
 				9CD390FB2BEAB6C600238FE9 /* WebView.swift in Sources */,
 				9CDAF83A2C32FE1E00BCFEDF /* AskBirthDateView.swift in Sources */,
 				9CDAF83C2C346D7C00BCFEDF /* String+Email.swift in Sources */,
@@ -881,6 +891,7 @@
 				9CD0988C2C22E33800FDDD8F /* Transaction.swift in Sources */,
 				9CDFD42D2BAB4D1D000466B9 /* WelcomeView.swift in Sources */,
 				9C62590C2BF9FFF60039DE9C /* Container.swift in Sources */,
+				9C2D8D522C35887E008D6174 /* Placeholder.swift in Sources */,
 				9C6259152BFB5B9A0039DE9C /* SendingRecipientView.swift in Sources */,
 				9C637CDB2BB09C4D005816B4 /* Notification.swift in Sources */,
 				9CDFD4402BAD83E7000466B9 /* ThemedText.swift in Sources */,
@@ -908,6 +919,7 @@
 				9CD0988A2C22E32300FDDD8F /* GetTransactionsHistory.swift in Sources */,
 				9C9098792C2AED57002A5833 /* ActivityView.swift in Sources */,
 				9CD1BE982BD7C51A0077A60B /* PhoneNumber+Parse.swift in Sources */,
+				9CDAF8422C355E4100BCFEDF /* FunkitStripeCheckoutQuote.swift in Sources */,
 				9C1C9D922C0FB4760028C8FD /* SendingConfirmationView.swift in Sources */,
 				9C9F9EFD2C22368200620AC6 /* VaultAPIClient.swift in Sources */,
 				9CDFD43E2BAD7F12000466B9 /* Shared.swift in Sources */,

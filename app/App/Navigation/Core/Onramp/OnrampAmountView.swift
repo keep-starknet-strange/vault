@@ -23,12 +23,26 @@ struct OnrampAmountView: View {
         VStack {
             Spacer()
 
-            FancyAmount(amount: self.$model.amount)
+            VStack(spacing: 8) {
+                FancyAmount(amount: self.$model.amount)
+
+                VStack {
+                    if
+                        let totalUsd = self.model.onRampTotalUsd,
+                        let totalUsdDouble = Double(totalUsd)
+                    {
+                        Text("$\(String(format: "%.2f", totalUsdDouble - self.model.parsedAmount)) Fees").textTheme(.headlineSubtitle)
+                    }
+                }
+                .frame(minWidth: 100, minHeight: 24)
+                .redacted(reason: self.model.isLoading ? .placeholder : [])
+                .animatePlaceholder(isLoading: self.$model.isLoading)
+            }
 
             Spacer()
 
             VStack(spacing: 32) {
-                PrimaryButton("Next", disabled: self.model.parsedAmount <= 0) {
+                PrimaryButton("Next", disabled: self.model.onRampQuoteId == nil) {
                     self.presentingNextView = true
                 }
 
@@ -53,6 +67,9 @@ struct OnrampAmountView: View {
         .navigationTitle("Select Amount")
         .navigationDestination(isPresented: $presentingNextView) {
             AskEmailView()
+        }
+        .onChange(of: self.model.amount) {
+            self.model.getOnrampQuote()
         }
     }
 }
