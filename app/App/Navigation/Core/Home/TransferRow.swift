@@ -15,6 +15,8 @@ struct TransferRow: View {
 
     init(transfer: Transaction) {
         self.transfer = transfer
+
+        print(transfer.to)
     }
 
     var body: some View {

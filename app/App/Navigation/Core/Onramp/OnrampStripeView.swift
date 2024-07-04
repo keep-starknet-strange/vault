@@ -95,7 +95,10 @@ struct OnrampStripeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            self.model.createOnrampCheckout()
+            Task {
+                try await Task.sleep(for: .seconds(1))
+                self.model.createOnrampCheckout()
+            }
         }
         .navigationBarItems(
             leading: IconButton {

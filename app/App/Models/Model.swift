@@ -474,7 +474,7 @@ extension Model {
 
         self.currentTask = Task {
             let response = try! await withCheckedThrowingContinuation { (continuation: CheckedContinuation<FunkitStripeCheckoutQuote, any Error>) in
-                VaultService.shared.send(GetFunkitStripeCheckoutQuote(address: self.address, amount: self.amount)) { result in
+                VaultService.shared.send(GetFunkitStripeCheckoutQuote(address: self.address, amount: String(self.parsedAmount))) { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(let response):

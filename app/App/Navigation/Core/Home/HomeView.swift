@@ -146,31 +146,40 @@ struct HomeView: View {
 
                         // PENDING
 
-                        VStack(spacing: 32) {
-                            ForEach(txHistory.groupedPendingTransactions[day] ?? [], id: \.self.id) { transfer in
+                        let pendingTransfers = txHistory.groupedPendingTransactions[day] ?? []
 
-                                TransferRow(transfer: transfer)
+                        if !pendingTransfers.isEmpty {
+                            VStack(spacing: 32) {
+                                ForEach(pendingTransfers, id: \.self.id) { transfer in
+
+                                    TransferRow(transfer: transfer)
+                                }
+                                .padding(16)
+                                .background(.accent.opacity(0.2))
+                                .animatePlaceholder(isLoading: .constant(true))
                             }
-                            .padding(16)
-                            .background(.accent.opacity(0.2))
+                            .background(.background2)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         }
-                        .background(.background2)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
 
                         // CONFIRMED
 
-                        VStack(spacing: 32) {
-                            ForEach(txHistory.groupedTransactions[day] ?? [], id: \.self.id) { transfer in
+                        let confirmedTransfers = txHistory.groupedTransactions[day] ?? []
 
-                                TransferRow(transfer: transfer)
-                                    .onAppear {
-                                        self.txHistoryModel.onItemAppear(transfer)
-                                    }
+                        if !confirmedTransfers.isEmpty {
+                            VStack(spacing: 32) {
+                                ForEach(confirmedTransfers, id: \.self.id) { transfer in
+
+                                    TransferRow(transfer: transfer)
+                                        .onAppear {
+                                            self.txHistoryModel.onItemAppear(transfer)
+                                        }
+                                }
                             }
+                            .padding(16)
+                            .background(.background2)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
                         }
-                        .padding(16)
-                        .background(.background2)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     .padding(.horizontal, 16)
                 }
