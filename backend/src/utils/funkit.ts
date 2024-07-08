@@ -1,25 +1,4 @@
-import { toHex } from 'viem'
-
-import { POLYGON_CHAIN_ID, TOKEN_INFO } from '@/constants/funkit'
-
-function randomBytes(length: number) {
-  const bytes = new Uint8Array(length)
-  for (let i = 0; i < length; i++) {
-    bytes[i] = Math.floor(Math.random() * 256)
-  }
-  return toHex(bytes)
-}
-
-export function generateRandomCheckoutSalt() {
-  return BigInt(randomBytes(32))
-}
-
-export function stringifyWithBigIntSanitization(object: any) {
-  return JSON.stringify(
-    object,
-    (_, value) => (typeof value === 'bigint' ? toHex(value) : value), // return everything else unchanged
-  )
-}
+import { TOKEN_INFO } from '@/constants/funkit'
 
 export function roundUpToFiveDecimalPlaces(inputNumber: string) {
   // Using toFixed to round up to 5 decimal places
@@ -30,8 +9,12 @@ export function roundUpToFiveDecimalPlaces(inputNumber: string) {
   return roundedNumber
 }
 
-export function pickSourceAssetForCheckout(isNy: boolean) {
-  return isNy ? TOKEN_INFO.POLYGON_MATIC : TOKEN_INFO.POLYGON_USDC
+export function pickSourceAssetForCheckout(isEu: boolean, isNy: boolean) {
+  return isEu ? TOKEN_INFO.ETHEREUM_ETH : isNy ? TOKEN_INFO.POLYGON_MATIC : TOKEN_INFO.POLYGON_USDC
+}
+
+export function getBooleanFromString(value: string | boolean) {
+  return typeof value === 'boolean' ? value : value.toLowerCase() === 'true'
 }
 
 // To be compliant with existing funkit SDK -- can be ignored
@@ -43,7 +26,7 @@ export function generateClientMetadata({
   estDollarValue: number
 }) {
   return {
-    id: generateRandomCheckoutSalt().toString(),
+    id: Math.random(),
     startTimestampMs: Date.now(),
     draftDollarValue: estDollarValue.toFixed(5),
     finalDollarValue: estDollarValue.toFixed(5),
@@ -53,7 +36,7 @@ export function generateClientMetadata({
     isFastForwarded: false,
     selectedSourceAssetInfo: {
       address: pickedSourceAsset.address,
-      chainId: POLYGON_CHAIN_ID,
+      chainId: pickedSourceAsset.networkId,
       symbol: pickedSourceAsset.symbol.toUpperCase(),
     },
     selectedPaymentMethodInfo: {

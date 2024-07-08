@@ -31,7 +31,7 @@ describe('POST /create_funkit_stripe_checkout route', () => {
     // A quote has to be generated first before creating a checkout
     const quoteResponse = await app.inject({
       method: 'GET',
-      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false`,
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false&isEu=true`,
     })
     const quoteObject = quoteResponse.json()
     const createResponse = await app.inject({
@@ -42,6 +42,7 @@ describe('POST /create_funkit_stripe_checkout route', () => {
         paymentTokenAmount: quoteObject.paymentTokenAmount,
         estSubtotalUsd: quoteObject.estSubtotalUsd,
         isNy: false,
+        isEu: true,
       },
     })
     expect(createResponse.statusCode).toBe(200)
@@ -60,6 +61,7 @@ describe('POST /create_funkit_stripe_checkout route', () => {
         paymentTokenAmount: 10,
         estSubtotalUsd: 10,
         isNy: false,
+        isEu: true,
       },
     })
     expect(createResponse.statusCode).toBe(500)
@@ -104,5 +106,15 @@ describe('POST /create_funkit_stripe_checkout route', () => {
     })
     expect(createResponse.statusCode).toBe(400)
     expect(createResponse.json()).toHaveProperty('message', 'isNy is a required boolean.')
+  })
+
+  test('should throw 400 for missing isEu', async () => {
+    const createResponse = await app.inject({
+      method: 'POST',
+      url: `/create_funkit_stripe_checkout`,
+      body: { quoteId: 'dummyQuoteId', paymentTokenAmount: 10, estSubtotalUsd: 10, isNy: true },
+    })
+    expect(createResponse.statusCode).toBe(400)
+    expect(createResponse.json()).toHaveProperty('message', 'isEu is a required boolean.')
   })
 })

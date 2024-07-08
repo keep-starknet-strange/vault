@@ -1,6 +1,5 @@
+import { getCheckoutByDepositAddress } from '@funkit/api-base'
 import type { FastifyInstance } from 'fastify'
-
-import { FUNKIT_API_BASE_URL } from '@/constants/funkit'
 
 export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance, funkitApiKey: string) {
   fastify.get(
@@ -15,20 +14,20 @@ export function getFunkitStripeCheckoutStatus(fastify: FastifyInstance, funkitAp
         return reply.status(400).send({ message: 'funkitDepositAddress is required.' })
       }
       try {
-        const checkoutRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout/${funkitDepositAddress}`, {
-          headers: {
-            'X-Api-Key': funkitApiKey,
-          },
+        const checkoutItem = await getCheckoutByDepositAddress({
+          depositAddress: funkitDepositAddress as `0x${string}`,
+          apiKey: funkitApiKey,
         })
-        const checkoutItem = (await checkoutRes.json()) as any
-        if (!checkoutItem || checkoutItem?.errorMsg) {
+        if (!checkoutItem || !checkoutItem?.depositAddr) {
           return reply.status(500).send({ message: 'Failed to get a funkit checkout.' })
         }
         return reply.send({
           state: checkoutItem.state,
         })
-      } catch (error) {
-        console.error(error)
+      } catch (error: any) {
+        if (error?.message?.includes('InvalidParameterError')) {
+          return reply.status(500).send({ message: 'Failed to get a funkit checkout.' })
+        }
         return reply.status(500).send({ message: 'Internal server error' })
       }
     },

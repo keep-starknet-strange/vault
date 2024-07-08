@@ -1,28 +1,20 @@
+import { createStripeBuySession, initializeCheckout } from '@funkit/api-base'
 import type { FastifyInstance } from 'fastify'
 
-import {
-  FUNKIT_API_BASE_URL,
-  FUNKIT_STRIPE_SOURCE_CURRENCY,
-  POLYGON_NETWORK_NAME,
-  SOURCE_OF_FUND_KEY,
-} from '@/constants/funkit'
-import {
-  generateClientMetadata,
-  generateRandomCheckoutSalt,
-  pickSourceAssetForCheckout,
-  stringifyWithBigIntSanitization,
-} from '@/utils/funkit'
+import { FUNKIT_STRIPE_SOURCE_CURRENCY, SOURCE_OF_FUND_KEY } from '@/constants/funkit'
+import { generateClientMetadata, getBooleanFromString, pickSourceAssetForCheckout } from '@/utils/funkit'
 
 interface InitCheckoutBody {
   quoteId: string
   paymentTokenAmount: number
   estSubtotalUsd: number
   isNy: boolean
+  isEu: boolean
 }
 
 export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKey: string): void {
   fastify.post<{ Body: InitCheckoutBody }>('/create_funkit_stripe_checkout', async (request, reply) => {
-    const { quoteId, paymentTokenAmount, estSubtotalUsd, isNy } = request.body as InitCheckoutBody
+    const { quoteId, paymentTokenAmount, estSubtotalUsd, isEu, isNy } = request.body as InitCheckoutBody
     if (!quoteId) {
       return reply.status(400).send({ message: 'quoteId is required.' })
     }
@@ -39,50 +31,34 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKe
       return reply.status(400).send({ message: 'isNy is a required boolean.' })
     }
 
+    if (isEu == null) {
+      return reply.status(400).send({ message: 'isEu is a required boolean.' })
+    }
+
     try {
       // 1 - Initialize the checkout and get a unique depositAddress
-      const pickedSourceAsset = pickSourceAssetForCheckout(isNy)
-      const body = {
+      const pickedSourceAsset = pickSourceAssetForCheckout(getBooleanFromString(isEu), getBooleanFromString(isNy))
+      const depositAddress = await initializeCheckout({
+        userOp: null,
         quoteId,
         sourceOfFund: SOURCE_OF_FUND_KEY,
-        salt: generateRandomCheckoutSalt(),
         clientMetadata: generateClientMetadata({ pickedSourceAsset, estDollarValue: estSubtotalUsd }),
-      }
-      const fetchRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': funkitApiKey,
-        },
-        body: stringifyWithBigIntSanitization(body),
+        apiKey: funkitApiKey,
       })
-      const res = (await fetchRes.json()) as any
-      const depositAddress = res?.depositAddr
       if (!depositAddress) {
         return reply.status(500).send({ message: 'Failed to start a funkit checkout.' })
       }
 
       // 2 - Generate stripe session
-      const stripeSessionBody = {
+      const stripeSession = await createStripeBuySession({
+        apiKey: funkitApiKey,
         sourceCurrency: FUNKIT_STRIPE_SOURCE_CURRENCY,
         destinationAmount: paymentTokenAmount,
-        destinationCurrencies: [pickedSourceAsset.symbol],
         destinationCurrency: pickedSourceAsset.symbol,
-        destinationNetworks: [POLYGON_NETWORK_NAME],
-        destinationNetwork: POLYGON_NETWORK_NAME,
-        walletAddresses: {
-          [POLYGON_NETWORK_NAME]: depositAddress,
-        },
-      }
-      const generateStripeRes = await fetch(`${FUNKIT_API_BASE_URL}/on-ramp/stripe-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': funkitApiKey,
-        },
-        body: stringifyWithBigIntSanitization(stripeSessionBody),
+        destinationNetwork: pickedSourceAsset.network,
+        walletAddress: depositAddress,
+        isSandbox: false,
       })
-      const stripeSession = (await generateStripeRes.json()) as any
       if (!stripeSession || !stripeSession.id || !stripeSession.redirect_url) {
         return reply.status(500).send({ message: 'Failed to start a stripe checkout session.' })
       }
