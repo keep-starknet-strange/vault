@@ -1,4 +1,3 @@
-export const FUNKIT_API_BASE_URL = 'https://api.fun.xyz/v1'
 export const FUNKIT_STARKNET_CHAIN_ID = '23448594291968334'
 export const SOURCE_OF_FUND_KEY = 'card|stripe'
 export const FUNKIT_STRIPE_SOURCE_CURRENCY = 'usd'
