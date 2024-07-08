@@ -65,7 +65,7 @@ describe('POST /create_funkit_stripe_checkout route', () => {
       },
     })
     expect(createResponse.statusCode).toBe(500)
-    expect(createResponse.json()).toHaveProperty('message', 'Failed to start a funkit checkout.')
+    expect(createResponse.json()).toHaveProperty('message', 'Failed to start a checkout.')
   })
 
   test('should throw 400 for missing quoteId', async () => {

@@ -48,7 +48,6 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKe
       if (!depositAddress) {
         return reply.status(500).send({ message: 'Failed to start a funkit checkout.' })
       }
-
       // 2 - Generate stripe session
       const stripeSession = await createStripeBuySession({
         apiKey: funkitApiKey,
@@ -67,7 +66,7 @@ export function createFunkitStripeCheckout(fastify: FastifyInstance, funkitApiKe
         stripeRedirectUrl: stripeSession.redirect_url,
         funkitDepositAddress: depositAddress,
       })
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to start a checkout:', error)
       return reply.status(500).send({ message: 'Failed to start a checkout.' })
     }
