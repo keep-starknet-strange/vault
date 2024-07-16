@@ -1,29 +1,16 @@
-import Big from 'big.js'
+import { getCheckoutQuote, getStripeBuyQuote } from '@funkit/api-base'
 import type { FastifyInstance } from 'fastify'
-import { Address } from 'viem'
+import { getChecksumAddress } from 'starknet'
 
-import {
-  FUNKIT_API_BASE_URL,
-  FUNKIT_STARKNET_CHAIN_ID,
-  FUNKIT_STRIPE_SOURCE_CURRENCY,
-  POLYGON_CHAIN_ID,
-  POLYGON_NETWORK_NAME,
-  TOKEN_INFO,
-} from '@/constants/funkit'
-import { pickSourceAssetForCheckout, roundUpToFiveDecimalPlaces } from '@/utils/funkit'
+import { FUNKIT_STARKNET_CHAIN_ID, FUNKIT_STRIPE_SOURCE_CURRENCY, TOKEN_INFO } from '@/constants/funkit'
+import { getBooleanFromString, pickSourceAssetForCheckout, roundUpToFiveDecimalPlaces } from '@/utils/funkit'
 
 import { addressRegex } from '.'
-
-interface CheckoutQuote {
-  quoteId: string
-  estTotalFromAmountBaseUnit: string
-  estSubtotalFromAmountBaseUnit: string
-  estFeesFromAmountBaseUnit: string
-  fromTokenAddress: Address
-  estFeesUsd: number
-  estSubtotalUsd: number
-  estTotalUsd: number
-  estCheckoutTimeMs: number
+interface GetQuoteQuery {
+  address: string
+  tokenAmount: number
+  isNy: boolean
+  isEu: boolean
 }
 
 export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApiKey: string) {
@@ -31,7 +18,7 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApi
     '/get_funkit_stripe_checkout_quote',
 
     async (request, reply) => {
-      const { address, tokenAmount, isNy } = request.query as { address: string; tokenAmount: number; isNy: boolean }
+      const { address, tokenAmount, isNy, isEu } = request.query as GetQuoteQuery
 
       if (!address) {
         return reply.status(400).send({ message: 'Address is required.' })
@@ -49,67 +36,56 @@ export function getFunkitStripeCheckoutQuote(fastify: FastifyInstance, funkitApi
         return reply.status(400).send({ message: 'isNy is a required boolean.' })
       }
 
+      if (isEu == null) {
+        return reply.status(400).send({ message: 'isEu is a required boolean.' })
+      }
+
       try {
         // 1 - Generate the funkit checkout quote
-        const toMultiplier = 10 ** TOKEN_INFO.STARKNET_USDC.decimals
-        const toAmountBaseUnitBI = BigInt(Math.floor(tokenAmount * toMultiplier))
-        const pickedSourceAsset = pickSourceAssetForCheckout(isNy)
-        const queryParams = {
-          fromChainId: POLYGON_CHAIN_ID,
-          fromTokenAddress: pickedSourceAsset.address,
+        const pickedSourceAsset = pickSourceAssetForCheckout(getBooleanFromString(isEu), getBooleanFromString(isNy))
+        const normalizedRecipientAddress = getChecksumAddress(address)
+        const baseQuote = await getCheckoutQuote({
+          fromChainId: pickedSourceAsset.networkId,
+          fromTokenAddress: pickedSourceAsset.address as `0x${string}`,
+          fromTokenDecimals: pickedSourceAsset.decimals,
           toChainId: FUNKIT_STARKNET_CHAIN_ID,
-          toTokenAddress: TOKEN_INFO.STARKNET_USDC.address,
-          toAmountBaseUnit: toAmountBaseUnitBI.toString(),
-          recipientAddr: address,
-          // 1 hour from now
-          checkoutExpirationTimestampSeconds: Math.round((Date.now() + 3600000) / 1000).toString(),
-        }
-        const searchParams = new URLSearchParams(queryParams)
-        const fetchRes = await fetch(`${FUNKIT_API_BASE_URL}/checkout/quote?${searchParams}`, {
-          headers: {
-            'X-Api-Key': funkitApiKey,
-          },
+          toTokenAddress: TOKEN_INFO.STARKNET_USDC.address as `0x${string}`,
+          toTokenDecimals: TOKEN_INFO.STARKNET_USDC.decimals,
+          toTokenAmount: Number(tokenAmount),
+          expirationTimestampMs: 1_800_000, // 30 minutes
+          apiKey: funkitApiKey,
+          sponsorInitialTransferGasLimit: '0',
+          recipientAddr: normalizedRecipientAddress as `0x${string}`,
+          userId: normalizedRecipientAddress,
+          needsRefuel: false,
         })
-        const quoteRes = (await fetchRes.json()) as CheckoutQuote
-        if (!quoteRes || !quoteRes.quoteId) {
+        if (!baseQuote || !baseQuote.quoteId) {
           return reply.status(500).send({ message: 'Failed to get a funkit quote.' })
         }
 
-        const fromMultiplier = 10 ** pickedSourceAsset.decimals
-        const estTotalFromAmount = roundUpToFiveDecimalPlaces(
-          new Big(quoteRes.estTotalFromAmountBaseUnit).div(fromMultiplier).toString(),
-        ).toString()
-
+        const estTotalFromAmount = roundUpToFiveDecimalPlaces(baseQuote.estTotalFromAmount)
         // 2 - Get the stripe quote based on the
-        const stripeQuoteParams = {
+        const stripeFullQuote = await getStripeBuyQuote({
           sourceCurrency: FUNKIT_STRIPE_SOURCE_CURRENCY,
-          destinationCurrencies: pickedSourceAsset.symbol,
-          destinationNetworks: POLYGON_NETWORK_NAME,
+          destinationCurrency: pickedSourceAsset.symbol,
+          destinationNetwork: pickedSourceAsset.network,
           destinationAmount: estTotalFromAmount,
-        }
-        const stripeQuoteSearchParams = new URLSearchParams(stripeQuoteParams)
-        const stripeQuoteRes = await fetch(
-          `${FUNKIT_API_BASE_URL}/on-ramp/stripe-buy-quote?${stripeQuoteSearchParams}`,
-          {
-            headers: {
-              'X-Api-Key': funkitApiKey,
-            },
-          },
-        )
-        const stripeQuote = (await stripeQuoteRes.json()) as any
-        const stripePolygonQuote = stripeQuote?.destination_network_quotes?.polygon?.[0]
-        if (!stripePolygonQuote) {
+          apiKey: funkitApiKey,
+          isSandbox: false,
+        })
+        const stripeQuote = stripeFullQuote?.destination_network_quotes?.[pickedSourceAsset.network]?.[0]
+        if (!stripeQuote) {
           return reply.status(500).send({ message: 'Failed to get stripe quote.' })
         }
         const finalQuote = {
-          quoteId: quoteRes.quoteId,
-          estSubtotalUsd: quoteRes.estSubtotalUsd,
-          paymentTokenChain: POLYGON_CHAIN_ID,
+          quoteId: baseQuote.quoteId,
+          estSubtotalUsd: baseQuote.estSubtotalUsd,
+          paymentTokenChain: pickedSourceAsset.network,
           paymentTokenSymbol: pickedSourceAsset.symbol,
           paymentTokenAmount: estTotalFromAmount,
-          networkFees: (Number(stripePolygonQuote.fees.network_fee_monetary) + Number(quoteRes.estFeesUsd)).toFixed(2),
-          cardFees: Number(stripePolygonQuote.fees.transaction_fee_monetary).toFixed(2),
-          totalUsd: Number(stripePolygonQuote.source_total_amount).toFixed(2),
+          networkFees: (Number(stripeQuote.fees.network_fee_monetary) + Number(baseQuote.estFeesUsd)).toFixed(2),
+          cardFees: Number(stripeQuote.fees.transaction_fee_monetary).toFixed(2),
+          totalUsd: Number(stripeQuote.source_total_amount).toFixed(2),
         }
         return reply.send(finalQuote)
       } catch (error) {

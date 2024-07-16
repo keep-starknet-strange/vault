@@ -30,7 +30,7 @@ describe('GET /get_funkit_stripe_checkout_quote route', () => {
   test('should return success with valid parameters', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false`,
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false&isEu=true`,
     })
     expect(response.statusCode).toBe(200)
     const resJson = response.json()
@@ -42,6 +42,39 @@ describe('GET /get_funkit_stripe_checkout_quote route', () => {
     expect(resJson).toHaveProperty('networkFees')
     expect(resJson).toHaveProperty('cardFees')
     expect(resJson).toHaveProperty('totalUsd')
+  })
+
+  test('should return quote with eth (ethereum) if in EU', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false&isEu=true`,
+    })
+    expect(response.statusCode).toBe(200)
+    const resJson = response.json()
+    expect(resJson.paymentTokenChain).toBe('ethereum')
+    expect(resJson.paymentTokenSymbol).toBe('eth')
+  })
+
+  test('should return quote with matic (polygon) if in NY', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=true&isEu=false`,
+    })
+    expect(response.statusCode).toBe(200)
+    const resJson = response.json()
+    expect(resJson.paymentTokenChain).toBe('polygon')
+    expect(resJson.paymentTokenSymbol).toBe('matic')
+  })
+
+  test('should return quote with usdc (polygon) if not in NY and not in EU', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=10&isNy=false&isEu=false`,
+    })
+    expect(response.statusCode).toBe(200)
+    const resJson = response.json()
+    expect(resJson.paymentTokenChain).toBe('polygon')
+    expect(resJson.paymentTokenSymbol).toBe('usdc')
   })
 
   test('should throw 400 for empty query parameters', async () => {
@@ -78,5 +111,14 @@ describe('GET /get_funkit_stripe_checkout_quote route', () => {
     })
     expect(response.statusCode).toBe(400)
     expect(response.json()).toHaveProperty('message', 'isNy is a required boolean.')
+  })
+
+  test('should throw 400 for missing isEu input', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: `/get_funkit_stripe_checkout_quote?address=0x00191f4a5635b5A51b33383190ccF2080ef53454d6A917bB3EECCD2028c82caf&tokenAmount=2&isNy=false`,
+    })
+    expect(response.statusCode).toBe(400)
+    expect(response.json()).toHaveProperty('message', 'isEu is a required boolean.')
   })
 })
