@@ -2,6 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SN_NETWORK</key>
+	<string>$(SN_NETWORK)</string>
+	<key>PRIVATE_KEY_LABEL</key>
+	<string>$(PRIVATE_KEY_LABEL)</string>
+	<key>API_BASE_URL</key>
+	<string>$(API_BASE_URL)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.chqrles.Vault</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vltfinance</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Sofia Pro Medium.otf</string>

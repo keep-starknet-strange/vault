@@ -26,10 +26,12 @@ struct FaceIDView: View {
                     Text("Better experience with Face ID")
                         .textTheme(.headlineLarge)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text("Enable Face ID to make your transactions smooth and secure.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 PrimaryButton("Set up Face ID") {

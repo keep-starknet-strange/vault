@@ -33,6 +33,7 @@ struct WelcomeView: View {
                     Text("Empower Your Assets\nRedefine Control")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 PrimaryButton("Get Started") {
                     presentingNextView = true
@@ -40,7 +41,7 @@ struct WelcomeView: View {
             }
         }
         .navigationDestination(isPresented: $presentingNextView) {
-            AccessCodeView()
+            AskSurnameView()
         }
     }
 }
