@@ -2,12 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SN_NETWORK</key>
-	<string>$(SN_NETWORK)</string>
-	<key>PRIVATE_KEY_LABEL</key>
-	<string>$(PRIVATE_KEY_LABEL)</string>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -21,6 +19,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>PRIVATE_KEY_LABEL</key>
+	<string>$(PRIVATE_KEY_LABEL)</string>
+	<key>SN_NETWORK</key>
+	<string>$(SN_NETWORK)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Sofia Pro Medium.otf</string>

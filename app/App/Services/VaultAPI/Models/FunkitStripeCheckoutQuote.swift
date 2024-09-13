@@ -10,9 +10,9 @@ import Foundation
 public struct FunkitStripeCheckoutQuote: Decodable {
     public let quoteId: String
     public let estSubtotalUsd: Double
-    public let paymentTokenAmount: String
     public let paymentTokenChain: String
     public let paymentTokenSymbol: String
+    public let paymentTokenAmount: Double
     public let networkFees: String
     public let cardFees: String
     public let totalUsd: String

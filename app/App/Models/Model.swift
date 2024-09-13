@@ -45,6 +45,7 @@ class Model: ObservableObject {
     @Published var onRampQuoteId: String?
     @Published var onRampTotalUsd: String?
     @Published var estSubtotalUsd: Double = 0
+    @Published var paymentTokenAmount: Double = 0
     @Published var stripeRedirectUrl: URL? = nil
 
     // Sending USDC
@@ -496,6 +497,7 @@ extension Model {
             self.onRampQuoteId = response.quoteId
             self.onRampTotalUsd = response.totalUsd
             self.estSubtotalUsd = response.estSubtotalUsd
+            self.paymentTokenAmount = response.paymentTokenAmount
         }
     }
 
@@ -505,7 +507,7 @@ extension Model {
         VaultService.shared.send(
             CreateFunkitStripeCheckout(
                 quoteId: quoteId,
-                parsedAmount: self.parsedAmount,
+                paymentTokenAmount: self.paymentTokenAmount,
                 estSubtotalUsd: self.estSubtotalUsd
             )
         ) {  result in

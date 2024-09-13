@@ -1038,6 +1038,7 @@
 				INFOPLIST_FILE = "Vault-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Vault;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to the camera for the KYC process during the onramp";
 				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts to show them in the app.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1233,6 +1234,7 @@
 				INFOPLIST_FILE = "Vault-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Vault;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to the camera for the KYC process during the onramp";
 				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts to show them in the app.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1269,6 +1271,7 @@
 				INFOPLIST_FILE = "Vault-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Vault;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to the camera for the KYC process during the onramp";
 				INFOPLIST_KEY_NSContactsUsageDescription = "We need access to your contacts to show them in the app.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate to access your secure data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

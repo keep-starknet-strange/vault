@@ -29,11 +29,13 @@ public struct CreateFunkitStripeCheckout: APIRequest {
     public let paymentTokenAmount: Double
     public let estSubtotalUsd: Double
     public let isNy: Bool
+    public let isEu: Bool
 
-    public init(quoteId: String, parsedAmount: Double, estSubtotalUsd: Double) {
+    public init(quoteId: String, paymentTokenAmount: Double, estSubtotalUsd: Double) {
         self.quoteId = quoteId
-        self.paymentTokenAmount = parsedAmount
+        self.paymentTokenAmount = paymentTokenAmount
         self.estSubtotalUsd = estSubtotalUsd
         self.isNy = false
+        self.isEu = true
     }
 }
