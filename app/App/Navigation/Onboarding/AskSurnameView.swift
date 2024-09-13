@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct AskSurnameView: View {
-    @EnvironmentObject private var settingsModel: SettingsModel
+
+    @AppStorage("surname") var surname: String = ""
 
     @State private var presentingNextView = false
 
@@ -21,13 +22,14 @@ struct AskSurnameView: View {
                     Text("Introduce yourself with your surname. Change it anytime.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .center, spacing: 32) {
-                    TextInput("Surname", text: $settingsModel.surname, shouldFocusOnAppear: true)
+                    TextInput("Surname", text: self.$surname, shouldFocusOnAppear: true)
 
-                    PrimaryButton("Next", disabled: settingsModel.surname.isEmpty) {
-                        presentingNextView = true
+                    PrimaryButton("Next", disabled: surname.isEmpty) {
+                        self.presentingNextView = true
                     }
                 }
             }

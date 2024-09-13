@@ -13,13 +13,11 @@ struct EarnView: View {
             Text("Start Earning yield !").textTheme(.headlineLarge)
             Text("Coming soon").textTheme(.subtitle)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultBackground()
     }
 }
 
 #Preview {
-    ZStack {
-        Color.background1.ignoresSafeArea()
-        EarnView()
-    }
+    EarnView()
 }

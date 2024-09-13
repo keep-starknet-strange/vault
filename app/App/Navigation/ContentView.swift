@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @StateObject private var registrationModel: RegistrationModel
-    @StateObject private var settingsModel = SettingsModel()
-    @StateObject private var navigationModel = NavigationModel()
+    @EnvironmentObject var model: Model
+
+    @State private var selectedTab: Tab = Tab.payments
 
     init() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -29,52 +29,59 @@ struct ContentView: View {
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.accentColor)]
 
         UITabBar.appearance().standardAppearance = tabBarAppearance
-
-        // init vault API models
-
-        let vaultService = VaultService()
-
-        self._registrationModel = StateObject(wrappedValue: RegistrationModel(vaultService: vaultService))
     }
 
     var body: some View {
-        if settingsModel.isOnboarded {
+        if self.model.isOnboarded {
             ZStack(alignment: .bottom) {
-                TabView(selection: $navigationModel.selectedTab) {
+                TabView(selection: $selectedTab) {
                     NavigationStack {
-                        HomeView().edgesIgnoringSafeArea(.bottom)
+                        HomeView()
                     }
                     .tag(Tab.payments)
-                    .toolbarBackground(.hidden, for: .tabBar)
 
                     NavigationStack {
-                        BudgetView().edgesIgnoringSafeArea(.bottom)
+                        BudgetView()
                     }
                     .tag(Tab.budget)
 
                     NavigationStack {
-                        EarnView().edgesIgnoringSafeArea(.bottom)
+                        EarnView()
                     }
                     .tag(Tab.earn)
                 }
-                .toolbarBackground(.hidden, for: .navigationBar)
-                .environmentObject(settingsModel)
-                .preferredColorScheme(.dark)
+                .edgesIgnoringSafeArea(.bottom)
 
-                CustomTabbar(selectedTab: $navigationModel.selectedTab)
+                CustomTabbar(selectedTab: $selectedTab)
             }
-            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .onOpenURL { incomingURL in
+                #if DEBUG
+                print("App was opened via URL: \(incomingURL)")
+                #endif
+
+                self.model.handleDeepLink(incomingURL)
+            }
+            .addSendingConfirmation(isPresented: self.$model.showRequestingConfirmation) {
+                self.model.sendingStatus = .none
+            }
         } else {
             NavigationStack {
                 OnboardingView()
             }
-            .environmentObject(settingsModel)
-            .environmentObject(registrationModel)
-            .preferredColorScheme(.dark)
         }
     }
 }
 
 #Preview {
-    ContentView()
+    struct ContentViewPreviews: View {
+
+        @StateObject var model = Model()
+
+        var body: some View {
+            ContentView()
+                .environmentObject(self.model)
+        }
+    }
+
+    return ContentViewPreviews()
 }

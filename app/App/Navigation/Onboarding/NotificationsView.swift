@@ -25,10 +25,12 @@ struct NotificationView: View {
                     Text("Stay Updated Instantly")
                         .textTheme(.headlineLarge)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text("Notifications to keep track of your account activity effortlessly.")
                         .textTheme(.headlineSubtitle)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 VStack(alignment: .center, spacing: 16) {
@@ -53,5 +55,16 @@ struct NotificationView: View {
 #Preview {
     NavigationStack {
         NotificationView()
+    }
+}
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
     }
 }

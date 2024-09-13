@@ -74,13 +74,6 @@
             ReferencedContainer = "container:Vault.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "VAULT_API_BASE_URL"
-            value = "https://api-production-e1fe.up.railway.app"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
